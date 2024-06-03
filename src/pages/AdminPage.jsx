@@ -1,33 +1,43 @@
-import React from 'react';
-import { useQuery, gql } from '@apollo/client';
-
-const GET_ADMIN_DATA = gql`
-  query GetAdminData {
-    adminData {
-      id
-      name
-      role
-    }
-  }
-`;
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const AdminPage = () => {
-  const { loading, error, data } = useQuery(GET_ADMIN_DATA);
+  const [exercises, setExercises] = useState([]);
+  const [error, setError] = useState(null);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
+  useEffect(() => {
+    axios.get('http://localhost:8081/exercise')
+      .then(response => {
+        setExercises(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching exercises:', error);
+        setError(error);
+      });
+  }, []);
 
   return (
     <div>
       <h1>Admin Page</h1>
-      <ul>
-        {data.adminData.map((admin) => (
-          <li key={admin.id}>
-            <h2>{admin.name}</h2>
-            <p>Role: {admin.role}</p>
-          </li>
-        ))}
-      </ul>
+      <h2>Exercise List</h2>
+      {exercises.length > 0 ? (
+        exercises.map(exercise => (
+          <div key={exercise.ID}>
+            <p>{exercise.Name}</p>
+            <button onClick={() => axios.post(`http://localhost:8081/exercise/${exercise.ID}/delete`)
+              .then(response => {
+                setExercises(exercises.filter(ex => ex.ID !== exercise.ID));
+              })
+              .catch(error => {
+                console.error('Error deleting exercise:', error);
+                setError(error);
+              })}>Delete</button>
+            <button onClick={() => console.log(`Edit exercise ${exercise.ID}`)}>Edit</button>
+          </div>
+        ))
+      ) : <p>Loading...</p>}
+      
+      {error && <p>Error: {error.message}</p>}
     </div>
   );
 };
