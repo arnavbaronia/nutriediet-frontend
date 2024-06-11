@@ -8,7 +8,7 @@ const ProfilePage = () => {
   useEffect(() => {
     axios.get('http://localhost:8081/6/my_profile')
       .then(response => {
-        setProfile(response.data.response); // Ensure that response.data.response is the correct path
+        setProfile(response.data.response);
       })
       .catch(error => {
         console.error('Error fetching profile:', error);

@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
+@import './colors.css';
+
+body {
+  background-color: var(--main-background-color);
+  margin: 0;
+  font-family: 'Rubik', sans-serif;
+}
+
+.diet-page {
+  display: flex;
+  padding: 25px 20px 20px;
+  color: black;
+}
+
+.diet-content {
+  flex: 5.5;
+  padding: 10px;
+}
+
+.diet-heading {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.meal-section {
+  margin-bottom: 20px;
+}
+
+.meal-category {
+  margin-bottom: 10px;
+}
+
+.meal-category h3 {
+  text-align: center;
+}
+
+.meal-items {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  justify-content: center; 
+}
+
+.meal-box {
+  background-color: var(--meal-box-color);
+  color: black;
+  padding: 5px;
+  border-radius: 15px; 
+  flex: 1 1 calc(33% - 20px); 
+  max-width: calc(33% - 20px); 
+  box-sizing: border-box;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.meal-box.single-box {
+  flex: 1 1 calc(30% - 20px); 
+  max-width: calc(30% - 20px); 
+}
+
+.meal-box p {
+  margin: 10px 0;
+}
+
+.diet-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex: 1;
+  margin-left: 20px; 
+  border-left: 2px solid black;
+  padding-left: 20px;
+}
+
+.diet-type-button {
+  display: block;
+  background-color: var(--button-color);
+  color: black;
+  border: none;
+  padding: 15px 10px;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+  font-family: 'Rubik', sans-serif; 
+  font-weight: bold; 
+  font-size: 130%; 
+}
+
+.diet-type-button.active-diet {
+  background-color: var(--highlight-color);
+}
+
+.footer {
+  background-color: var(--footer-background-color);
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}

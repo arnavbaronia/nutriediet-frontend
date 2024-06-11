@@ -8,7 +8,7 @@ const WeightUpdatePage = () => {
   useEffect(() => {
     axios.get('http://localhost:8081/6/weight_update')
       .then(response => {
-        setWeightUpdate(response.data.weight_updates);
+        setWeightUpdate(response.data);
       })
       .catch(error => {
         console.error('Error fetching weight update:', error);
@@ -16,18 +16,11 @@ const WeightUpdatePage = () => {
       });
   }, []);
 
-  if (error) {
-    return <p>Error: {error.message}</p>;
-  }
-
-  if (!weightUpdate) {
-    return <p>Loading...</p>;
-  }
-
   return (
     <div>
-      <h2>Weight Update</h2>
-      <pre>{JSON.stringify(weightUpdate, null, 2)}</pre>
+      <h1>Weight Update</h1>
+      {weightUpdate ? <pre>{JSON.stringify(weightUpdate, null, 2)}</pre> : <p>Loading...</p>}
+      {error && <p>Error: {error.message}</p>}
     </div>
   );
 };
