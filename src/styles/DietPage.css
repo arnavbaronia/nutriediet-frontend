@@ -11,11 +11,13 @@ body {
   display: flex;
   padding: 25px 20px 20px;
   color: black;
+  flex-wrap: wrap;
 }
 
 .diet-content {
   flex: 5.5;
   padding: 10px;
+  width: 100%;
 }
 
 .diet-heading {
@@ -45,18 +47,18 @@ body {
 .meal-box {
   background-color: var(--meal-box-color);
   color: black;
-  padding: 5px;
-  border-radius: 15px; 
-  flex: 1 1 calc(33% - 20px); 
-  max-width: calc(33% - 20px); 
+  padding: 15px;
+  border-radius: 15px;
+  flex: 1 1 calc(33% - 20px);
+  max-width: calc(33% - 20px);
   box-sizing: border-box;
   text-align: center;
   margin-bottom: 20px;
 }
 
 .meal-box.single-box {
-  flex: 1 1 calc(30% - 20px); 
-  max-width: calc(30% - 20px); 
+  flex: 1 1 calc(30% - 20px);
+  max-width: calc(30% - 20px);
 }
 
 .meal-box p {
@@ -103,4 +105,37 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
+}
+
+@media (max-width: 768px) {
+  .meal-box {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .diet-page {
+    flex-direction: column;
+  }
+
+  .diet-content {
+    width: 100%;
+  }
+
+  .diet-buttons {
+    width: 100%;
+    align-items: center;
+    margin-left: 0;
+    border-left: none;
+    padding-left: 0;
+    margin-bottom: 20px;
+    order: -1; 
+    flex-direction: row;
+    justify-content: space-around; 
+  }
+
+  .diet-type-button {
+    width: 45%; 
+    margin-top: 0;
+    margin-bottom: 0;
+  }
 }

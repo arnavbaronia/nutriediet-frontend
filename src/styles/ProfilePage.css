@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
+
+body {
+  font-family: 'Rubik', sans-serif;
+  background-color: #F0F8E7; 
+  margin: 0;
+  padding: 0;
+}
+
+.profile-container {
+  background-color: #A5D6A7; 
+  border-radius: 20px;
+  padding: 30px;
+  width: 85%; 
+  margin: 50px auto;
+}
+
+.profile-heading {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #004D40;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+
+.form-group {
+  margin-bottom: 20px;
+  width: 60%; 
+}
+
+.form-group label {
+  font-weight: bold; 
+  color: #004D40;
+}
+
+.form-group-inline {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.inline-input {
+  width: 33%; 
+}
+
+.inline-input-wide {
+  width: 33%; 
+}
+
+.profile-input, .profile-textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #B0BEC5;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.profile-input:read-only {
+  background-color: #e0e0e0;
+}
+
+.profile-textarea {
+  height: 40px;
+}
+
+.profile-textarea-large {
+  height: 160px; 
+}
+
+.update-button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #004D40;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 15px;
+  cursor: pointer;
+  width: 15%;
+  text-align: center;
+}
+
+.update-button:hover {
+  background-color: #004D40;
+}

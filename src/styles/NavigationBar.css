@@ -1,6 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
 @import './colors.css';
 
+body {
+  background-color: var(--main-background-color);
+  margin: 0;
+  font-family: 'Rubik', sans-serif;
+}
+
 .navigation-bar {
   display: flex;
   justify-content: space-between;
@@ -49,4 +55,27 @@
 
 .nav-link span {
   font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .nav-buttons {
+    justify-content: space-around;
+    width: 100%;
+  }
+
+  .nav-link {
+    margin-left: 5px;
+    padding: 5px 10px;
+    font-size: 16px;
+  }
+
+  .nav-logo {
+    height: 50px;
+  }
+
+  .nav-icon {
+    margin-right: 5px;
+    height: 25px;
+    width: 25px;
+  }
 }
