@@ -113,7 +113,7 @@ const ProfilePage = () => {
           </div>
         </div>
         <div className="form-group-inline">
-          <div className="form-group inline-input">
+          <div className="form-group inline-input-wide">
             <label htmlFor="age">Age</label>
             <input
               type="text"
@@ -124,7 +124,7 @@ const ProfilePage = () => {
               className="profile-input"
             />
           </div>
-          <div className="form-group inline-input">
+          <div className="form-group inline-input-wide">
             <label htmlFor="city">City</label>
             <input
               type="text"
@@ -135,7 +135,7 @@ const ProfilePage = () => {
               className="profile-input"
             />
           </div>
-          <div className="form-group inline-input">
+          <div className="form-group inline-input-wide">
             <label htmlFor="locality">Locality</label>
             <input
               type="text"
@@ -148,6 +148,17 @@ const ProfilePage = () => {
           </div>
         </div>
         <div className="form-group-inline">
+          <div className="form-group inline-input">
+            <label htmlFor="stay">Stay</label>
+            <input
+              type="text"
+              id="stay"
+              name="stay"
+              value={profile.stay}
+              onChange={handleChange}
+              className="profile-input"
+            />
+          </div>
           <div className="form-group inline-input">
             <label htmlFor="height">Height</label>
             <input
@@ -185,17 +196,6 @@ const ProfilePage = () => {
               <option value="Eggetarian">Eggetarian</option>
             </select>
           </div>
-        </div>
-        <div className="form-group">
-          <label htmlFor="stay">Stay</label>
-          <input
-            type="text"
-            id="stay"
-            name="stay"
-            value={profile.stay}
-            onChange={handleChange}
-            className="profile-input"
-          />
         </div>
         <div className="form-group">
           <label htmlFor="medicalHistory">Medical History</label>

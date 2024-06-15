@@ -11,13 +11,13 @@ body {
   background-color: #A5D6A7; 
   border-radius: 20px;
   padding: 30px;
-  width: 85%; 
+  width: 75%; 
   margin: 50px auto;
 }
 
 .profile-heading {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   font-size: 24px;
   font-weight: bold;
   color: #004D40;
@@ -30,27 +30,29 @@ body {
 }
 
 .form-group {
-  margin-bottom: 20px;
-  width: 60%; 
+  margin-bottom: 30px; /* Increased margin to add more space */
+  width: 100%; 
 }
 
 .form-group label {
   font-weight: bold; 
   color: #004D40;
+  margin-bottom: 10px; /* Adjust as needed */
 }
 
 .form-group-inline {
   display: flex;
   justify-content: space-between;
   width: 100%;
+  margin-bottom: 20px; /* Ensure space between rows */
 }
 
 .inline-input {
-  width: 33%; 
+  width: 23%; /* Adjusted to fit 4 inputs in a row */
 }
 
 .inline-input-wide {
-  width: 33%; 
+  width: 31%; 
 }
 
 .profile-input, .profile-textarea {
