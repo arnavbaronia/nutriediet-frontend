@@ -5,7 +5,7 @@ import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import MonitorWeightOutlinedIcon from '@mui/icons-material/MonitorWeightOutlined';
 import '../styles/NavigationBar.css';
-import logo from '../assets/Nutriediet_Logo_Transparent.png'; // Import the logo image
+import logo from '../assets/Nutriediet_Logo_Transparent.png'; 
 
 const NavigationBar = () => {
   const location = useLocation();

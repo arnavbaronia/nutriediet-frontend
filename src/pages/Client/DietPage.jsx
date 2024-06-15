@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../styles/DietPage.css';
+import '../../styles/DietPage.css';
 
 const DietPage = () => {
   const [diet, setDiet] = useState(null);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import '../styles/ExercisePage.css';
+import '../../styles/ExercisePage.css';
 
 const ExercisePage = () => {
   const [videos, setVideos] = useState([

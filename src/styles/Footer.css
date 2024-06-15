@@ -1,4 +1,4 @@
-@import './colors.css';
+@import './Colors.css';
 
 .footer {
   background-color: var(--footer-background-color);

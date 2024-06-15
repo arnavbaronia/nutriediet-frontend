@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
-@import './colors.css';
+@import './Colors.css';
 
 body {
   background-color: var(--main-background-color);
