@@ -1,8 +1,9 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import ClientPage from './pages/Client/ClientPage';
 import AdminPage from './pages/Admin/AdminPage';
+import AdminDashboard from './pages/Admin/AdminDashboard';
 import DietPage from './pages/Client/DietPage';
 import ExercisePage from './pages/Client/ExercisePage';
 import ProfilePage from './pages/Client/ProfilePage';
@@ -17,7 +18,11 @@ import RemindersPage from './pages/Admin/RemindersPage';
 import FaqContentPage from './pages/Admin/FaqContentPage';
 import NavigationBar from './components/NavigationBar';
 import AdminNavBar from './components/AdminNavBar';
+import HomeNavBar from './components/HomeNavBar';
 import Footer from './components/Footer';
+import Signup from './components/Signup';
+import Login from './components/Login';
+import ProtectedRoute from './auth/ProtectedRoute';
 import './App.css';
 
 function App() {
@@ -25,40 +30,33 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/*" element={
-            <>
-              <NavigationBar />
-              <div className="main-content">
-                <Routes>
-                  <Route exact path="/" element={<HomePage />} />
-                  <Route path="/client" element={<ClientPage />} />
-                  <Route path="/client/diet" element={<DietPage />} />
-                  <Route path="/client/exercise" element={<ExercisePage />} />
-                  <Route path="/client/profile" element={<ProfilePage />} />
-                  <Route path="/client/weight-update" element={<WeightUpdatePage />} />
-                </Routes>
-              </div>
-              <Footer />
-            </>
-          } />
-          <Route path="/admin/*" element={
-            <>
-              <AdminNavBar />
-              <div className="main-content">
-                <Routes>
-                  <Route path="appointments" element={<AppointmentsPage />} />
-                  <Route path="clients" element={<ClientsPage />} />
-                  <Route path="diet-templates" element={<DietTemplatesPage />} />
-                  <Route path="recipes" element={<RecipesPage />} />
-                  <Route path="exercises" element={<ExercisesPage />} />
-                  <Route path="motivation" element={<MotivationPage />} />
-                  <Route path="reminders" element={<RemindersPage />} />
-                  <Route path="faq-content" element={<FaqContentPage />} />
-                </Routes>
-              </div>
-            </>
-          } />
+          <Route path="/admin/*" element={<AdminNavBar />} />
+          <Route path="/*" element={<HomeNavBar />} />
+          <Route path="/client/*" element={<NavigationBar />} />
         </Routes>
+        <div className="main-content">
+          <Routes>
+            <Route exact path="/" element={<HomePage />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/client/:client_id" element={<ProtectedRoute component={ClientPage} />} />
+            <Route path="/client/:client_id/diet" element={<ProtectedRoute component={DietPage} />} />
+            <Route path="/client/:client_id/exercise" element={<ProtectedRoute component={ExercisePage} />} />
+            <Route path="/client/:client_id/profile" element={<ProtectedRoute component={ProfilePage} />} />
+            <Route path="/client/:client_id/weight-update" element={<ProtectedRoute component={WeightUpdatePage} />} />
+            <Route path="/admin/appointments" element={<ProtectedRoute component={AppointmentsPage} />} />
+            <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
+            <Route path="/admin/dashboard" element={<ProtectedRoute requiredUserType="ADMIN" component={AdminDashboard} />} />
+            <Route path="/admin/clients" element={<ProtectedRoute component={ClientsPage} />} />
+            <Route path="/admin/diet-templates" element={<ProtectedRoute component={DietTemplatesPage} />} />
+            <Route path="/admin/recipes" element={<ProtectedRoute component={RecipesPage} />} />
+            <Route path="/admin/exercises" element={<ProtectedRoute component={ExercisesPage} />} />
+            <Route path="/admin/motivation" element={<ProtectedRoute component={MotivationPage} />} />
+            <Route path="/admin/reminders" element={<ProtectedRoute component={RemindersPage} />} />
+            <Route path="/admin/faq-content" element={<ProtectedRoute component={FaqContentPage} />} />
+          </Routes>
+        </div>
+        <Footer />
       </div>
     </Router>
   );

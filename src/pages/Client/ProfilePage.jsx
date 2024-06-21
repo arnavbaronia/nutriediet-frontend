@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../styles/ProfilePage.css';
+import { getToken } from '../../auth/token';
+import { useParams } from 'react-router-dom';
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState({
@@ -22,9 +24,17 @@ const ProfilePage = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const { client_id } = useParams();
+  
   useEffect(() => {
-    axios.get('http://localhost:8081/6/my_profile')
+    console.log(`Client ID: ${client_id}`);
+    const token = getToken();
+    axios.get('http://localhost:8081/6/my_profile', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      withCredentials: true
+    })
       .then(response => {
         const profileData = response.data.response;
         delete profileData.created_at;
@@ -56,7 +66,13 @@ const ProfilePage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.put('http://localhost:8081/6/my_profile', profile)
+    const token = getToken();
+    axios.put('http://localhost:8081/6/my_profile', profile, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      withCredentials: true
+    })
       .then(response => {
         console.log('Profile updated successfully', response.data);
       })
@@ -147,55 +163,35 @@ const ProfilePage = () => {
             />
           </div>
         </div>
-        <div className="form-group-inline">
-          <div className="form-group inline-input">
-            <label htmlFor="stay">Stay</label>
-            <input
-              type="text"
-              id="stay"
-              name="stay"
-              value={profile.stay}
-              onChange={handleChange}
-              className="profile-input"
-            />
-          </div>
-          <div className="form-group inline-input">
-            <label htmlFor="height">Height</label>
-            <input
-              type="text"
-              id="height"
-              name="height"
-              value={profile.height}
-              onChange={handleChange}
-              className="profile-input"
-            />
-          </div>
-          <div className="form-group inline-input">
-            <label htmlFor="startingWeight">Starting Weight</label>
-            <input
-              type="text"
-              id="startingWeight"
-              name="startingWeight"
-              value={profile.startingWeight}
-              onChange={handleChange}
-              className="profile-input"
-            />
-          </div>
-          <div className="form-group inline-input">
-            <label htmlFor="dietaryPreference">Dietary Preference</label>
-            <select
-              id="dietaryPreference"
-              name="dietaryPreference"
-              value={profile.dietaryPreference}
-              onChange={handleChange}
-              className="profile-input"
-            >
-              <option value="">Select Preference</option>
-              <option value="Vegetarian">Vegetarian</option>
-              <option value="Non-Vegetarian">Non-Vegetarian</option>
-              <option value="Eggetarian">Eggetarian</option>
-            </select>
-          </div>
+        <div className="form-group">
+          <label htmlFor="height">Height</label>
+          <textarea
+            id="height"
+            name="height"
+            value={profile.height}
+            onChange={handleChange}
+            className="profile-textarea profile-textarea-large"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="startingWeight">Starting Weight</label>
+          <textarea
+            id="startingWeight"
+            name="startingWeight"
+            value={profile.startingWeight}
+            onChange={handleChange}
+            className="profile-textarea profile-textarea-large"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="dietaryPreference">Dietary Preference</label>
+          <textarea
+            id="dietaryPreference"
+            name="dietaryPreference"
+            value={profile.dietaryPreference}
+            onChange={handleChange}
+            className="profile-textarea profile-textarea-large"
+          />
         </div>
         <div className="form-group">
           <label htmlFor="medicalHistory">Medical History</label>
@@ -213,6 +209,16 @@ const ProfilePage = () => {
             id="allergies"
             name="allergies"
             value={profile.allergies}
+            onChange={handleChange}
+            className="profile-textarea profile-textarea-large"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="stay">Stay</label>
+          <textarea
+            id="stay"
+            name="stay"
+            value={profile.stay}
             onChange={handleChange}
             className="profile-textarea profile-textarea-large"
           />

@@ -1,22 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import { getToken } from '../../auth/token'; 
 import '../../styles/DietPage.css';
 
 const DietPage = () => {
+  const { clientId } = useParams(); 
   const [diet, setDiet] = useState(null);
-  const [error, setError] = useState(null);
   const [selectedDiet, setSelectedDiet] = useState('Regular Diet');
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:8081/6/diet')
+    console.log('Client ID:', clientId); 
+    const token = getToken();
+
+    axios.get(`http://localhost:8081/${clientId}/diet`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      withCredentials: true
+    })
       .then(response => {
-        setDiet(response.data.diet);
+        setDiet(response.data);
       })
       .catch(error => {
         console.error('Error fetching diet:', error);
         setError(error);
       });
-  }, []);
+  }, [clientId]);
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -29,14 +40,14 @@ const DietPage = () => {
   return (
     <div className="diet-page">
       <div className="diet-content">
-        {Object.entries(diet).map(([time, details]) => (
+        {Object.keys(diet).map(time => (
           <div key={time} className="meal-section">
             <h2 className="meal-time">{time}</h2>
             <div className="meal-category">
               <h3 className="meal-category-heading">Primary</h3>
               <div className="meal-items">
-                {details.Primary.map(item => (
-                  <div key={item.ID} className={`meal-box ${details.Primary.length === 1 ? 'single-box' : ''}`}>
+                {diet[time].Primary.map(item => (
+                  <div key={item.ID} className={`meal-box ${diet[time].Primary.length === 1 ? 'single-box' : ''}`}>
                     <p><strong>{item.Name}</strong></p>
                     <p>{item.Quantity}</p>
                     <p>{item.Preparation}</p>
@@ -45,12 +56,12 @@ const DietPage = () => {
                 ))}
               </div>
             </div>
-            {details.Alternative && (
+            {diet[time].Alternative && (
               <div className="meal-category">
                 <h3 className="meal-category-heading">Alternatives</h3>
                 <div className="meal-items">
-                  {details.Alternative.map(item => (
-                    <div key={item.ID} className={`meal-box ${details.Alternative.length === 1 ? 'single-box' : ''}`}>
+                  {diet[time].Alternative.map(item => (
+                    <div key={item.ID} className={`meal-box ${diet[time].Alternative.length === 1 ? 'single-box' : ''}`}>
                       <p><strong>{item.Name}</strong></p>
                       <p>{item.Quantity}</p>
                       <p>{item.Preparation}</p>

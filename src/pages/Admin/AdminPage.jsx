@@ -1,5 +1,7 @@
+// src/pages/Admin/AdminPage.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import AdminNavBar from '../../components/AdminNavBar';
 
 const AdminPage = () => {
   const [exercises, setExercises] = useState([]);
@@ -18,6 +20,7 @@ const AdminPage = () => {
 
   return (
     <div>
+      <AdminNavBar />
       <h1>Admin Page</h1>
       <h2>Exercise List</h2>
       {exercises.length > 0 ? (

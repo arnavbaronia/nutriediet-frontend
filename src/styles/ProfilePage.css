@@ -30,25 +30,25 @@ body {
 }
 
 .form-group {
-  margin-bottom: 30px; /* Increased margin to add more space */
+  margin-bottom: 30px; 
   width: 100%; 
 }
 
 .form-group label {
   font-weight: bold; 
   color: #004D40;
-  margin-bottom: 10px; /* Adjust as needed */
+  margin-bottom: 10px; 
 }
 
 .form-group-inline {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: 20px; /* Ensure space between rows */
+  margin-bottom: 20px; 
 }
 
 .inline-input {
-  width: 23%; /* Adjusted to fit 4 inputs in a row */
+  width: 23%; 
 }
 
 .inline-input-wide {

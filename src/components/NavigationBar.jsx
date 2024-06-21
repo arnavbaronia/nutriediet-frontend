@@ -16,19 +16,19 @@ const NavigationBar = () => {
         <img src={logo} alt="Logo" style={{ maxWidth: '100%', maxHeight: '100%' }} />
       </Link>
       <div className="nav-buttons">
-        <Link to="/client/weight-update" className={`nav-link ${location.pathname === '/client/weight-update' ? 'active' : ''}`}>
+        <Link to="/client/:client_id/weight-update" className={`nav-link ${location.pathname === '/client/:client_id/weight-update' ? 'active' : ''}`}>
           <MonitorWeightOutlinedIcon className="nav-icon" />
           <span>Weight Update</span>
         </Link>
-        <Link to="/client/diet" className={`nav-link ${location.pathname === '/client/diet' ? 'active' : ''}`}>
+        <Link to="/client/:client_id/diet" className={`nav-link ${location.pathname === '/client/:client_id/diet' ? 'active' : ''}`}>
           <ArticleOutlinedIcon className="nav-icon" />
           <span>Diet Plan</span>
         </Link>
-        <Link to="/client/exercise" className={`nav-link ${location.pathname === '/client/exercise' ? 'active' : ''}`}>
+        <Link to="/client/:client_id/exercise" className={`nav-link ${location.pathname === '/client/:client_id/exercise' ? 'active' : ''}`}>
           <FitnessCenterIcon className="nav-icon" />
           <span>Exercise</span>
         </Link>
-        <Link to="/client/profile" className={`nav-link ${location.pathname === '/client/profile' ? 'active' : ''}`}>
+        <Link to="/client/:client_id/profile" className={`nav-link ${location.pathname === '/client/:client_id/profile' ? 'active' : ''}`}>
           <PersonRoundedIcon className="nav-icon" />
           <span>My Profile</span>
         </Link>
