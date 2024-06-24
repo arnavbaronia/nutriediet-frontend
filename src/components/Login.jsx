@@ -1,69 +1,57 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    axios.post('http://localhost:8081/login', formData)
-      .then(response => {
-        console.log('Login successful:', response);
-        const userType = response.data.userType;
-        if (userType === 'ADMIN') {
-          navigate('/admin');
-        } else {
-          navigate('/client');
-        }
-      })
-      .catch(error => {
-        console.error('Error during login:', error);
-        setError(error.response ? error.response.data : 'Login failed');
-      });
+
+    try {
+      const response = await axios.post('http://localhost:8081/login', { email, password });
+      const { token, userType } = response.data;
+      localStorage.setItem('token', token);
+      localStorage.setItem('userType', userType);
+      console.log('Token:', token);
+      console.log('UserType:', userType);
+      if (userType === 'ADMIN') {
+        window.location.href = '/admin/dashboard'; // Redirect to admin dashboard
+      } else {
+        setError('Unauthorized access');
+      }
+    } catch (err) {
+      setError('Login failed. Please check your credentials and try again.');
+      console.error('Login error:', err);
+    }
   };
 
   return (
     <div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit} className="login-form">
-        <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-
-        {error && <p className="error-message">{error}</p>}
-
-        <button type="submit">Login</button>
+      <h1>Login</h1>
+      {error && <div className="error-message">{error}</div>}
+      <form onSubmit={handleLogin} className="login-form">
+        <div className="form-group">
+          <label>Email</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit" className="login-button">Login</button>
       </form>
     </div>
   );

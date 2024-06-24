@@ -22,8 +22,18 @@ import HomeNavBar from './components/HomeNavBar';
 import Footer from './components/Footer';
 import Signup from './components/Signup';
 import Login from './components/Login';
-import ProtectedRoute from './auth/ProtectedRoute';
 import './App.css';
+
+const ProtectedRoute = ({ component: Component, requiredUserType, ...rest }) => {
+  const token = localStorage.getItem('token');
+  const userType = localStorage.getItem('userType');
+
+  if (!token || (requiredUserType && userType !== requiredUserType)) {
+    return <Navigate to="/login" />;
+  }
+
+  return <Component {...rest} />;
+};
 
 function App() {
   return (
@@ -47,13 +57,13 @@ function App() {
             <Route path="/admin/appointments" element={<ProtectedRoute component={AppointmentsPage} />} />
             <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
             <Route path="/admin/dashboard" element={<ProtectedRoute requiredUserType="ADMIN" component={AdminDashboard} />} />
-            <Route path="/admin/clients" element={<ProtectedRoute component={ClientsPage} />} />
-            <Route path="/admin/diet-templates" element={<ProtectedRoute component={DietTemplatesPage} />} />
-            <Route path="/admin/recipes" element={<ProtectedRoute component={RecipesPage} />} />
-            <Route path="/admin/exercises" element={<ProtectedRoute component={ExercisesPage} />} />
-            <Route path="/admin/motivation" element={<ProtectedRoute component={MotivationPage} />} />
-            <Route path="/admin/reminders" element={<ProtectedRoute component={RemindersPage} />} />
-            <Route path="/admin/faq-content" element={<ProtectedRoute component={FaqContentPage} />} />
+            <Route path="/admin/clients" element={<ProtectedRoute requiredUserType="ADMIN" component={ClientsPage} />} />
+            <Route path="/admin/diet-templates" element={<ProtectedRoute requiredUserType="ADMIN" component={DietTemplatesPage} />} />
+            <Route path="/admin/recipes" element={<ProtectedRoute requiredUserType="ADMIN" component={RecipesPage} />} />
+            <Route path="/admin/exercises" element={<ProtectedRoute requiredUserType="ADMIN" component={ExercisesPage} />} />
+            <Route path="/admin/motivation" element={<ProtectedRoute requiredUserType="ADMIN" component={MotivationPage} />} />
+            <Route path="/admin/reminders" element={<ProtectedRoute requiredUserType="ADMIN" component={RemindersPage} />} />
+            <Route path="/admin/faq-content" element={<ProtectedRoute requiredUserType="ADMIN" component={FaqContentPage} />} />
           </Routes>
         </div>
         <Footer />

@@ -1,99 +1,87 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import '../styles/Signup.css';
 
 const Signup = () => {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    userType: 'USER', // Default value
-  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    axios.post('http://localhost:8081/signup', formData)
-      .then(response => {
-        console.log('Signup successful:', response);
-        navigate('/login');
-      })
-      .catch(error => {
-        console.error('Error during signup:', error);
-        setError(error.response ? error.response.data : 'Signup failed');
+
+    try {
+      const response = await axios.post('http://localhost:8081/signup', {
+        email,
+        password,
+        firstName,
+        lastName,
+        phoneNumber,
       });
+      const { token } = response.data;
+      localStorage.setItem('token', token);
+      console.log('Token:', token);
+      window.location.href = '/login'; // Redirect to login page after successful signup
+    } catch (err) {
+      setError('Signup failed. Please try again.');
+      console.error('Signup error:', err);
+    }
   };
 
   return (
     <div className="signup-container">
-      <h2>Sign Up</h2>
-      <form onSubmit={handleSubmit} className="signup-form">
-        <label htmlFor="firstName">First Name</label>
-        <input
-          type="text"
-          id="firstName"
-          name="firstName"
-          value={formData.firstName}
-          onChange={handleChange}
-          required
-        />
-
-        <label htmlFor="lastName">Last Name</label>
-        <input
-          type="text"
-          id="lastName"
-          name="lastName"
-          value={formData.lastName}
-          onChange={handleChange}
-          required
-        />
-
-        <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-
-        <label htmlFor="userType">User Type</label>
-        <select
-          id="userType"
-          name="userType"
-          value={formData.userType}
-          onChange={handleChange}
-          required
-        >
-          <option value="USER">User</option>
-          <option value="ADMIN">Admin</option>
-        </select>
-
-        {error && <p className="error-message">{error}</p>}
-
-        <button type="submit">Sign Up</button>
+      <h1>Signup</h1>
+      {error && <div className="error-message">{error}</div>}
+      <form onSubmit={handleSignup} className="signup-form">
+        <div className="form-group">
+          <label>First Name</label>
+          <input
+            type="text"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Last Name</label>
+          <input
+            type="text"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Email</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Phone Number</label>
+          <input
+            type="tel"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit" className="signup-button">Signup</button>
       </form>
     </div>
   );
