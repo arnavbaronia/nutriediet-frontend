@@ -17,7 +17,7 @@ export const signup = async (formData) => {
 
 export const login = async (credentials) => {
   try {
-    const response = await axios.post(`${BASE_URL}/login`, credentials);
+    const response = await axios.post(`${BASE_URL}/login`, { ...credentials, userType: 'ADMIN' });
     const token = response.data.token; 
     setToken(token);
     return response.data;

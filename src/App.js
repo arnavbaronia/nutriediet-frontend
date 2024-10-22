@@ -10,10 +10,11 @@ import ProfilePage from './pages/Client/ProfilePage';
 import WeightUpdatePage from './pages/Client/WeightUpdatePage';
 import AppointmentsPage from './pages/Admin/AppointmentsPage';
 import ClientsPage from './pages/Admin/ClientsPage';
+import ClientDetailsPage from './pages/Admin/ClientDetailsPage';
 import DietTemplatesPage from './pages/Admin/DietTemplatesPage';
 import RecipesPage from './pages/Admin/RecipesPage';
 import ExercisesPage from './pages/Admin/ExercisesPage';
-import MotivationPage from './pages/Admin/MotivationPage';
+import CreateDietPage from './pages/Admin/CreateDietPage';
 import RemindersPage from './pages/Admin/RemindersPage';
 import FaqContentPage from './pages/Admin/FaqContentPage';
 import NavigationBar from './components/NavigationBar';
@@ -58,10 +59,11 @@ function App() {
             <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
             <Route path="/admin/dashboard" element={<ProtectedRoute requiredUserType="ADMIN" component={AdminDashboard} />} />
             <Route path="/admin/clients" element={<ProtectedRoute requiredUserType="ADMIN" component={ClientsPage} />} />
+            <Route path="/admin/client/:client_id" element={<ProtectedRoute requiredUserType="ADMIN" component={ClientDetailsPage} />} />
             <Route path="/admin/diet-templates" element={<ProtectedRoute requiredUserType="ADMIN" component={DietTemplatesPage} />} />
             <Route path="/admin/recipes" element={<ProtectedRoute requiredUserType="ADMIN" component={RecipesPage} />} />
             <Route path="/admin/exercises" element={<ProtectedRoute requiredUserType="ADMIN" component={ExercisesPage} />} />
-            <Route path="/admin/motivation" element={<ProtectedRoute requiredUserType="ADMIN" component={MotivationPage} />} />
+            <Route path="/admin/creatediet" element={<ProtectedRoute requiredUserType="ADMIN" component={CreateDietPage} />} />
             <Route path="/admin/reminders" element={<ProtectedRoute requiredUserType="ADMIN" component={RemindersPage} />} />
             <Route path="/admin/faq-content" element={<ProtectedRoute requiredUserType="ADMIN" component={FaqContentPage} />} />
           </Routes>

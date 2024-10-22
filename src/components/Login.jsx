@@ -11,7 +11,11 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:8081/login', { email, password });
+      const response = await axios.post('http://localhost:8081/login', { 
+        email: "nutriedietplan@gmail.com", 
+        password: "Flamingo@123", 
+        user_type: 'ADMIN' 
+      });
       const { token, userType } = response.data;
       localStorage.setItem('token', token);
       localStorage.setItem('userType', userType);

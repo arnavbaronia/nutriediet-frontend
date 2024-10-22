@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import '../../styles/ClientsPage.css'; 
+
 const ClientsPage = () => {
   const [clients, setClients] = useState([]);
   const [search, setSearch] = useState('');
   const [filteredClients, setFilteredClients] = useState([]);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     const token = localStorage.getItem('token'); 
@@ -45,6 +48,10 @@ const ClientsPage = () => {
     setSearch(e.target.value);
   };
 
+  const handleMoreDetailsClick = (clientId) => {
+    navigate(`/admin/client/${clientId}`); // Redirect to the new client details page
+  };
+
   return (
     <div className="clients-page-container">
       <h1>Clients</h1>
@@ -65,6 +72,7 @@ const ClientsPage = () => {
             <th>Email</th>
             <th>Next Payment Date</th>
             <th>Last Diet Date</th>
+            <th>Actions</th> {/* New column for actions */}
           </tr>
         </thead>
         <tbody>
@@ -75,6 +83,11 @@ const ClientsPage = () => {
               <td>{client.email}</td>
               <td>{client.next_payment_date === "0001-01-01T05:30:00+05:30" ? 'N/A' : new Date(client.next_payment_date).toLocaleDateString()}</td>
               <td>{client.last_diet_date ? new Date(client.last_diet_date).toLocaleDateString() : 'N/A'}</td>
+              <td>
+                <button onClick={() => handleMoreDetailsClick(client.id)}>
+                  More Details
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

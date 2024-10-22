@@ -15,7 +15,7 @@ const AdminNavBar = () => {
         <Link to="/admin/diet-templates" className="nav-link">Diet Templates</Link>
         <Link to="/admin/recipes" className="nav-link">Recipes</Link>
         <Link to="/admin/exercises" className="nav-link">Exercises</Link>
-        <Link to="/admin/motivation" className="nav-link">Motivation</Link>
+        <Link to="/admin/creatediet" className="nav-link">Create Diet</Link>
         <Link to="/admin/reminders" className="nav-link">Reminders</Link>
         <Link to="/admin/faq-content" className="nav-link">FAQ Content</Link>
         <Link to="/admin/logout" className="nav-link">Logout</Link>
