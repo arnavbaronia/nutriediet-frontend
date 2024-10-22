@@ -1,6 +1,8 @@
-# Getting Started with Create React App
-
+## NutrieDiet-Frontend
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## NutrieDiet-Backend
+The repository is currently private.
 
 ## Available Scripts
 
