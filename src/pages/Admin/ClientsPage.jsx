@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { useNavigate } from 'react-router-dom';
 import '../../styles/ClientsPage.css'; 
 
 const ClientsPage = () => {
@@ -8,7 +8,7 @@ const ClientsPage = () => {
   const [search, setSearch] = useState('');
   const [filteredClients, setFilteredClients] = useState([]);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     const token = localStorage.getItem('token'); 
@@ -49,7 +49,7 @@ const ClientsPage = () => {
   };
 
   const handleMoreDetailsClick = (clientId) => {
-    navigate(`/admin/client/${clientId}`); // Redirect to the new client details page
+    navigate(`/admin/client/${clientId}`);
   };
 
   return (
@@ -72,7 +72,7 @@ const ClientsPage = () => {
             <th>Email</th>
             <th>Next Payment Date</th>
             <th>Last Diet Date</th>
-            <th>Actions</th> {/* New column for actions */}
+            <th>Actions</th> 
           </tr>
         </thead>
         <tbody>

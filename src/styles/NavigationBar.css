@@ -40,8 +40,8 @@ body {
   padding: 10px 15px;
   border-radius: 20px;
   transition: background-color 0.3s ease;
-  font-weight: bold; 
-  font-size: 20px; 
+  font-weight: bold;
+  font-size: 20px;
 }
 
 .nav-link:hover,

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import '../../styles/ClientDetailsPage.css'; // Import the updated CSS
+import '../../styles/ClientDetailsPage.css';
 
 const ClientDetailsPage = () => {
   const { client_id } = useParams();

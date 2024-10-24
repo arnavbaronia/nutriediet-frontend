@@ -39,3 +39,25 @@ h1 {
 .client-table tr:nth-child(even) {
   background-color: #f9f9f9;
 }
+
+.client-table button {
+  padding: 8px 12px;
+  border: none;
+  background-color: #007bff; 
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.client-table button:hover {
+  background-color: #0056b3; 
+}
+
+.client-table button:focus {
+  outline: none;
+}
+
+.client-table button:active {
+  background-color: #004080; 
+}
