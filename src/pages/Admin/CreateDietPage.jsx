@@ -147,45 +147,28 @@ const CreateDietPage = () => {
 
       <div className="right-section">
         <h2>View Past Diets and Templates</h2>
-          <div className="past-diet-section">
-            {/* Wrap all dropdowns in a single flex container */}
-            <div className="past-diet-dropdowns">
-              <Form.Group controlId="weekSelect" className="template-select no-gap">
-                <Form.Control as="select" className="custom-dropdown">
-                  <option value="">Select Week</option>
-                  <option value="week1">Week 1</option>
-                  <option value="week2">Week 2</option>
-                </Form.Control>
-              </Form.Group>
-
-              {/* New Dropdown for selecting Meal Plan Type */}
-              <Form.Group controlId="mealPlanTypeSelect" className="template-select no-gap">
-                <Form.Control as="select" className="custom-dropdown">
-                  <option value="">Select Meal Plan Type</option>
-                  <option value="weightLoss">Weight Loss</option>
-                  <option value="muscleGain">Muscle Gain</option>
-                  <option value="maintenance">Maintenance</option>
-                </Form.Control>
-              </Form.Group>
-
-              <Form.Group controlId="pastTemplateSelect" className="template-select no-gap">
-                <Form.Control as="select" className="custom-dropdown">
-                  <option value="">Select Template</option>
-                  {dietTemplates.map((template) => (
-                    <option key={template.id} value={template.id}>
-                      {template.name}
-                    </option>
-                  ))}
-                </Form.Control>
-              </Form.Group>
-            </div>
-          </div>
-
-          <div className="view-past-container">
-            <p>Here you can view past diets and templates details...</p>
-          </div>
+        <div className="past-diet-section">
+          <Form.Group controlId="weekSelect" className="template-select no-gap">
+            <Form.Control as="select" className="custom-dropdown">
+              <option value="">Select Week</option>
+              <option value="week1">Week 1</option>
+              <option value="week2">Week 2</option>
+              <option value="week3">Week 3</option>
+              <option value="week4">Week 4</option>
+              <option value="week5">Week 5</option>
+              <option value="week6">Week 6</option>
+              <option value="week7">Week 7</option>
+              <option value="week8">Week 8</option>
+              <option value="week9">Week 9</option>
+              <option value="week10">Week 10</option>
+            </Form.Control>
+          </Form.Group>
         </div>
 
+        <div className="view-past-container">
+          <p>Here you can view past diets details...</p>
+        </div>
+      </div>
     </div>
   );
 };
