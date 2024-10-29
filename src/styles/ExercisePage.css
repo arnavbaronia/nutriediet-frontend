@@ -1,97 +1,87 @@
 .exercise-page {
-    padding: 20px;
-    color: black;
-  }
-  
-  .exercise-schedule {
-    margin-bottom: 20px;
-  }
-  
-  .schedule-box {
-    background-color: #A5D6A7;
-    border-radius: 15px;
-    padding: 20px;
-    height: 120px;
-  }
-  
-  .exercise-search {
-    margin-bottom: 20px;
-  }
-  
-  .search-container {
-    display: flex;
-    align-items: center;
-  }
-  
-  .search-bar-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100%;
-  }
-  
-  .search-bar {
-    width: calc(100% - 32px);
-    padding: 10px;
-    border-radius: 15px;
-    border: 1px solid #CCC;
-    box-sizing: border-box;
-  }
-  
-  .search-icon {
-    position: absolute;
-    right: 8px;
-    cursor: pointer;
-  }
-  
-  .exercise-videos {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: space-between; /* Distribute items evenly with gaps */
-  }
-  
-  .video-box {
-    background-color: #A5D6A7;
-    border-radius: 15px;
-    padding: 20px;
-    width: calc(33% - 20px); /* Adjust width with gap */
-    box-sizing: border-box;
-    text-align: center;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .video-thumbnail {
-    background-color: #DDD;
-    border-radius: 10px;
-    overflow: hidden;
-    height: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 10px;
-  }
-  
-  .video-thumbnail img {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-  }
-  
-  .video-title {
-    font-weight: bold;
-    margin-top: 10px;
-  }
-  
-  @media (max-width: 768px) {
-    .video-box {
-      width: calc(50% - 20px);
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .video-box {
-      width: 100%;
-    }
-  }
-  
+  padding: 20px;
+  color: black;
+}
+
+.exercise-schedule {
+  margin-bottom: 20px;
+}
+
+.schedule-box {
+  background-color: #A5D6A7;
+  border-radius: 15px;
+  padding: 20px;
+  height: 120px;
+}
+
+.exercise-search {
+  margin-bottom: 20px;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  width: 25%;
+  max-width: 400px;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.search-bar {
+  flex-grow: 1;
+  padding: 10px;
+  border: none;
+  font-size: 1rem;
+}
+
+.search-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #555;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.search-button:hover {
+  color: #8fbe00;
+}
+
+.exercise-videos {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.video-box {
+  background-color: #A5D6A7;
+  border-radius: 15px;
+  padding: 20px;
+  width: calc(30% - 20px);
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.video-thumbnail {
+  background-color: #DDD;
+  border-radius: 10px;
+  height: 150px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-thumbnail img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.video-title {
+  font-weight: bold;
+  margin-top: 10px;
+}

@@ -8,6 +8,7 @@ import DietPage from './pages/Client/DietPage';
 import ExercisePage from './pages/Client/ExercisePage';
 import ProfilePage from './pages/Client/ProfilePage';
 import WeightUpdatePage from './pages/Client/WeightUpdatePage';
+import ClientRecipesPage from './pages/Client/ClientRecipesPage';
 import AppointmentsPage from './pages/Admin/AppointmentsPage';
 import ClientsPage from './pages/Admin/ClientsPage';
 import ClientDetailsPage from './pages/Admin/ClientDetailsPage';
@@ -55,6 +56,7 @@ function App() {
             <Route path="/client/:client_id/exercise" element={<ProtectedRoute component={ExercisePage} />} />
             <Route path="/client/:client_id/profile" element={<ProtectedRoute component={ProfilePage} />} />
             <Route path="/client/:client_id/weight-update" element={<ProtectedRoute component={WeightUpdatePage} />} />
+            <Route path="/client/:client_id/recipes" element={<ProtectedRoute component={ClientRecipesPage} />} />
             <Route path="/admin/appointments" element={<ProtectedRoute component={AppointmentsPage} />} />
             <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
             <Route path="/admin/dashboard" element={<ProtectedRoute requiredUserType="ADMIN" component={AdminDashboard} />} />

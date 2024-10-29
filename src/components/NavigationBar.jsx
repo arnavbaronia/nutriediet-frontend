@@ -4,6 +4,7 @@ import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import MonitorWeightOutlinedIcon from '@mui/icons-material/MonitorWeightOutlined';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 import '../styles/NavigationBar.css';
 import logo from '../assets/Nutriediet_Logo_Transparent.png'; 
 
@@ -23,6 +24,10 @@ const NavigationBar = () => {
         <Link to="/client/:client_id/diet" className={`nav-link ${location.pathname === '/client/:client_id/diet' ? 'active' : ''}`}>
           <ArticleOutlinedIcon className="nav-icon" />
           <span>Diet Plan</span>
+        </Link>
+        <Link to="/client/:client_id/recipes" className={`nav-link ${location.pathname === '/client/:client_id/recipes' ? 'active' : ''}`}>
+          <MenuBookIcon className="nav-icon" />
+          <span>Recipes</span>
         </Link>
         <Link to="/client/:client_id/exercise" className={`nav-link ${location.pathname === '/client/:client_id/exercise' ? 'active' : ''}`}>
           <FitnessCenterIcon className="nav-icon" />

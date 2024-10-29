@@ -31,18 +31,18 @@ const ExercisePage = () => {
 
       <div className="exercise-search">
         <h2>Exercises</h2>
-        <div className="search-container">
-          <div className="search-bar-container">
-            <input
-              type="text"
-              className="search-bar"
-              placeholder="Search"
-              value={searchTerm}
-              onChange={handleInputChange}
-            />
-            <SearchOutlinedIcon className="search-icon" onClick={handleSearch} />
-          </div>
-        </div>
+        <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }} className="search-container">
+          <input
+            type="text"
+            className="search-bar"
+            placeholder="Search Exercises"
+            value={searchTerm}
+            onChange={handleInputChange}
+          />
+          <button type="submit" className="search-button">
+            <SearchOutlinedIcon />
+          </button>
+        </form>
       </div>
 
       <div className="exercise-videos">
