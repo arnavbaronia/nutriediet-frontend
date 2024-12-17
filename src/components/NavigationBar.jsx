@@ -25,7 +25,7 @@ const NavigationBar = () => {
           <ArticleOutlinedIcon className="nav-icon" />
           <span>Diet Plan</span>
         </Link>
-        <Link to="/client/:client_id/recipes" className={`nav-link ${location.pathname === '/client/:client_id/recipes' ? 'active' : ''}`}>
+        <Link to="/client/recipes" className={`nav-link ${location.pathname === '/client/:client_id/recipes' ? 'active' : ''}`}>
           <MenuBookIcon className="nav-icon" />
           <span>Recipes</span>
         </Link>

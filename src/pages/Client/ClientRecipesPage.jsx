@@ -1,87 +1,115 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Card, Spinner } from 'react-bootstrap';
-import { SearchOutlined } from '@mui/icons-material';
 import axios from 'axios';
-import '../../styles/ClientRecipesPage.css';
 
 const ClientRecipesPage = () => {
   const [recipes, setRecipes] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchRecipes = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) throw new Error('Unauthorized: No token found');
+
+        const response = await axios.get('http://localhost:8081/admin/recipes', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        setRecipes(response.data.list || []);
+      } catch (err) {
+        console.error('Error fetching recipes:', err.response || err);
+        setErrorMessage('Failed to fetch recipes. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchRecipes();
   }, []);
 
-  const fetchRecipes = async () => {
-    setLoading(true);
+  const handleRecipeSelect = async (recipeID) => {
     try {
-      const response = await axios.get('/api/client/recipes');
-      setRecipes(response.data.recipes);
-    } catch (error) {
-      console.error('Error fetching recipes:', error);
-    } finally {
-      setLoading(false);
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('Unauthorized: No token found');
+
+      const response = await axios.get(`http://localhost:8081/client/recipes/${recipeID}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      console.log('Recipe API Response:', response.data); 
+      const recipeData = response.data;
+
+      const ingredients = recipeData.ingredients
+        ? recipeData.ingredients.split(';').map((ing) => ing.trim())
+        : [];
+      const preparation = recipeData.preparation
+        ? recipeData.preparation.split(';').map((step) => step.trim())
+        : [];
+
+      setSelectedRecipe({
+        ...recipeData,
+        ingredients,
+        preparation,
+      });
+    } catch (err) {
+      console.error('Error fetching recipe details:', err.response || err);
+      setErrorMessage('Failed to fetch recipe details. Please try again.');
     }
   };
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (!searchTerm.trim()) {
-      fetchRecipes();
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const response = await axios.get(`/api/client/recipes?search=${searchTerm}`);
-      setRecipes(response.data.recipes);
-    } catch (error) {
-      console.error('Error searching recipes:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (loading) return <p>Loading recipes...</p>;
+  if (errorMessage) return <p>{errorMessage}</p>;
 
   return (
-    <div className="recipes-page">
+    <div>
       <h1>Recipes</h1>
-      <Form onSubmit={handleSearch} className="search-form">
-        <div className="search-container">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search recipes..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button type="submit" className="search-button">
-            <SearchOutlined />
-          </button>
-        </div>
-      </Form>
-
-      {loading ? (
-        <Spinner animation="border" className="loading-spinner" />
-      ) : (
-        <div className="recipes-list">
+      <div>
+        <label htmlFor="recipe-select">Select a Recipe: </label>
+        <select
+          id="recipe-select"
+          onChange={(e) => handleRecipeSelect(e.target.value)}
+          defaultValue=""
+        >
+          <option value="" disabled>
+            -- Select a Recipe --
+          </option>
           {recipes.map((recipe) => (
-            <Card key={recipe.id} className="recipe-card">
-              <Card.Body>
-                <Card.Title>{recipe.name}</Card.Title>
-                <Card.Text>
-                  <strong>Ingredients:</strong> {recipe.ingredients.join(', ')}
-                </Card.Text>
-                <Card.Text>
-                  <strong>Preparation:</strong> {recipe.preparation.join('. ')}
-                </Card.Text>
-              </Card.Body>
-            </Card>
+            <option key={recipe.RecipeID} value={recipe.RecipeID}>
+              {recipe.Name}
+            </option>
           ))}
+        </select>
+      </div>
+
+      {selectedRecipe && (
+        <div>
+          <h2>{selectedRecipe.name}</h2>
+          <h3>Ingredients</h3>
+          {selectedRecipe.ingredients.length > 0 ? (
+            <ul>
+              {selectedRecipe.ingredients.map((ingredient, idx) => (
+                <li key={idx}>{ingredient}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No ingredients found.</p>
+          )}
+          <h3>Preparation Steps</h3>
+          {selectedRecipe.preparation.length > 0 ? (
+            <ol>
+              {selectedRecipe.preparation.map((step, idx) => (
+                <li key={idx}>{step}</li>
+              ))}
+            </ol>
+          ) : (
+            <p>No preparation steps found.</p>
+          )}
         </div>
       )}
     </div>
   );
-};
+}
 
 export default ClientRecipesPage;

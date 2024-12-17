@@ -24,7 +24,7 @@ const Signup = () => {
       const { token } = response.data;
       localStorage.setItem('token', token);
       console.log('Token:', token);
-      window.location.href = '/login'; // Redirect to login page after successful signup
+      window.location.href = '/login'; 
     } catch (err) {
       setError('Signup failed. Please try again.');
       console.error('Signup error:', err);

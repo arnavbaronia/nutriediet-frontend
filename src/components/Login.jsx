@@ -22,7 +22,7 @@ const Login = () => {
       console.log('Token:', token);
       console.log('UserType:', userType);
       if (userType === 'ADMIN') {
-        window.location.href = '/admin/dashboard'; // Redirect to admin dashboard
+        window.location.href = '/admin/dashboard'; 
       } else {
         setError('Unauthorized access');
       }

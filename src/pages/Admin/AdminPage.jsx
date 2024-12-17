@@ -1,4 +1,3 @@
-// src/pages/Admin/AdminPage.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AdminNavBar from '../../components/AdminNavBar';

@@ -14,6 +14,7 @@ import ClientsPage from './pages/Admin/ClientsPage';
 import ClientDetailsPage from './pages/Admin/ClientDetailsPage';
 import DietTemplatesPage from './pages/Admin/DietTemplatesPage';
 import RecipesPage from './pages/Admin/RecipesPage';
+import AdminRecipeListPage from './pages/Admin/RecipeListPage';
 import ExercisesPage from './pages/Admin/ExercisesPage';
 import CreateDietPage from './pages/Admin/CreateDietPage';
 import RemindersPage from './pages/Admin/RemindersPage';
@@ -48,7 +49,7 @@ function App() {
         </Routes>
         <div className="main-content">
           <Routes>
-            <Route exact path="/" element={<HomePage />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
             <Route path="/client/:client_id" element={<ProtectedRoute component={ClientPage} />} />
@@ -56,14 +57,15 @@ function App() {
             <Route path="/client/:client_id/exercise" element={<ProtectedRoute component={ExercisePage} />} />
             <Route path="/client/:client_id/profile" element={<ProtectedRoute component={ProfilePage} />} />
             <Route path="/client/:client_id/weight-update" element={<ProtectedRoute component={WeightUpdatePage} />} />
-            <Route path="/client/:client_id/recipes" element={<ProtectedRoute component={ClientRecipesPage} />} />
+            <Route path="/client/recipes" element={<ProtectedRoute component={ClientRecipesPage} />} />
             <Route path="/admin/appointments" element={<ProtectedRoute component={AppointmentsPage} />} />
             <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
             <Route path="/admin/dashboard" element={<ProtectedRoute requiredUserType="ADMIN" component={AdminDashboard} />} />
             <Route path="/admin/clients" element={<ProtectedRoute requiredUserType="ADMIN" component={ClientsPage} />} />
             <Route path="/admin/client/:client_id" element={<ProtectedRoute requiredUserType="ADMIN" component={ClientDetailsPage} />} />
             <Route path="/admin/diet-templates" element={<ProtectedRoute requiredUserType="ADMIN" component={DietTemplatesPage} />} />
-            <Route path="/admin/recipes" element={<ProtectedRoute requiredUserType="ADMIN" component={RecipesPage} />} />
+            <Route path="/admin/recipes" element={<AdminRecipeListPage />} />
+            <Route path="/admin/recipes/new" element={<ProtectedRoute requiredUserType="ADMIN" component={RecipesPage} />} />
             <Route path="/admin/exercises" element={<ProtectedRoute requiredUserType="ADMIN" component={ExercisesPage} />} />
             <Route path="/admin/creatediet" element={<ProtectedRoute requiredUserType="ADMIN" component={CreateDietPage} />} />
             <Route path="/admin/reminders" element={<ProtectedRoute requiredUserType="ADMIN" component={RemindersPage} />} />

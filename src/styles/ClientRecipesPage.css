@@ -1,37 +1,37 @@
-.recipes-page {
+.client-recipe-page {
   padding: 20px;
 }
 
-.search-form {
-  margin-bottom: 20px;
+h1 {
+  font-size: 2rem;
+  color: #333;
 }
 
-.search-container {
-  display: flex;
-  align-items: center;
-  width: 25%;
-  max-width: 400px;
+.recipe-card {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  width: 60%;
+  margin: auto;
 }
 
-.search-input {
-  flex-grow: 1;
-  padding: 10px;
-  border-radius: 15px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
+.recipe-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
 }
 
-.search-button {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  margin-left: 5px;
-  color: #555;
+.recipe-card h3 {
   font-size: 1.2rem;
-  display: flex;
-  align-items: center;
+  margin-top: 1rem;
 }
 
-.search-button:hover {
-  color: #8fbe00;
+ul, ol {
+  margin-left: 20px;
+}
+
+.error-message {
+  color: red;
+  font-size: 1.2rem;
+  text-align: center;
 }
