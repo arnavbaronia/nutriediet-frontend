@@ -2,114 +2,215 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const ClientRecipesPage = () => {
-  const [recipes, setRecipes] = useState([]);
-  const [selectedRecipe, setSelectedRecipe] = useState(null);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [loading, setLoading] = useState(true);
+    const [recipes, setRecipes] = useState([]);
+    const [selectedRecipe, setSelectedRecipe] = useState(null);
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [dropdownVisible, setDropdownVisible] = useState(false);
 
-  useEffect(() => {
-    const fetchRecipes = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) throw new Error('Unauthorized: No token found');
+    useEffect(() => {
+        const fetchRecipes = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) throw new Error('Unauthorized: No token found');
 
-        const response = await axios.get('http://localhost:8081/admin/recipes', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+                const response = await axios.get('http://localhost:8081/client/recipes', {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
 
-        setRecipes(response.data.list || []);
-      } catch (err) {
-        console.error('Error fetching recipes:', err.response || err);
-        setErrorMessage('Failed to fetch recipes. Please try again.');
-      } finally {
-        setLoading(false);
-      }
+                if (response.data.recipes && Array.isArray(response.data.recipes)) {
+                    setRecipes(response.data.recipes);
+                } else {
+                    throw new Error('Invalid API response: Expected an array of recipes.');
+                }
+            } catch (err) {
+                setError(err.response?.data?.error || err.message || 'Failed to fetch recipes.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchRecipes();
+    }, []);
+
+    const fetchRecipeDetails = async (mealID) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) throw new Error('Unauthorized: No token found');
+
+            // Corrected URL: Use template literals for dynamic mealID
+            const response = await axios.get(`http://localhost:8081/client/${mealID}/recipe`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (response.data.recipe) {
+                setSelectedRecipe(response.data.recipe);
+            } else {
+                throw new Error('Recipe details not found.');
+            }
+        } catch (err) {
+            setError(err.response?.data?.error || err.message || 'Failed to fetch recipe details.');
+        }
     };
 
-    fetchRecipes();
-  }, []);
+    const toggleDropdown = () => {
+        setDropdownVisible(!dropdownVisible);
+    };
 
-  const handleRecipeSelect = async (recipeID) => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) throw new Error('Unauthorized: No token found');
-
-      const response = await axios.get(`http://localhost:8081/client/recipes/${recipeID}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-  
-      console.log('Recipe API Response:', response.data); 
-      const recipeData = response.data;
-
-      const ingredients = recipeData.ingredients
-        ? recipeData.ingredients.split(';').map((ing) => ing.trim())
-        : [];
-      const preparation = recipeData.preparation
-        ? recipeData.preparation.split(';').map((step) => step.trim())
-        : [];
-
-      setSelectedRecipe({
-        ...recipeData,
-        ingredients,
-        preparation,
-      });
-    } catch (err) {
-      console.error('Error fetching recipe details:', err.response || err);
-      setErrorMessage('Failed to fetch recipe details. Please try again.');
-    }
-  };
-
-  if (loading) return <p>Loading recipes...</p>;
-  if (errorMessage) return <p>{errorMessage}</p>;
+    if (loading) return <p>Loading recipes...</p>;
 
   return (
-    <div>
-      <h1>Recipes</h1>
-      <div>
-        <label htmlFor="recipe-select">Select a Recipe: </label>
-        <select
-          id="recipe-select"
-          onChange={(e) => handleRecipeSelect(e.target.value)}
-          defaultValue=""
+    <div style={{ fontFamily: 'Rubik, sans-serif', padding: '20px', width: '90vw', margin: '0 auto' }}>
+      <h1 style={{ textAlign: 'center', color: '#333', fontSize: '2rem', fontWeight: 'bold' }}>Client Recipe List</h1>
+      {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+
+      <div style={{ textAlign: 'center', margin: '20px 0', position: 'relative' }}>
+        <button
+          type="button"
+          onClick={toggleDropdown}
+          style={{
+            padding: '12px 24px',
+            background: '#28a745',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '12px',
+            fontSize: '16px',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '200px',
+            margin: '0 auto',
+          }}
         >
-          <option value="" disabled>
-            -- Select a Recipe --
-          </option>
-          {recipes.map((recipe) => (
-            <option key={recipe.RecipeID} value={recipe.RecipeID}>
-              {recipe.Name}
-            </option>
-          ))}
-        </select>
+          Select a Recipe
+          <span style={{ marginLeft: '8px', fontSize: '16px' }}>▼</span>
+        </button>
       </div>
 
+      {dropdownVisible && (
+        <ul
+          style={{
+            position: 'absolute',
+            background: '#f8f9fa',
+            border: '1px solid #ccc',
+            borderRadius: '12px',
+            listStyle: 'none',
+            padding: '10px 0',
+            margin: '5px 0',
+            width: '250px',
+            zIndex: 1000,
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            left: '50%',
+            transform: 'translateX(-50%)',
+          }}
+        >
+          {recipes.map((recipe) => (
+            <li
+              key={recipe.id}
+              onClick={() => {
+                fetchRecipeDetails(recipe.id);
+                setDropdownVisible(false);
+              }}
+              style={{
+                padding: '12px 20px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                color: '#333',
+                borderBottom: '1px solid #ddd',
+                textAlign: 'center',
+              }}
+            >
+              {recipe.name}
+            </li>
+          ))}
+        </ul>
+      )}
+
       {selectedRecipe && (
-        <div>
-          <h2>{selectedRecipe.name}</h2>
-          <h3>Ingredients</h3>
-          {selectedRecipe.ingredients.length > 0 ? (
-            <ul>
-              {selectedRecipe.ingredients.map((ingredient, idx) => (
-                <li key={idx}>{ingredient}</li>
-              ))}
-            </ul>
-          ) : (
-            <p>No ingredients found.</p>
-          )}
-          <h3>Preparation Steps</h3>
-          {selectedRecipe.preparation.length > 0 ? (
-            <ol>
-              {selectedRecipe.preparation.map((step, idx) => (
-                <li key={idx}>{step}</li>
-              ))}
-            </ol>
-          ) : (
-            <p>No preparation steps found.</p>
-          )}
+        <div style={{ marginTop: '30px', textAlign: 'center' }}>
+          <h2 style={{ color: 'black', fontSize: '1.5rem', marginBottom: '20px' }}>{selectedRecipe.name}</h2>
+
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'stretch',
+              gap: '20px',
+              flexWrap: 'wrap',
+              margin: '0 auto',
+              maxWidth: '80%',
+            }}
+          >
+            <div
+              style={{
+                background: '#A5D6A7',
+                borderRadius: '20px',
+                padding: '20px',
+                flex: '1 1 300px',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                minWidth: '300px',
+                maxWidth: '400px',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <h3 style={{ color: 'black', marginBottom: '10px', fontSize: '1.25rem', textAlign: 'center' }}>Ingredients</h3>
+              <ul
+                style={{
+                  fontSize: '16px',
+                  color: '#555',
+                  lineHeight: '1.6',
+                  paddingLeft: '20px',
+                  margin: '0',
+                  textAlign: 'left',
+                }}
+              >
+                {selectedRecipe.ingredients.map((ingredient, index) => (
+                  <li key={index} style={{ marginBottom: '5px' }}>
+                    {ingredient}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div
+              style={{
+                background: '#A5D6A7',
+                borderRadius: '20px',
+                padding: '20px',
+                flex: '1 1 300px',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                minWidth: '300px',
+                maxWidth: '400px',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <h3 style={{ color: 'black', marginBottom: '10px', fontSize: '1.25rem', textAlign: 'center' }}>Preparation</h3>
+              <ul
+                style={{
+                  fontSize: '16px',
+                  color: '#555',
+                  lineHeight: '1.6',
+                  paddingLeft: '20px',
+                  margin: '0',
+                  textAlign: 'left',
+                }}
+              >
+                {selectedRecipe.preparation.map((step, index) => (
+                  <li key={index} style={{ marginBottom: '5px' }}>
+                    {step}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       )}
     </div>
   );
-}
+};
 
 export default ClientRecipesPage;

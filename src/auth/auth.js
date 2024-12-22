@@ -1,32 +1,63 @@
 import axios from 'axios';
-import { setToken, getToken, removeToken } from './token';
+import { setToken, setUserId, setUserType } from './token'; 
 
 const BASE_URL = 'http://localhost:8081';
 
+/**
+ * Handles user signup
+ * @param {Object} formData - The data required for user signup.
+ * @returns {Object} - The token, clientId, and userType from the server response.
+ * @throws {Error} - Throws an error if the server response is invalid or the request fails.
+ */
 export const signup = async (formData) => {
   try {
     const response = await axios.post(`${BASE_URL}/signup`, formData);
-    const token = response.data.created.Token; 
+
+    const { created } = response.data || {};
+    const token = created?.token;
+    const clientId = created?.id; 
+    const userType = created?.user_type;
+
+    if (!token || !clientId || !userType) {
+      throw new Error('Missing token, clientId, or userType in server response.');
+    }
+
     setToken(token);
-    return response.data;
+    setUserId(clientId);
+    setUserType(userType);
+
+    return { token, clientId, userType };
   } catch (error) {
-    console.error('Signup error:', error.response || error.message);
-    throw error;
+    const serverError = error.response?.data?.err || error.message || 'Signup failed.';
+    console.error('Signup error:', serverError);
+    throw new Error(serverError);
   }
 };
 
+/**
+ * Handles user login
+ * @param {Object} credentials - The email, password, and userType for login.
+ * @returns {Object} - The token, clientId, and userType from the server response.
+ * @throws {Error} - Throws an error if the server response is invalid or the request fails.
+ */
 export const login = async (credentials) => {
   try {
-    const response = await axios.post(`${BASE_URL}/login`, { ...credentials, userType: 'ADMIN' });
-    const token = response.data.token; 
-    setToken(token);
-    return response.data;
-  } catch (error) {
-    console.error('Login error:', error.response || error.message);
-    throw error;
-  }
-};
+    const response = await axios.post(`${BASE_URL}/login`, credentials);
 
-export const logout = () => {
-  removeToken();
+    const { token, id: clientId, userType } = response.data || {};
+
+    if (!token || !clientId || !userType) {
+      throw new Error('Missing token, clientId, or userType in server response.');
+    }
+
+    setToken(token);
+    setUserId(clientId);
+    setUserType(userType);
+
+    return { token, clientId, userType };
+  } catch (error) {
+    const serverError = error.response?.data?.err || error.message || 'Login failed.';
+    console.error('Login error:', serverError);
+    throw new Error(serverError);
+  }
 };

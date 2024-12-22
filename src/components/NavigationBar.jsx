@@ -21,7 +21,7 @@ const NavigationBar = () => {
           <MonitorWeightOutlinedIcon className="nav-icon" />
           <span>Weight Update</span>
         </Link>
-        <Link to="/client/:client_id/diet" className={`nav-link ${location.pathname === '/client/:client_id/diet' ? 'active' : ''}`}>
+        <Link to="/client/${clientId}/diet" className={`nav-link ${location.pathname === '/client/:client_id/diet' ? 'active' : ''}`}>
           <ArticleOutlinedIcon className="nav-icon" />
           <span>Diet Plan</span>
         </Link>

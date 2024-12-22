@@ -1,87 +1,104 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import '../styles/Signup.css';
+import React, { useState } from "react";
+import axios from "axios";
 
 const Signup = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    userType: "CLIENT",
+  });
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleSignup = async (e) => {
     e.preventDefault();
-
+    setError(null);
     try {
-      const response = await axios.post('http://localhost:8081/signup', {
-        email,
-        password,
-        firstName,
-        lastName,
-        phoneNumber,
+      await axios.post("http://localhost:8081/signup", formData);
+      setSuccess("Signup successful! Please log in.");
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        userType: "CLIENT",
       });
-      const { token } = response.data;
-      localStorage.setItem('token', token);
-      console.log('Token:', token);
-      window.location.href = '/login'; 
     } catch (err) {
-      setError('Signup failed. Please try again.');
-      console.error('Signup error:', err);
+      setError(err.response?.data?.err || "Signup failed. Please try again.");
+      console.error("Signup error:", err);
     }
   };
 
   return (
-    <div className="signup-container">
+    <div>
       <h1>Signup</h1>
-      {error && <div className="error-message">{error}</div>}
-      <form onSubmit={handleSignup} className="signup-form">
-        <div className="form-group">
-          <label>First Name</label>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {success && <p style={{ color: "green" }}>{success}</p>}
+      <form onSubmit={handleSignup}>
+        <label>
+          First Name:
           <input
             type="text"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
             required
           />
-        </div>
-        <div className="form-group">
-          <label>Last Name</label>
+        </label>
+        <br />
+        <label>
+          Last Name:
           <input
             type="text"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
             required
           />
-        </div>
-        <div className="form-group">
-          <label>Email</label>
+        </label>
+        <br />
+        <label>
+          Email:
           <input
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
             required
           />
-        </div>
-        <div className="form-group">
-          <label>Password</label>
+        </label>
+        <br />
+        <label>
+          Password:
           <input
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
             required
           />
-        </div>
-        <div className="form-group">
-          <label>Phone Number</label>
-          <input
-            type="tel"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" className="signup-button">Signup</button>
+        </label>
+        <br />
+        <label>
+          User Type:
+          <select
+            name="userType"
+            value={formData.userType}
+            onChange={handleChange}
+          >
+            <option value="CLIENT">Client</option>
+            <option value="ADMIN">Admin</option>
+          </select>
+        </label>
+        <br />
+        <button type="submit">Sign Up</button>
       </form>
     </div>
   );

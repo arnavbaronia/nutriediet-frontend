@@ -1,61 +1,81 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import '../styles/Login.css';
+import React, { useState } from "react";
+import axios from "axios";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [credentials, setCredentials] = useState({
+    email: "",
+    password: "",
+    userType: "CLIENT",
+  });
   const [error, setError] = useState(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCredentials({ ...credentials, [name]: value });
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
+    setError(null);
     try {
-      const response = await axios.post('http://localhost:8081/login', { 
-        email: "nutriedietplan@gmail.com", 
-        password: "Flamingo@123", 
-        user_type: 'ADMIN' 
-      });
-      const { token, userType } = response.data;
-      localStorage.setItem('token', token);
-      localStorage.setItem('userType', userType);
-      console.log('Token:', token);
-      console.log('UserType:', userType);
-      if (userType === 'ADMIN') {
-        window.location.href = '/admin/dashboard'; 
-      } else {
-        setError('Unauthorized access');
-      }
-    } catch (err) {
-      setError('Login failed. Please check your credentials and try again.');
-      console.error('Login error:', err);
+      const response = await axios.post("http://localhost:8081/login", credentials);
+      const { token, refreshToken, userType, id, email } = response.data;
+      localStorage.setItem("token", token);
+      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("userType", userType);
+      localStorage.setItem("clientId", id);
+      localStorage.setItem("email", email);
+      console.log("Login successful:", { token, userType, id });
+      console.log("Login response data:", response.data);
+      setTimeout(() => {
+        window.location.href = userType === "CLIENT" ? "/diet" : "/dashboard";
+      }, 13000);
+      } catch (err) {
+      setError(err.response?.data?.err || "Login failed. Please try again.");
+      console.error("Login error:", err);
     }
   };
 
   return (
-    <div className="login-container">
+    <div>
       <h1>Login</h1>
-      {error && <div className="error-message">{error}</div>}
-      <form onSubmit={handleLogin} className="login-form">
-        <div className="form-group">
-          <label>Email</label>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <form onSubmit={handleLogin}>
+        <label>
+          Email:
           <input
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            value={credentials.email}
+            onChange={handleChange}
             required
           />
-        </div>
-        <div className="form-group">
-          <label>Password</label>
+        </label>
+        <br />
+        <label>
+          Password:
           <input
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+            value={credentials.password}
+            onChange={handleChange}
             required
           />
-        </div>
-        <button type="submit" className="login-button">Login</button>
+        </label>
+        <br />
+        <label>
+          User Type:
+          <select
+            name="userType"
+            value={credentials.userType}
+            onChange={handleChange}
+          >
+            <option value="CLIENT">Client</option>
+            <option value="ADMIN">Admin</option>
+          </select>
+        </label>
+        <br />
+        <button type="submit">Log In</button>
       </form>
     </div>
   );
