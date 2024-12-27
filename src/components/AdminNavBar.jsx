@@ -1,13 +1,26 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import '../styles/NavigationBar.css'; 
+import React, { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import '../styles/NavigationBar.css';
 import logo from '../assets/Nutriediet_Logo_Transparent.png';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 const AdminNavBar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const isActive = (path) => {
     return location.pathname === path ? 'active' : '';
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user_type");
+    localStorage.removeItem("clientId");
+    localStorage.removeItem("email");
+
+    navigate('/login'); 
   };
 
   return (
@@ -26,8 +39,29 @@ const AdminNavBar = () => {
         <Link to="/admin/creatediet" className={`nav-link ${isActive('/admin/creatediet')}`}>Create Diet</Link>
         <Link to="/admin/reminders" className={`nav-link ${isActive('/admin/reminders')}`}>Reminders</Link>
         <Link to="/admin/faq-content" className={`nav-link ${isActive('/admin/faq-content')}`}>FAQ Content</Link>
-        <Link to="/admin/logout" className="nav-link">Logout</Link>
+        <button className="logout-button nav-link" onClick={() => setShowLogoutModal(true)}>
+          <ExitToAppIcon className="nav-icon" />
+          <span>Logout</span>
+        </button>
       </div>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2>Confirm Logout</h2>
+            <p>Are you sure you want to log out?</p>
+            <div className="modal-buttons">
+              <button className="confirm-button" onClick={handleLogout}>
+                Confirm
+              </button>
+              <button className="cancel-button" onClick={() => setShowLogoutModal(false)}>
+                Go Back
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };

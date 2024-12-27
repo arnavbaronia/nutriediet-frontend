@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "../styles/Signup.css";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -37,68 +38,50 @@ const Signup = () => {
   };
 
   return (
-    <div>
-      <h1>Signup</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>{success}</p>}
-      <form onSubmit={handleSignup}>
-        <label>
-          First Name:
-          <input
-            type="text"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <br />
-        <label>
-          Last Name:
-          <input
-            type="text"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <br />
-        <label>
-          Email:
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <br />
-        <label>
-          Password:
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <br />
-        <label>
-          User Type:
-          <select
-            name="user_type"
-            value={formData.user_type}
-            onChange={handleChange}
-          >
-            <option value="CLIENT">Client</option>
-            <option value="ADMIN">Admin</option>
-          </select>
-        </label>
-        <br />
-        <button type="submit">Sign Up</button>
+    <div className="signup-wrapper">
+      <form onSubmit={handleSignup} className="signup-form">
+        <h1>Sign Up</h1>
+        {error && <p className="error-message">{error}</p>}
+        {success && <p className="success-message">{success}</p>}
+        <input
+          type="text"
+          name="first_name"
+          placeholder="First Name"
+          value={formData.first_name}
+          onChange={handleChange}
+          className="input-field"
+          required
+        />
+        <input
+          type="text"
+          name="last_name"
+          placeholder="Last Name"
+          value={formData.last_name}
+          onChange={handleChange}
+          className="input-field"
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          className="input-field"
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+          className="input-field"
+          required
+        />
+        <button type="submit" className="submit-button">
+          Sign Up
+        </button>
       </form>
     </div>
   );
