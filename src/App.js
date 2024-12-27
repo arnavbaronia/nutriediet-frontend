@@ -27,11 +27,11 @@ import Signup from './components/Signup';
 import Login from './components/Login';
 import './App.css';
 
-const ProtectedRoute = ({ component: Component, requiredUserType, ...rest }) => {
+const ProtectedRoute = ({ component: Component, requireduser_type, ...rest }) => {
   const token = localStorage.getItem('token');
-  const userType = localStorage.getItem('userType');
+  const user_type = localStorage.getItem('user_type');
 
-  if (!token || (requiredUserType && userType !== requiredUserType)) {
+  if (!token || (requireduser_type && user_type !== requireduser_type)) {
     return <Navigate to="/login" />;
   }
 
@@ -60,16 +60,16 @@ function App() {
             <Route path="/client/recipes" element={<ProtectedRoute component={ClientRecipesPage} />} />
             <Route path="/admin/appointments" element={<ProtectedRoute component={AppointmentsPage} />} />
             <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
-            <Route path="/admin/dashboard" element={<ProtectedRoute requiredUserType="ADMIN" component={AdminDashboard} />} />
-            <Route path="/admin/clients" element={<ProtectedRoute requiredUserType="ADMIN" component={ClientsPage} />} />
-            <Route path="/admin/client/:client_id" element={<ProtectedRoute requiredUserType="ADMIN" component={ClientDetailsPage} />} />
-            <Route path="/admin/diet-templates" element={<ProtectedRoute requiredUserType="ADMIN" component={DietTemplatesPage} />} />
+            <Route path="/admin/dashboard" element={<ProtectedRoute requireduser_type="ADMIN" component={AdminDashboard} />} />
+            <Route path="/admin/clients" element={<ProtectedRoute requireduser_type="ADMIN" component={ClientsPage} />} />
+            <Route path="/admin/client/:client_id" element={<ProtectedRoute requireduser_type="ADMIN" component={ClientDetailsPage} />} />
+            <Route path="/admin/diet-templates" element={<ProtectedRoute requireduser_type="ADMIN" component={DietTemplatesPage} />} />
             <Route path="/admin/recipes" element={<AdminRecipeListPage />} />
-            <Route path="/admin/recipes/new" element={<ProtectedRoute requiredUserType="ADMIN" component={RecipesPage} />} />
-            <Route path="/admin/exercises" element={<ProtectedRoute requiredUserType="ADMIN" component={ExercisesPage} />} />
-            <Route path="/admin/creatediet" element={<ProtectedRoute requiredUserType="ADMIN" component={CreateDietPage} />} />
-            <Route path="/admin/reminders" element={<ProtectedRoute requiredUserType="ADMIN" component={RemindersPage} />} />
-            <Route path="/admin/faq-content" element={<ProtectedRoute requiredUserType="ADMIN" component={FaqContentPage} />} />
+            <Route path="/admin/recipes/new" element={<ProtectedRoute requireduser_type="ADMIN" component={RecipesPage} />} />
+            <Route path="/admin/exercises" element={<ProtectedRoute requireduser_type="ADMIN" component={ExercisesPage} />} />
+            <Route path="/admin/creatediet" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateDietPage} />} />
+            <Route path="/admin/reminders" element={<ProtectedRoute requireduser_type="ADMIN" component={RemindersPage} />} />
+            <Route path="/admin/faq-content" element={<ProtectedRoute requireduser_type="ADMIN" component={FaqContentPage} />} />
           </Routes>
         </div>
         <Footer />

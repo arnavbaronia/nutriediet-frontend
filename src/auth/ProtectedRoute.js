@@ -1,19 +1,19 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { getToken, getUserType } from './token';
+import { getToken, getuser_type } from './token';
 
-const ProtectedRoute = ({ component: Component, requiredUserType, ...rest }) => {
+const ProtectedRoute = ({ component: Component, requireduser_type, ...rest }) => {
   const token = getToken();
-  const userType = getUserType();
+  const user_type = getuser_type();
 
   console.log('ProtectedRoute: token:', token);
-  console.log('ProtectedRoute: userType:', userType);
+  console.log('ProtectedRoute: user_type:', user_type);
 
   if (!token) {
     return <Navigate to="/login" />;
   }
 
-  if (requiredUserType && userType !== requiredUserType) {
+  if (requireduser_type && user_type !== requireduser_type) {
     return <Navigate to="/signup" />;
   }
 

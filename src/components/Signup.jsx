@@ -3,11 +3,11 @@ import axios from "axios";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     email: "",
     password: "",
-    userType: "CLIENT",
+    user_type: "CLIENT",
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -24,11 +24,11 @@ const Signup = () => {
       await axios.post("http://localhost:8081/signup", formData);
       setSuccess("Signup successful! Please log in.");
       setFormData({
-        firstName: "",
-        lastName: "",
+        first_name: "",
+        last_name: "",
         email: "",
         password: "",
-        userType: "CLIENT",
+        user_type: "CLIENT",
       });
     } catch (err) {
       setError(err.response?.data?.err || "Signup failed. Please try again.");
@@ -89,8 +89,8 @@ const Signup = () => {
         <label>
           User Type:
           <select
-            name="userType"
-            value={formData.userType}
+            name="user_type"
+            value={formData.user_type}
             onChange={handleChange}
           >
             <option value="CLIENT">Client</option>

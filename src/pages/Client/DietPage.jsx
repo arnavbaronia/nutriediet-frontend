@@ -8,10 +8,10 @@ const DietPage = () => {
     const fetchDiet = async () => {
       const token = localStorage.getItem("token");
       const clientId = localStorage.getItem("clientId");
-      const userType = localStorage.getItem("userType"); 
-      console.log("Stored userType:", localStorage.getItem("userType"));
+      const user_type = localStorage.getItem("user_type"); 
+      console.log("Stored user_type:", localStorage.getItem("user_type"));
       console.log("Stored clientId:", localStorage.getItem("clientId"));
-      if (!token || !clientId || userType !== "CLIENT") {
+      if (!token || !clientId || user_type !== "CLIENT") {
         setError("You must be logged in as a client to view this page.");
         localStorage.clear(); 
         window.location.href = "/login";

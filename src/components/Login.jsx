@@ -5,7 +5,7 @@ const Login = () => {
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
-    userType: "CLIENT",
+    user_type: "CLIENT",
   });
   const [error, setError] = useState(null);
 
@@ -17,24 +17,37 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
+    console.log("Login attempt with email:", credentials.email);
+    console.log("Login attempt with user_type:", credentials.user_type);
+  
     try {
       const response = await axios.post("http://localhost:8081/login", credentials);
-      const { token, refreshToken, userType, id, email } = response.data;
+  
+      const { token, refreshToken, user_type: user_typeFromBackend, id, email } = response.data || {};
+      const user_type = user_typeFromBackend; 
+  
+      console.log("Email returned from backend:", email);
+      console.log("user_type returned from backend:", user_type);
+  
       localStorage.setItem("token", token);
       localStorage.setItem("refreshToken", refreshToken);
-      localStorage.setItem("userType", userType);
+      localStorage.setItem("user_type", user_type);
       localStorage.setItem("clientId", id);
       localStorage.setItem("email", email);
-      console.log("Login successful:", { token, userType, id });
+  
+      console.log("Stored email:", localStorage.getItem("email"));
+      console.log("Stored user_type:", localStorage.getItem("user_type"));
+      console.log("Login successful:", { token, user_type, id });
       console.log("Login response data:", response.data);
+  
       setTimeout(() => {
-        window.location.href = userType === "CLIENT" ? "/diet" : "/dashboard";
+        window.location.href = user_type === "CLIENT" ? "/diet" : "/admin/dashboard";
       }, 13000);
-      } catch (err) {
+    } catch (err) {
       setError(err.response?.data?.err || "Login failed. Please try again.");
       console.error("Login error:", err);
     }
-  };
+  };  
 
   return (
     <div>
@@ -66,8 +79,8 @@ const Login = () => {
         <label>
           User Type:
           <select
-            name="userType"
-            value={credentials.userType}
+            name="user_type"
+            value={credentials.user_type}
             onChange={handleChange}
           >
             <option value="CLIENT">Client</option>

@@ -18,10 +18,10 @@ export const getUserId = () => {
   return localStorage.getItem('userId');
 };
 
-export const setUserType = (userType) => {
-  localStorage.setItem('userType', userType);
+export const setuser_type = (user_type) => {
+  localStorage.setItem('user_type', user_type);
 };
 
-export const getUserType = () => {
-  return localStorage.getItem('userType');
+export const getuser_type = () => {
+  return localStorage.getItem('user_type');
 };
