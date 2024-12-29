@@ -41,9 +41,7 @@ const Login = () => {
       localStorage.setItem("clientId", id);
       localStorage.setItem("email", email);
 
-      setTimeout(() => {
-        window.location.href = user_type === "CLIENT" ? "/client" : "/admin/dashboard";
-      }, 3000);
+      window.location.href = user_type === "CLIENT" ? "/client" : "/admin/dashboard";
     } catch (err) {
       setError(err.response?.data?.err || "Login failed. Please try again.");
     }

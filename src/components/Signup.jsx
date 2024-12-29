@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "../styles/Signup.css";
 
 const Signup = () => {
@@ -10,8 +11,9 @@ const Signup = () => {
     password: "",
     user_type: "CLIENT",
   });
+
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,16 +23,12 @@ const Signup = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     setError(null);
+
     try {
-      await axios.post("http://localhost:8081/signup", formData);
-      setSuccess("Signup successful! Please log in.");
-      setFormData({
-        first_name: "",
-        last_name: "",
-        email: "",
-        password: "",
-        user_type: "CLIENT",
-      });
+      await axios.post("http://localhost:8081/signup", formData);      
+      localStorage.setItem("firstName", formData.first_name);
+      localStorage.setItem("lastName", formData.last_name);      
+      navigate(`/create_profile/${formData.email}`);
     } catch (err) {
       setError(err.response?.data?.err || "Signup failed. Please try again.");
       console.error("Signup error:", err);
@@ -40,9 +38,9 @@ const Signup = () => {
   return (
     <div className="signup-wrapper">
       <form onSubmit={handleSignup} className="signup-form">
-        <h1>Sign Up</h1>
+        <h1>Sign-Up</h1>
         {error && <p className="error-message">{error}</p>}
-        {success && <p className="success-message">{success}</p>}
+        
         <input
           type="text"
           name="first_name"
@@ -79,9 +77,7 @@ const Signup = () => {
           className="input-field"
           required
         />
-        <button type="submit" className="submit-button">
-          Sign Up
-        </button>
+        <button type="submit" className="submit-button">Sign Up</button>
       </form>
     </div>
   );

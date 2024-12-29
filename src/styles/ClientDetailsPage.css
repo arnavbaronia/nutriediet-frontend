@@ -34,7 +34,7 @@
 }
 
 .client-input {
-    width: 100%;
+    width: 95%;
     padding: 8px;
     font-size: 16px;
     margin-top: 5px;
@@ -42,9 +42,9 @@
 }
 
 .client-textarea {
-    width: 100%;
+    width: 98%;
     height: 100px;
-    padding: 10px;
+    padding: 8px;
     font-size: 16px;
     border-radius: 10px; 
 }

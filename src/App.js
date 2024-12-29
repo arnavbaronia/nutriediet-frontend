@@ -7,6 +7,8 @@ import AdminDashboard from './pages/Admin/AdminDashboard';
 import DietPage from './pages/Client/DietPage';
 import ExercisePage from './pages/Client/ExercisePage';
 import ProfilePage from './pages/Client/ProfilePage';
+import CreateProfilePage from './pages/Client/CreateProfilePage';
+import AccountActivationPage from './pages/Client/AccountActivationPage';
 import WeightUpdatePage from './pages/Client/WeightUpdatePage';
 import ClientRecipesPage from './pages/Client/ClientRecipesPage';
 import AppointmentsPage from './pages/Admin/AppointmentsPage';
@@ -52,6 +54,8 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/create_profile/:email" element={<CreateProfilePage />} />
+            <Route path="/account-activation" element={<AccountActivationPage />} />
             <Route path="/client/:client_id" element={<ProtectedRoute component={ClientPage} />} />
             <Route path="/client/:client_id/diet" element={<ProtectedRoute component={DietPage} />} />
             <Route path="/client/:client_id/exercise" element={<ProtectedRoute component={ExercisePage} />} />

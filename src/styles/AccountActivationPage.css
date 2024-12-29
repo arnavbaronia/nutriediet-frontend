@@ -1,0 +1,28 @@
+.page-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh; 
+    padding: 20px;
+  }
+  
+  .account-activation-container {
+    text-align: center;
+    padding: 40px;
+    width: 70%; 
+    max-width: 400px; 
+    height: 150px; 
+    border: 1px solid #ccc;
+    border-radius: 20px; 
+    background-color: #a5d6aa;
+  }
+  
+  .account-activation-heading {
+    font-size: 28px; 
+    margin-bottom: 35px;
+  }
+  
+  .account-activation-text {
+    font-size: 18px; 
+  }
+  

@@ -38,8 +38,8 @@ const ClientsPage = () => {
   useEffect(() => {
     setFilteredClients(
       clients.filter(client =>
-        client.name.toLowerCase().includes(search.toLowerCase()) ||
-        client.email.toLowerCase().includes(search.toLowerCase())
+        (client.name?.toLowerCase() || '').includes(search.toLowerCase()) ||
+        (client.email?.toLowerCase() || '').includes(search.toLowerCase())
       )
     );
   }, [search, clients]);
@@ -79,8 +79,8 @@ const ClientsPage = () => {
           {filteredClients.map(client => (
             <tr key={client.id}>
               <td>{client.id}</td>
-              <td>{client.name}</td>
-              <td>{client.email}</td>
+              <td>{client.name || 'N/A'}</td>
+              <td>{client.email || 'N/A'}</td>
               <td>{client.next_payment_date === "0001-01-01T05:30:00+05:30" ? 'N/A' : new Date(client.next_payment_date).toLocaleDateString()}</td>
               <td>{client.last_diet_date ? new Date(client.last_diet_date).toLocaleDateString() : 'N/A'}</td>
               <td>
