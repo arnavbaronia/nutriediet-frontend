@@ -24,11 +24,20 @@ const Signup = () => {
     e.preventDefault();
     setError(null);
 
+    const payload = {
+      ...formData,
+      name: `${formData.first_name.trim()} ${formData.last_name.trim()}`.trim(),
+    };
+
     try {
-      await axios.post("http://localhost:8081/signup", formData);      
+      const response = await axios.post("http://localhost:8081/signup", payload);
+
+      const { token } = response.data || {};
+
       localStorage.setItem("firstName", formData.first_name);
-      localStorage.setItem("lastName", formData.last_name);      
-      navigate(`/create_profile/${formData.email}`);
+      localStorage.setItem("lastName", formData.last_name);
+
+      navigate(`/create_profile/${formData.email}`, { state: { token } });
     } catch (err) {
       setError(err.response?.data?.err || "Signup failed. Please try again.");
       console.error("Signup error:", err);
@@ -40,7 +49,7 @@ const Signup = () => {
       <form onSubmit={handleSignup} className="signup-form">
         <h1>Sign-Up</h1>
         {error && <p className="error-message">{error}</p>}
-        
+
         <input
           type="text"
           name="first_name"
@@ -77,7 +86,9 @@ const Signup = () => {
           className="input-field"
           required
         />
-        <button type="submit" className="submit-button">Sign Up</button>
+        <button type="submit" className="submit-button">
+          Sign Up
+        </button>
       </form>
     </div>
   );

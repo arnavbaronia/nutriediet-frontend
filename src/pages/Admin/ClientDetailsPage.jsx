@@ -7,6 +7,8 @@ const ClientDetailsPage = () => {
   const { client_id } = useParams();
   const [client, setClient] = useState({
     name: '',
+    first_name: '',
+    last_name: '',
     age: '',
     email: '',
     city: '',
@@ -32,19 +34,32 @@ const ClientDetailsPage = () => {
   const [isActive, setIsActive] = useState(true);
   const [diets, setDiets] = useState([]);
 
+  const formatDate = (date) => {
+    if (!date) return ''; 
+    const isoDate = new Date(date).toISOString();
+    return isoDate.split('T')[0]; 
+  };
+
   useEffect(() => {
     const token = localStorage.getItem('token');
-    axios.get(`http://localhost:8081/admin/client/${client_id}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(response => {
+    axios
+      .get(`http://localhost:8081/admin/client/${client_id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
         const clientData = response.data.client;
-        setClient(clientData);
+
+        const name = clientData.name?.trim() || `${clientData.first_name?.trim() || ''} ${clientData.last_name?.trim() || ''}`.trim() || 'N/A';
+        setClient({
+          ...clientData,
+          name,
+        });
+
         setDiets(response.data.diets);
         setIsActive(clientData.is_active);
         setLoading(false);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error fetching client details:', error);
         setError('Error fetching client details. Please try again later.');
         setLoading(false);
@@ -77,13 +92,39 @@ const ClientDetailsPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
-    axios.put(`http://localhost:8081/admin/client/${client_id}`, client, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(response => {
-        setClient(response.data.client);
+
+    const payload = {
+      first_name: client.first_name || '',
+      last_name: client.last_name || '',
+      age: client.age || null,
+      email: client.email || '',
+      city: client.city || '',
+      phone_number: client.phone_number || '',
+      height: client.height || null,
+      starting_weight: client.starting_weight || null,
+      dietary_preference: client.dietary_preference || '',
+      medical_history: client.medical_history || '',
+      allergies: client.allergies || '',
+      locality: client.locality || '',
+      diet_recall: client.diet_recall || '',
+      exercise: client.exercise || '',
+      package: client.package || '',
+      amount_paid: client.amount_paid || null,
+      remarks: client.remarks || '',
+      next_payment_date: client.next_payment_date ? formatDate(client.next_payment_date) : null,
+      last_payment_date: client.last_payment_date ? formatDate(client.last_payment_date) : null,
+      date_of_joining: client.date_of_joining ? formatDate(client.date_of_joining) : null,
+    };
+
+    axios
+      .post(`http://localhost:8081/admin/client/${client_id}`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
       })
-      .catch(error => {
+      .then((response) => {
+        setClient(response.data.client);
+        setError(null);
+      })
+      .catch((error) => {
         console.error('Error updating client info:', error);
         setError('Error updating client info.');
       });
@@ -276,7 +317,7 @@ const ClientDetailsPage = () => {
               type="date"
               id="next_payment_date"
               name="next_payment_date"
-              value={client.next_payment_date}
+              value={formatDate(client.next_payment_date)}
               className="client-input"
               onChange={handleChange}
             />
@@ -287,7 +328,7 @@ const ClientDetailsPage = () => {
               type="date"
               id="last_payment_date"
               name="last_payment_date"
-              value={client.last_payment_date}
+              value={formatDate(client.last_payment_date)}
               className="client-input"
               onChange={handleChange}
             />
@@ -298,7 +339,7 @@ const ClientDetailsPage = () => {
               type="date"
               id="date_of_joining"
               name="date_of_joining"
-              value={client.date_of_joining}
+              value={formatDate(client.date_of_joining)}
               className="client-input"
               onChange={handleChange}
             />

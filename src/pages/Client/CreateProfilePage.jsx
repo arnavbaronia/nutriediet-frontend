@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from "axios";
-import { useParams } from "react-router-dom";
 import "../../styles/ProfilePage.css";
 
 const CreateProfilePage = () => {
-  const { email } = useParams(); 
+  const { email } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { token } = location.state || {};
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
+    name: "",
     age: "",
     city: "",
     phone_number: "",
@@ -27,29 +32,38 @@ const CreateProfilePage = () => {
 
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const firstName = localStorage.getItem("firstName");
     const lastName = localStorage.getItem("lastName");
+
     if (firstName && lastName) {
       setFormData((prev) => ({
         ...prev,
         first_name: firstName,
         last_name: lastName,
+        name: `${firstName} ${lastName}`.trim(),
       }));
     }
   }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+
+    setFormData((prev) => {
+      const updatedFormData = { ...prev, [name]: value };
+
+      if (name === "first_name" || name === "last_name") {
+        updatedFormData.name = `${updatedFormData.first_name} ${updatedFormData.last_name}`.trim();
+      }
+
+      return updatedFormData;
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
       const url = `http://localhost:8081/create_profile/${email}`;
 
       const processedFormData = {
@@ -64,18 +78,19 @@ const CreateProfilePage = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+
       setSuccess(true);
       setError(null);
       console.log("Profile created successfully:", response.data);
-      console.log("Data sent to backend:", processedFormData);
-      navigate('/account-activation');
+
+      navigate("/account-activation", { state: { token } });
     } catch (err) {
       setSuccess(false);
       setError(err.response?.data?.error || "An error occurred.");
       console.error("Error creating profile:", err.response?.data || err.message);
     }
   };
-
+  
   return (
     <div className="profile-container">
       <div className="form-container">
@@ -251,4 +266,4 @@ const CreateProfilePage = () => {
   );
 };
 
-export default CreateProfilePage;
+export default CreateProfilePage;          
