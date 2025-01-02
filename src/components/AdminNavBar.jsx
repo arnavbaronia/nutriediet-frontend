@@ -3,34 +3,34 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import '../styles/NavigationBar.css';
 import logo from '../assets/Nutriediet_Logo_Transparent.png';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import MenuIcon from '@mui/icons-material/Menu';
 
 const AdminNavBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const isActive = (path) => {
     return location.pathname === path ? 'active' : '';
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("user_type");
-    localStorage.removeItem("clientId");
-    localStorage.removeItem("email");
-
-    navigate('/login'); 
+    localStorage.clear();
+    navigate('/login');
   };
 
   return (
     <nav className="navigation-bar">
       <div className="nav-logo">
         <Link to="/">
-          <img src={logo} alt="Nutriediet Logo" style={{ maxWidth: '100%', maxHeight: '100%' }} className="nav-logo-img" />
+          <img src={logo} alt="Nutriediet Logo" className="nav-logo-img" />
         </Link>
       </div>
-      <div className="nav-buttons">
+      <div className="menu-icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+        <MenuIcon />
+      </div>
+      <div className={`nav-buttons ${isMobileMenuOpen ? 'show-menu' : ''}`}>
         <Link to="/admin/appointments" className={`nav-link ${isActive('/admin/appointments')}`}>Appointments</Link>
         <Link to="/admin/clients" className={`nav-link ${isActive('/admin/clients')}`}>Clients</Link>
         <Link to="/admin/diet-templates" className={`nav-link ${isActive('/admin/diet-templates')}`}>Diet Templates</Link>
@@ -45,7 +45,6 @@ const AdminNavBar = () => {
         </button>
       </div>
 
-      {/* Logout Confirmation Modal */}
       {showLogoutModal && (
         <div className="modal-overlay">
           <div className="modal-content">

@@ -26,9 +26,21 @@ body {
   height: 60px;
 }
 
+.nav-logo-img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.menu-icon {
+  display: none;
+  cursor: pointer;
+  font-size: 24px;
+}
+
 .nav-buttons {
   display: flex;
   align-items: center;
+  transition: max-height 0.3s ease;
 }
 
 .nav-link {
@@ -53,30 +65,49 @@ body {
   margin-right: 10px;
 }
 
-.nav-link span {
-  font-size: 14px;
+.logout-button {
+  color: red;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 10px;
+}
+
+.logout-button:hover {
+  background-color: red;
+  color: black;
 }
 
 @media (max-width: 768px) {
+  .menu-icon {
+    display: block;
+  }
+
   .nav-buttons {
-    justify-content: space-around;
+    flex-direction: column;
+    max-height: 0;
+    overflow: hidden;
     width: 100%;
+    background-color: var(--navbar-background-color);
+    position: absolute;
+    top: 70px;
+    left: 0;
+  }
+
+  .nav-buttons.show-menu {
+    max-height: 600px; 
   }
 
   .nav-link {
-    margin-left: 5px;
-    padding: 5px 10px;
+    margin: 10px 0;
     font-size: 16px;
   }
 
   .nav-logo {
     height: 50px;
-  }
-
-  .nav-icon {
-    margin-right: 5px;
-    height: 25px;
-    width: 25px;
   }
 }
 
@@ -95,19 +126,16 @@ body {
 
 .modal-content {
   background: #A5D6A7;
-  padding: 30px; 
-  border-radius: 15px; 
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.15); 
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.15);
   text-align: center;
-  width: 350px; 
+  width: 350px;
   max-width: 90%;
-  height: auto; 
 }
-
 
 .modal-buttons {
   margin-top: 20px;
-  /* width: 20px; */
   display: flex;
   justify-content: space-evenly;
 }
@@ -136,25 +164,4 @@ body {
 
 .cancel-button:hover {
   background-color: #c7c7c7;
-}
-
-.logout-button {
-  color: red; 
-  background: none;
-  border: none;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-size: 16px;
-  text-decoration: none;
-  padding: 10px;
-}
-
-.logout-button .nav-icon {
-  margin-right: 8px;
-}
-
-.logout-button:hover {
-  background-color: red;
-  color: black; 
 }

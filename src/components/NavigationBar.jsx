@@ -6,6 +6,7 @@ import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import MonitorWeightOutlinedIcon from '@mui/icons-material/MonitorWeightOutlined';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import MenuIcon from '@mui/icons-material/Menu';
 import '../styles/NavigationBar.css';
 import logo from '../assets/Nutriediet_Logo_Transparent.png';
 
@@ -13,40 +14,56 @@ const NavigationBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("user_type");
-    localStorage.removeItem("clientId");
-    localStorage.removeItem("email");
-
-    navigate('/login'); // Redirect to the login page
+    localStorage.clear();
+    navigate('/login');
   };
+
+  const isActive = (path) => location.pathname === path ? 'active' : '';
 
   return (
     <div className="navigation-bar">
       <Link to="/" className="nav-logo">
-        <img src={logo} alt="Logo" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+        <img src={logo} alt="Logo" className="nav-logo-img" />
       </Link>
-      <div className="nav-buttons">
-        <Link to="/client/:client_id/weight-update" className={`nav-link ${location.pathname === '/client/:client_id/weight-update' ? 'active' : ''}`}>
+      <div className="menu-icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+        <MenuIcon />
+      </div>
+      <div className={`nav-buttons ${isMobileMenuOpen ? 'show-menu' : ''}`}>
+        <Link
+          to="/client/:client_id/weight-update"
+          className={`nav-link ${isActive('/client/:client_id/weight-update')}`}
+        >
           <MonitorWeightOutlinedIcon className="nav-icon" />
           <span>Weight Update</span>
         </Link>
-        <Link to="/client/${clientId}/diet" className={`nav-link ${location.pathname === '/client/:client_id/diet' ? 'active' : ''}`}>
+        <Link
+          to="/client/:client_id/diet"
+          className={`nav-link ${isActive('/client/:client_id/diet')}`}
+        >
           <ArticleOutlinedIcon className="nav-icon" />
           <span>Diet Plan</span>
         </Link>
-        <Link to="/client/recipes" className={`nav-link ${location.pathname === '/client/:client_id/recipes' ? 'active' : ''}`}>
+        <Link
+          to="/client/:client_id/recipes"
+          className={`nav-link ${isActive('/client/:client_id/recipes')}`}
+        >
           <MenuBookIcon className="nav-icon" />
           <span>Recipes</span>
         </Link>
-        <Link to="/client/:client_id/exercise" className={`nav-link ${location.pathname === '/client/:client_id/exercise' ? 'active' : ''}`}>
+        <Link
+          to="/client/:client_id/exercise"
+          className={`nav-link ${isActive('/client/:client_id/exercise')}`}
+        >
           <FitnessCenterIcon className="nav-icon" />
           <span>Exercise</span>
         </Link>
-        <Link to="/client/:client_id/profile" className={`nav-link ${location.pathname === '/client/:client_id/profile' ? 'active' : ''}`}>
+        <Link
+          to="/client/:client_id/profile"
+          className={`nav-link ${isActive('/client/:client_id/profile')}`}
+        >
           <PersonRoundedIcon className="nav-icon" />
           <span>My Profile</span>
         </Link>
@@ -56,7 +73,6 @@ const NavigationBar = () => {
         </button>
       </div>
 
-      {/* Logout Confirmation Modal */}
       {showLogoutModal && (
         <div className="modal-overlay">
           <div className="modal-content">
