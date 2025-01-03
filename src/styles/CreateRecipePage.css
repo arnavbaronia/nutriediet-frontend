@@ -1,0 +1,116 @@
+.admin-create-recipe {
+    padding: 30px;
+    background-color: #A5D6A7;
+    border-radius: 20px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    width: 2000px;
+    max-width: 700px;
+    margin: 50px auto;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .admin-create-recipe h1 {
+    text-align: center;
+    color: black;
+    font-size: 28px;
+    margin-bottom: 30px;
+    font-weight: 700;
+  }
+  
+  .admin-create-recipe form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .admin-create-recipe input[type="text"],
+  .admin-create-recipe textarea {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    font-size: 16px;
+    font-family: 'Arial', sans-serif;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+  }
+  
+  .admin-create-recipe input:focus,
+  .admin-create-recipe textarea:focus {
+    border-color: #A5D6A7;
+    outline: none;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 8px rgba(76, 175, 80, 0.5);
+  }
+  
+  .admin-create-recipe label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: black;
+    display: block;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .admin-create-recipe button {
+    background: #004D40;
+    color: #fff;
+    border: none;
+    padding: 15px;
+    border-radius: 15px;
+    font-size: 18px;
+    font-family: 'Arial', sans-serif;
+    cursor: pointer;
+    font-weight: 600;
+    width: 30%;
+    margin: 0 auto;
+    display: block;
+    transition: all 0.3s ease;
+  }
+  
+  .admin-create-recipe button:hover {
+    background: #dc6719;
+  }
+  
+  .admin-create-recipe .success-message,
+  .admin-create-recipe .error-message {
+    border-radius: 15px;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+  }
+  
+  .admin-create-recipe .success-message {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  
+  .admin-create-recipe .error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+  
+  .admin-create-recipe input:hover,
+  .admin-create-recipe textarea:hover {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  @media (max-width: 768px) {
+    .admin-create-recipe {
+      padding: 20px;
+      max-width: 90%;
+    }
+  
+    .admin-create-recipe h1 {
+      font-size: 24px;
+    }
+  
+    .admin-create-recipe button {
+      font-size: 16px;
+      padding: 12px;
+    }
+  }
+  

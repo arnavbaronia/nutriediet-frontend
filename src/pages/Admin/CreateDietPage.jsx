@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Card } from 'react-bootstrap';
+import { FaTrashAlt, FaPlusCircle } from 'react-icons/fa';
 import axios from 'axios';
 import '../../styles/CreateDietPage.css';
 
@@ -61,14 +62,14 @@ const CreateDietPage = () => {
       <div className="meal-boxes">
         {meals[mealType].map((meal, index) => (
           <div key={index} className="meal-box">
-            <Form.Group controlId={`${mealType}-meal-${index}`} className="mb-2">
+            <Form.Group controlId={`${mealType}-meal-${index}`}>
               <Form.Control
                 as="select"
                 value={meal.meal}
                 onChange={(e) => handleMealChange(mealType, index, 'meal', e.target.value)}
                 className="custom-dropdown"
               >
-                <option value="">Select a meal</option>
+                <option value="">Choose meal</option>
                 {mealOptions.map((mealOption, idx) => (
                   <option key={idx} value={mealOption}>
                     {mealOption}
@@ -77,14 +78,14 @@ const CreateDietPage = () => {
               </Form.Control>
             </Form.Group>
 
-            <Form.Group controlId={`${mealType}-quantity-${index}`} className="mb-2">
+            <Form.Group controlId={`${mealType}-quantity-${index}`}>
               <Form.Control
                 as="select"
                 value={meal.quantity}
                 onChange={(e) => handleMealChange(mealType, index, 'quantity', e.target.value)}
                 className="custom-dropdown"
               >
-                <option value="">Select quantity</option>
+                <option value="">Set quantity</option>
                 {quantityOptions.map((quantity, idx) => (
                   <option key={idx} value={quantity}>
                     {quantity}
@@ -94,16 +95,17 @@ const CreateDietPage = () => {
             </Form.Group>
 
             <Button
-              variant="danger"
+              variant="link"
               onClick={() => removeMeal(mealType, index)}
               className="remove-meal-btn"
             >
-              &#x2715;
+              <FaTrashAlt />
             </Button>
           </div>
         ))}
         <div className="add-meal-box" onClick={() => addMeal(mealType)}>
-          <h1>+</h1>
+          <FaPlusCircle className="add-meal-icon" />
+          <p>Add Meal</p>
         </div>
       </div>
       <hr />
@@ -148,25 +150,20 @@ const CreateDietPage = () => {
       <div className="right-section">
         <h2>View Past Diets and Templates</h2>
         <div className="past-diet-section">
-          <Form.Group controlId="weekSelect" className="template-select no-gap">
+          <Form.Group controlId="weekSelect" className="template-select">
             <Form.Control as="select" className="custom-dropdown">
               <option value="">Select Week</option>
-              <option value="week1">Week 1</option>
-              <option value="week2">Week 2</option>
-              <option value="week3">Week 3</option>
-              <option value="week4">Week 4</option>
-              <option value="week5">Week 5</option>
-              <option value="week6">Week 6</option>
-              <option value="week7">Week 7</option>
-              <option value="week8">Week 8</option>
-              <option value="week9">Week 9</option>
-              <option value="week10">Week 10</option>
+              {[...Array(10)].map((_, index) => (
+                <option key={index} value={`week${index + 1}`}>
+                  Week {index + 1}
+                </option>
+              ))}
             </Form.Control>
           </Form.Group>
         </div>
 
         <div className="view-past-container">
-          <p>Here you can view past diets details...</p>
+          <p>Here you can view past diet details...</p>
         </div>
       </div>
     </div>
