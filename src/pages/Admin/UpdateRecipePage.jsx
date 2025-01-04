@@ -21,9 +21,10 @@ const AdminUpdateRecipePage = () => {
 
         const fetchedRecipe = response.data.recipe;
         setRecipe({
-          ...fetchedRecipe,
-          ingredients: Array.isArray(fetchedRecipe.ingredients) ? fetchedRecipe.ingredients.join('\n') : '', // Ensure string
-          preparation: Array.isArray(fetchedRecipe.preparation) ? fetchedRecipe.preparation.join('\n') : '', // Ensure string
+          id: fetchedRecipe.ID,
+          name: fetchedRecipe.Name,
+          ingredients: fetchedRecipe.Ingredients.join('\n'),
+          preparation: fetchedRecipe.Preparation.join('\n'),
         });
       } catch (err) {
         setError(err.response?.data?.error || err.message || 'Failed to fetch recipe.');
@@ -47,9 +48,9 @@ const AdminUpdateRecipePage = () => {
 
       const payload = {
         id: recipe.id,
-        name: recipe.name,
-        ingredients: recipe.ingredients.split('\n'), 
-        preparation: recipe.preparation.split('\n'), 
+        name: recipe.name.trim(),
+        ingredients: recipe.ingredients.split('\n').map((ing) => ing.trim()).filter(Boolean),
+        preparation: recipe.preparation.split('\n').map((prep) => prep.trim()).filter(Boolean),
       };
 
       await axios.post(

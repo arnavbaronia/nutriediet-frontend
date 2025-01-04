@@ -71,7 +71,6 @@ const AdminRecipeListPage = () => {
 
   return (
     <div className="admin-recipes-container">
-      {/* Left Section */}
       <div className="left-section">
         <h2>Recipes</h2>
         <div className="controls-container">
@@ -107,14 +106,12 @@ const AdminRecipeListPage = () => {
         {error && <p className="error-text">{error}</p>}
       </div>
 
-      {/* Right Section */}
       <div className="right-section">
         {selectedRecipe ? (
           <div>
             <h2>{selectedRecipe.Name}</h2>
 
             <div className="recipe-details">
-              {/* Ingredients */}
               <div className="recipe-section">
                 <h3>Ingredients</h3>
                 <ul>
@@ -124,7 +121,6 @@ const AdminRecipeListPage = () => {
                 </ul>
               </div>
 
-              {/* Preparation */}
               <div className="recipe-section">
                 <h3>Preparation</h3>
                 <ol>
