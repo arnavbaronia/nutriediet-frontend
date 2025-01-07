@@ -27,17 +27,21 @@ const ClientDetailsPage = () => {
     next_payment_date: '',
     last_payment_date: '',
     created_at: '',
-    date_of_joining: ''
+    date_of_joining: '',
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isActive, setIsActive] = useState(true);
   const [diets, setDiets] = useState([]);
 
-  const formatDate = (date) => {
-    if (!date) return ''; 
-    const isoDate = new Date(date).toISOString();
-    return isoDate.split('T')[0]; 
+  const formatDateForInput = (date) => {
+    if (!date) return '';
+    return new Date(date).toISOString().split('T')[0];
+  };
+
+  const formatDateForPayload = (date) => {
+    if (!date) return null;
+    return new Date(date).toISOString();
   };
 
   useEffect(() => {
@@ -49,10 +53,18 @@ const ClientDetailsPage = () => {
       .then((response) => {
         const clientData = response.data.client;
 
-        const name = clientData.name?.trim() || `${clientData.first_name?.trim() || ''} ${clientData.last_name?.trim() || ''}`.trim() || 'N/A';
+        const name = clientData.name?.trim() || 
+          `${clientData.first_name?.trim() || ''} ${clientData.last_name?.trim() || ''}`.trim() || 
+          'N/A';
+
         setClient({
           ...clientData,
           name,
+          amount_paid: clientData.amount_paid?.toString() || '',
+          next_payment_date: formatDateForInput(clientData.next_payment_date),
+          last_payment_date: formatDateForInput(clientData.last_payment_date),
+          date_of_joining: formatDateForInput(clientData.date_of_joining),
+          created_at: formatDateForInput(clientData.created_at),
         });
 
         setDiets(response.data.diets);
@@ -70,7 +82,7 @@ const ClientDetailsPage = () => {
     const { name, value } = e.target;
     setClient({
       ...client,
-      [name]: value
+      [name]: value,
     });
   };
 
@@ -93,15 +105,19 @@ const ClientDetailsPage = () => {
     e.preventDefault();
     const token = localStorage.getItem('token');
 
+    const [first_name, ...last_nameArr] = client.name.split(' ');
+    const last_name = last_nameArr.join(' ');
+
     const payload = {
-      first_name: client.first_name || '',
-      last_name: client.last_name || '',
-      age: client.age || null,
+      name: client.name || '',
+      first_name: first_name || '',
+      last_name: last_name || '',
+      age: client.age ? parseInt(client.age, 10) : null,
       email: client.email || '',
       city: client.city || '',
       phone_number: client.phone_number || '',
-      height: client.height || null,
-      starting_weight: client.starting_weight || null,
+      height: client.height ? parseInt(client.height, 10) : null,
+      starting_weight: client.starting_weight ? parseInt(client.starting_weight, 10) : null,
       dietary_preference: client.dietary_preference || '',
       medical_history: client.medical_history || '',
       allergies: client.allergies || '',
@@ -109,11 +125,12 @@ const ClientDetailsPage = () => {
       diet_recall: client.diet_recall || '',
       exercise: client.exercise || '',
       package: client.package || '',
-      amount_paid: client.amount_paid || null,
+      amount_paid: client.amount_paid ? parseInt(client.amount_paid, 10) : null,
       remarks: client.remarks || '',
-      next_payment_date: client.next_payment_date ? formatDate(client.next_payment_date) : null,
-      last_payment_date: client.last_payment_date ? formatDate(client.last_payment_date) : null,
-      date_of_joining: client.date_of_joining ? formatDate(client.date_of_joining) : null,
+      next_payment_date: formatDateForPayload(client.next_payment_date),
+      last_payment_date: formatDateForPayload(client.last_payment_date),
+      date_of_joining: formatDateForPayload(client.date_of_joining),
+      created_at: formatDateForPayload(client.created_at),
     };
 
     axios
@@ -121,7 +138,13 @@ const ClientDetailsPage = () => {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
-        setClient(response.data.client);
+        const updatedClient = response.data.client;
+
+        setClient((prevState) => ({
+          ...prevState,
+          ...updatedClient,
+          name: prevState.name,
+        }));
         setError(null);
       })
       .catch((error) => {
@@ -317,7 +340,7 @@ const ClientDetailsPage = () => {
               type="date"
               id="next_payment_date"
               name="next_payment_date"
-              value={formatDate(client.next_payment_date)}
+              value={(client.next_payment_date)}
               className="client-input"
               onChange={handleChange}
             />
@@ -328,7 +351,7 @@ const ClientDetailsPage = () => {
               type="date"
               id="last_payment_date"
               name="last_payment_date"
-              value={formatDate(client.last_payment_date)}
+              value={(client.last_payment_date)}
               className="client-input"
               onChange={handleChange}
             />
@@ -339,7 +362,7 @@ const ClientDetailsPage = () => {
               type="date"
               id="date_of_joining"
               name="date_of_joining"
-              value={formatDate(client.date_of_joining)}
+              value={(client.date_of_joining)}
               className="client-input"
               onChange={handleChange}
             />
