@@ -85,21 +85,33 @@ const ClientDetailsPage = () => {
       [name]: value,
     });
   };
-
+  
   const handleActivateDeactivate = async () => {
     const token = localStorage.getItem('token');
     try {
-      await axios.patch(
-        `http://localhost:8081/admin/client/${client_id}/activate_deactivate`,
-        {},
+      console.log(`Sending POST request to: /admin/client/${client_id}/activation`);
+      console.log('Authorization Token:', token);
+  
+      const response = await axios.post(
+        `http://localhost:8081/admin/client/${client_id}/activation`,
+        {}, 
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setIsActive(!isActive);
+  
+      console.log('Response from server:', response);
+  
+      if (response.data.success) {
+        setIsActive((prevState) => !prevState);
+        setError(null);
+      } else {
+        setError(response.data.message || 'Failed to activate/deactivate the client.');
+      }
+      console.log('Updated activation status:', !isActive);
     } catch (error) {
       console.error('Error activating/deactivating client:', error);
-      setError('Error activating/deactivating client.');
+      setError('Error activating/deactivating client. Please try again later.');
     }
-  };
+  };  
 
   const handleSubmit = (e) => {
     e.preventDefault();

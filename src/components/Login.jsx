@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../styles/Login.css";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
-    user_type: "CLIENT", 
+    user_type: "CLIENT",
   });
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,7 +20,7 @@ const Login = () => {
       if (name === "email" && value === "nutriedietplan@gmail.com") {
         updatedCredentials.user_type = "ADMIN";
       } else if (name === "email") {
-        updatedCredentials.user_type = "CLIENT"; 
+        updatedCredentials.user_type = "CLIENT";
       }
 
       return updatedCredentials;
@@ -32,8 +34,9 @@ const Login = () => {
     try {
       const response = await axios.post("http://localhost:8081/login", credentials);
 
-      const { token, refreshToken, user_type: user_typeFromBackend, id, email } = response.data || {};
+      const { token, refreshToken, user_type: user_typeFromBackend, id, email, is_active } = response.data || {};
       const user_type = user_typeFromBackend;
+      console.log("is_active value from backend:", is_active);
 
       localStorage.setItem("token", token);
       localStorage.setItem("refreshToken", refreshToken);
@@ -41,8 +44,23 @@ const Login = () => {
       localStorage.setItem("clientId", id);
       localStorage.setItem("email", email);
 
-      window.location.href = user_type === "CLIENT" ? "/client" : "/admin/dashboard";
+      if (user_type === "CLIENT") {
+        if (is_active === true) {
+          console.log("Client is active. Navigating to client dashboard...");
+          setTimeout(() => navigate("/client"), 5000); 
+        } else if (is_active === false) {
+          console.log("Client is inactive. Navigating to account activation page...");
+          setTimeout(() => navigate("/account-activation", { state: { token } }), 5000);
+        } else {
+          console.error("Unexpected value for is_active:", is_active);
+          setError("An unexpected error occurred. Please try again.");
+        }
+      } else {
+        console.log("Admin login. Navigating to admin dashboard...");
+        setTimeout(() => navigate("/admin/dashboard"), 1000);
+      }
     } catch (err) {
+      console.error("Error during login:", err);
       setError(err.response?.data?.err || "Login failed. Please try again.");
     }
   };
