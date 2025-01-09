@@ -62,13 +62,16 @@ const ExercisesPage = () => {
   };
 
   const deleteExercise = async (exerciseId) => {
+    if (!window.confirm('Are you sure you want to delete this exercise?')) {
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await api.post(`/admin/exercise/${exerciseId}/delete`);
       if (response.data.success) {
-        setExercises((prevExercises) =>
-          prevExercises.filter((exercise) => exercise.id !== exerciseId)
-        );
+        // Re-fetch the exercises to reflect the updated list
+        await fetchExercises();
         setSelectedExerciseDetails(null);
         setSelectedExerciseId('');
         setError(null);

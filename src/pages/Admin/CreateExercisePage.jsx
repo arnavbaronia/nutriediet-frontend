@@ -19,7 +19,7 @@ const CreateExercisePage = () => {
 
   const handleCreateExercise = async () => {
     try {
-      await api.post('/admin/exercise', exercise);
+      await api.post('/admin/exercise/new', exercise);
       setSuccess('Exercise created successfully!');
       setError(null);
       setTimeout(() => navigate('/admin/exercises'), 1500);
