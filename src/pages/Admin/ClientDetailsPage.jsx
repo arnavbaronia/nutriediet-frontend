@@ -31,6 +31,7 @@ const ClientDetailsPage = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
   const [isActive, setIsActive] = useState(true);
   const [diets, setDiets] = useState([]);
 
@@ -158,6 +159,8 @@ const ClientDetailsPage = () => {
           name: prevState.name,
         }));
         setError(null);
+        setSuccessMessage('Details updated successfully!'); 
+        setTimeout(() => setSuccessMessage(null), 3000);
       })
       .catch((error) => {
         console.error('Error updating client info:', error);
@@ -174,247 +177,253 @@ const ClientDetailsPage = () => {
   }
 
   return (
-    <div className="client-container">
+    <div className="client-container">{successMessage && <p className="success-message">{successMessage}</p>}
       <h2 className="client-heading">{client.name}'s Details</h2>
-      <form onSubmit={handleSubmit} className="client-form">
+        <div className="form-background">
+          <form onSubmit={handleSubmit} className="client-form">
 
-        {/* Name, Age, Phone Number, Email */}
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="name">Name</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={client.name}
-              className="client-input"
-              readOnly
-            />
+          {/* Name, Age, Phone Number, Email */}
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="name">Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={client.name}
+                className="client-input"
+                readOnly
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="age">Age</label>
+              <input
+                type="number"
+                id="age"
+                name="age"
+                value={client.age}
+                className="client-input"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="phone_number">Phone Number</label>
+              <input
+                type="text"
+                id="phone_number"
+                name="phone_number"
+                value={client.phone_number}
+                className="client-input"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={client.email}
+                className="client-input"
+                onChange={handleChange}
+              />
+            </div>
           </div>
-          <div className="form-group">
-            <label htmlFor="age">Age</label>
-            <input
-              type="number"
-              id="age"
-              name="age"
-              value={client.age}
-              className="client-input"
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="phone_number">Phone Number</label>
-            <input
-              type="text"
-              id="phone_number"
-              name="phone_number"
-              value={client.phone_number}
-              className="client-input"
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={client.email}
-              className="client-input"
-              onChange={handleChange}
-            />
-          </div>
-        </div>
 
-        {/* City, Locality, Height, Starting Weight, Dietary Preference */}
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="city">City</label>
-            <input
-              type="text"
-              id="city"
-              name="city"
-              value={client.city}
-              className="client-input"
-              onChange={handleChange}
-            />
+          {/* City, Locality, Height, Starting Weight, Dietary Preference */}
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="city">City</label>
+              <input
+                type="text"
+                id="city"
+                name="city"
+                value={client.city}
+                className="client-input"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="locality">Locality</label>
+              <input
+                type="text"
+                id="locality"
+                name="locality"
+                value={client.locality}
+                className="client-input"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="height">Height (cm)</label>
+              <input
+                type="number"
+                id="height"
+                name="height"
+                value={client.height}
+                className="client-input"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="starting_weight">Starting Weight (kg)</label>
+              <input
+                type="number"
+                id="starting_weight"
+                name="starting_weight"
+                value={client.starting_weight}
+                className="client-input"
+                onChange={handleChange}
+              />
+            </div>
+              <div className="form-group">
+                <label htmlFor="dietary_preference">Dietary Preference</label>
+                <select
+                  id="dietary_preference"
+                  name="dietary_preference"
+                  value={client.dietary_preference}
+                  className="client-input"
+                  onChange={handleChange}
+                >
+                  <option value="">Select</option>
+                  <option value="Veg">Veg</option>
+                  <option value="Non-Veg">Non-Veg</option>
+                  <option value="Eggetarian">Eggetarian</option>
+                </select>
+              </div>
           </div>
-          <div className="form-group">
-            <label htmlFor="locality">Locality</label>
-            <input
-              type="text"
-              id="locality"
-              name="locality"
-              value={client.locality}
-              className="client-input"
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="height">Height (cm)</label>
-            <input
-              type="number"
-              id="height"
-              name="height"
-              value={client.height}
-              className="client-input"
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="starting_weight">Starting Weight (kg)</label>
-            <input
-              type="number"
-              id="starting_weight"
-              name="starting_weight"
-              value={client.starting_weight}
-              className="client-input"
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="dietary_preference">Dietary Preference</label>
-            <input
-              type="text"
-              id="dietary_preference"
-              name="dietary_preference"
-              value={client.dietary_preference}
-              className="client-input"
-              onChange={handleChange}
-            />
-          </div>
-        </div>
 
-        {/* Medical History, Allergies, Exercise */}
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="medical_history">Medical History</label>
-            <input
-              type="text"
-              id="medical_history"
-              name="medical_history"
-              value={client.medical_history}
-              className="client-input"
-              onChange={handleChange}
-            />
+          {/* Medical History, Allergies, Exercise */}
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="medical_history">Medical History</label>
+              <input
+                type="text"
+                id="medical_history"
+                name="medical_history"
+                value={client.medical_history}
+                className="client-input"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="allergies">Allergies</label>
+              <input
+                type="text"
+                id="allergies"
+                name="allergies"
+                value={client.allergies}
+                className="client-input"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="exercise">Exercise</label>
+              <input
+                type="text"
+                id="exercise"
+                name="exercise"
+                value={client.exercise}
+                className="client-input"
+                onChange={handleChange}
+              />
+            </div>
           </div>
-          <div className="form-group">
-            <label htmlFor="allergies">Allergies</label>
-            <input
-              type="text"
-              id="allergies"
-              name="allergies"
-              value={client.allergies}
-              className="client-input"
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="exercise">Exercise</label>
-            <input
-              type="text"
-              id="exercise"
-              name="exercise"
-              value={client.exercise}
-              className="client-input"
-              onChange={handleChange}
-            />
-          </div>
-        </div>
 
-        {/* Package, Amount Paid, Next Payment Date, Last Payment Date, Date of Joining */}
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="package">Package</label>
-            <input
-              type="text"
-              id="package"
-              name="package"
-              value={client.package}
-              className="client-input"
-              onChange={handleChange}
-            />
+          {/* Package, Amount Paid, Next Payment Date, Last Payment Date, Date of Joining */}
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="package">Package</label>
+              <input
+                type="text"
+                id="package"
+                name="package"
+                value={client.package}
+                className="client-input"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="amount_paid">Amount Paid (₹)</label>
+              <input
+                type="number"
+                id="amount_paid"
+                name="amount_paid"
+                value={client.amount_paid}
+                className="client-input"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="next_payment_date">Next Payment Date</label>
+              <input
+                type="date"
+                id="next_payment_date"
+                name="next_payment_date"
+                value={(client.next_payment_date)}
+                className="client-input"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="last_payment_date">Last Payment Date</label>
+              <input
+                type="date"
+                id="last_payment_date"
+                name="last_payment_date"
+                value={(client.last_payment_date)}
+                className="client-input"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="date_of_joining">Date of Joining</label>
+              <input
+                type="date"
+                id="date_of_joining"
+                name="date_of_joining"
+                value={(client.date_of_joining)}
+                className="client-input"
+                onChange={handleChange}
+              />
+            </div>
           </div>
-          <div className="form-group">
-            <label htmlFor="amount_paid">Amount Paid (₹)</label>
-            <input
-              type="number"
-              id="amount_paid"
-              name="amount_paid"
-              value={client.amount_paid}
-              className="client-input"
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="next_payment_date">Next Payment Date</label>
-            <input
-              type="date"
-              id="next_payment_date"
-              name="next_payment_date"
-              value={(client.next_payment_date)}
-              className="client-input"
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="last_payment_date">Last Payment Date</label>
-            <input
-              type="date"
-              id="last_payment_date"
-              name="last_payment_date"
-              value={(client.last_payment_date)}
-              className="client-input"
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="date_of_joining">Date of Joining</label>
-            <input
-              type="date"
-              id="date_of_joining"
-              name="date_of_joining"
-              value={(client.date_of_joining)}
-              className="client-input"
-              onChange={handleChange}
-            />
-          </div>
-        </div>
 
-        {/* Diet Recall and Remarks */}
-        <div className="form-group">
-          <label htmlFor="diet_recall">Diet Recall</label>
-          <textarea
-            id="diet_recall"
-            name="diet_recall"
-            value={client.diet_recall}
-            onChange={handleChange}
-            className="client-textarea client-textarea-large"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="remarks">Remarks</label>
-          <textarea
-            id="remarks"
-            name="remarks"
-            value={client.remarks}
-            onChange={handleChange}
-            className="client-textarea client-textarea-large"
-          />
-        </div>
+          {/* Diet Recall and Remarks */}
+          <div className="form-group">
+            <label htmlFor="diet_recall">Diet Recall</label>
+            <textarea
+              id="diet_recall"
+              name="diet_recall"
+              value={client.diet_recall}
+              onChange={handleChange}
+              className="client-textarea client-textarea-large"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="remarks">Remarks</label>
+            <textarea
+              id="remarks"
+              name="remarks"
+              value={client.remarks}
+              onChange={handleChange}
+              className="client-textarea client-textarea-large"
+            />
+          </div>
 
-        <button type="submit" className="update-button">Update</button>
-        <button type="button" onClick={handleActivateDeactivate} className="toggle-button">
-          {isActive ? 'Deactivate' : 'Activate'} Account
-        </button>
-      </form>
+          <button type="submit" className="update-button">Update</button>
+          <button type="button" onClick={handleActivateDeactivate} className="toggle-button">
+            {isActive ? 'Deactivate' : 'Activate'} Account
+          </button>
+        </form>
 
-      <h2>Diet Histories</h2>
-      <ul>
-        {diets.map(diet => (
-          <li key={diet.id}>Week {diet.week_number}</li>
-        ))}
-      </ul>
+        <h2>Diet Histories</h2>
+        <ul>
+          {diets.map(diet => (
+            <li key={diet.id}>Week {diet.week_number}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

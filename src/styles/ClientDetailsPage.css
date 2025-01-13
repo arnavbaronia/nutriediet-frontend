@@ -93,3 +93,21 @@
 .form-group {
     margin-bottom: 20px; 
 }
+
+.form-background {
+    background-color: #A5D6A7;
+    border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+}
+
+.success-message {
+    color: green;
+    background-color: #e8f5e9;
+    border: 1px solid #4caf50;
+    padding: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    border-radius: 5px;
+    font-weight: bold;
+}

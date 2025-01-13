@@ -15,6 +15,8 @@ import AppointmentsPage from './pages/Admin/AppointmentsPage';
 import ClientsPage from './pages/Admin/ClientsPage';
 import ClientDetailsPage from './pages/Admin/ClientDetailsPage';
 import DietTemplatesPage from './pages/Admin/DietTemplatesPage';
+import CreateDietTemplatePage from './pages/Admin/CreateDietTemplatePage';
+import EditDietTemplatePage from './pages/Admin/EditDietTemplatePage';
 import CreateRecipePage from './pages/Admin/CreateRecipePage';
 import UpdateRecipePage from './pages/Admin/UpdateRecipePage';
 import AdminRecipeListPage from './pages/Admin/RecipeListPage';
@@ -70,7 +72,9 @@ function App() {
             <Route path="/admin/dashboard" element={<ProtectedRoute requireduser_type="ADMIN" component={AdminDashboard} />} />
             <Route path="/admin/clients" element={<ProtectedRoute requireduser_type="ADMIN" component={ClientsPage} />} />
             <Route path="/admin/client/:client_id" element={<ProtectedRoute requireduser_type="ADMIN" component={ClientDetailsPage} />} />
-            <Route path="/admin/diet-templates" element={<ProtectedRoute requireduser_type="ADMIN" component={DietTemplatesPage} />} />
+            <Route path="/admin/diet_templates" element={<ProtectedRoute requireduser_type="ADMIN" component={DietTemplatesPage} />} />
+            <Route path="/admin/diet_templates/new" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateDietTemplatePage} />} />
+            <Route path="/admin/diet_templates/:dietTemplateId" element={<ProtectedRoute requireduser_type="ADMIN" component={EditDietTemplatePage} />} />
             <Route path="/admin/recipes" element={<AdminRecipeListPage />} />
             <Route path="/admin/recipes/new" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateRecipePage} />} />
             <Route path="/admin/recipe/:meal_id" element={<ProtectedRoute requireduser_type="ADMIN" component={UpdateRecipePage} />} />
