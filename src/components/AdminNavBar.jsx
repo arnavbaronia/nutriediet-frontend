@@ -33,7 +33,7 @@ const AdminNavBar = () => {
       <div className={`nav-buttons ${isMobileMenuOpen ? 'show-menu' : ''}`}>
         <Link to="/admin/appointments" className={`nav-link ${isActive('/admin/appointments')}`}>Appointments</Link>
         <Link to="/admin/clients" className={`nav-link ${isActive('/admin/clients')}`}>Clients</Link>
-        <Link to="/admin/diet_templates" className={`nav-link ${isActive('/admin/diet-templates')}`}>Diet Templates</Link>
+        <Link to="/admin/diet_templates" className={`nav-link ${isActive('/admin/diet_templates')}`}>Diet Templates</Link>
         <Link to="/admin/recipes" className={`nav-link ${isActive('/admin/recipes')}`}>Recipes</Link>
         <Link to="/admin/exercises" className={`nav-link ${isActive('/admin/exercises')}`}>Exercises</Link>
         <Link to="/admin/creatediet" className={`nav-link ${isActive('/admin/creatediet')}`}>Create Diet</Link>
