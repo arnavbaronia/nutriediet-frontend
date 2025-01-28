@@ -1,27 +1,29 @@
-import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
-import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
-import MonitorWeightOutlinedIcon from '@mui/icons-material/MonitorWeightOutlined';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import MenuIcon from '@mui/icons-material/Menu';
-import '../styles/NavigationBar.css';
-import logo from '../assets/Nutriediet_Logo_Transparent.png';
+import React, { useState } from "react";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
+import MonitorWeightOutlinedIcon from "@mui/icons-material/MonitorWeightOutlined";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import MenuIcon from "@mui/icons-material/Menu";
+import "../styles/NavigationBar.css";
+import logo from "../assets/Nutriediet_Logo_Transparent.png";
 
 const NavigationBar = () => {
+  // const { client_id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const client_id = localStorage.getItem("client_id");
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate('/login');
+    navigate("/login");
   };
 
-  const isActive = (path) => location.pathname === path ? 'active' : '';
+  const isActive = (path) => (location.pathname === path ? "active" : "");
 
   return (
     <div className="navigation-bar">
@@ -31,38 +33,38 @@ const NavigationBar = () => {
       <div className="menu-icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
         <MenuIcon />
       </div>
-      <div className={`nav-buttons ${isMobileMenuOpen ? 'show-menu' : ''}`}>
+      <div className={`nav-buttons ${isMobileMenuOpen ? "show-menu" : ""}`}>
         <Link
-          to="/client/:client_id/weight-update"
-          className={`nav-link ${isActive('/client/:client_id/weight-update')}`}
+          to={`/clients/${client_id}/weight-update`}
+          className={`nav-link ${isActive(`/clients/${client_id}/weight-update`)}`}
         >
           <MonitorWeightOutlinedIcon className="nav-icon" />
           <span>Weight Update</span>
         </Link>
         <Link
-          to="/client/:client_id/diet"
-          className={`nav-link ${isActive('/client/:client_id/diet')}`}
+          to={`/clients/${client_id}/diet`}
+          className={`nav-link ${isActive(`/clients/${client_id}/diet`)}`}
         >
           <ArticleOutlinedIcon className="nav-icon" />
           <span>Diet Plan</span>
         </Link>
         <Link
-          to="/client/:client_id/recipes"
-          className={`nav-link ${isActive('/client/:client_id/recipes')}`}
+          to={`/clients/${client_id}/recipes`}
+          className={`nav-link ${isActive(`/clients/${client_id}/recipes`)}`}
         >
           <MenuBookIcon className="nav-icon" />
           <span>Recipes</span>
         </Link>
         <Link
-          to="/client/:client_id/exercise"
-          className={`nav-link ${isActive('/client/:client_id/exercise')}`}
+          to={`/clients/${client_id}/exercise`}
+          className={`nav-link ${isActive(`/clients/${client_id}/exercise`)}`}
         >
           <FitnessCenterIcon className="nav-icon" />
           <span>Exercise</span>
         </Link>
         <Link
-          to="/client/:client_id/profile"
-          className={`nav-link ${isActive('/client/:client_id/profile')}`}
+          to={`/clients/${client_id}/my_profile`}
+          className={`nav-link ${isActive(`/clients/${client_id}/my_profile`)}`}
         >
           <PersonRoundedIcon className="nav-icon" />
           <span>My Profile</span>

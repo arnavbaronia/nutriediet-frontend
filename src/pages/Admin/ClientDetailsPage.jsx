@@ -34,6 +34,7 @@ const ClientDetailsPage = () => {
   const [successMessage, setSuccessMessage] = useState(null);
   const [isActive, setIsActive] = useState(true);
   const [diets, setDiets] = useState([]);
+  console.log('Client ID:', client_id);
 
   const formatDateForInput = (date) => {
     if (!date) return '';
@@ -53,7 +54,7 @@ const ClientDetailsPage = () => {
       })
       .then((response) => {
         const clientData = response.data.client;
-
+        console.log("Client details response:", response);
         const name = clientData.name?.trim() || 
           `${clientData.first_name?.trim() || ''} ${clientData.last_name?.trim() || ''}`.trim() || 
           'N/A';

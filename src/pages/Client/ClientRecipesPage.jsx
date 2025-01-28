@@ -14,7 +14,7 @@ const ClientRecipesPage = () => {
                 const token = localStorage.getItem('token');
                 if (!token) throw new Error('Unauthorized: No token found');
 
-                const response = await axios.get('http://localhost:8081/client/recipes', {
+                const response = await axios.get('http://localhost:8081/clients/recipes', {
                     headers: { Authorization: `Bearer ${token}` },
                 });
 
@@ -39,7 +39,7 @@ const ClientRecipesPage = () => {
             if (!token) throw new Error('Unauthorized: No token found');
 
             // Corrected URL: Use template literals for dynamic mealID
-            const response = await axios.get(`http://localhost:8081/client/${mealID}/recipe`, {
+            const response = await axios.get(`http://localhost:8081/clients/${mealID}/recipe`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 

@@ -34,23 +34,24 @@ const Login = () => {
     try {
       const response = await axios.post("http://localhost:8081/login", credentials);
 
-      const { token, refreshToken, user_type: user_typeFromBackend, id, email, is_active } = response.data || {};
+      const { token, refreshToken, user_type: user_typeFromBackend, id, email, is_active, client_id } = response.data || {};
       const user_type = user_typeFromBackend;
       console.log("is_active value from backend:", is_active);
+      console.log("Login response data:", response.data);
 
       localStorage.setItem("token", token);
       localStorage.setItem("refreshToken", refreshToken);
       localStorage.setItem("user_type", user_type);
       localStorage.setItem("clientId", id);
       localStorage.setItem("email", email);
-
+      localStorage.setItem("client_id", client_id);
       if (user_type === "CLIENT") {
         if (is_active === true) {
           console.log("Client is active. Navigating to client dashboard...");
-          setTimeout(() => navigate("/client"), 5000); 
+          setTimeout(() => navigate("/client"), 1000); 
         } else if (is_active === false) {
           console.log("Client is inactive. Navigating to account activation page...");
-          setTimeout(() => navigate("/account-activation", { state: { token } }), 5000);
+          setTimeout(() => navigate("/account-activation", { state: { token } }), 1000);
         } else {
           console.error("Unexpected value for is_active:", is_active);
           setError("An unexpected error occurred. Please try again.");

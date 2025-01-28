@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useParams } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import ClientPage from './pages/Client/ClientPage';
 import AdminPage from './pages/Admin/AdminPage';
@@ -37,6 +37,7 @@ import './App.css';
 const ProtectedRoute = ({ component: Component, requireduser_type, ...rest }) => {
   const token = localStorage.getItem('token');
   const user_type = localStorage.getItem('user_type');
+  const params = useParams();
 
   if (!token || (requireduser_type && user_type !== requireduser_type)) {
     return <Navigate to="/login" />;
@@ -61,12 +62,12 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/create_profile/:email" element={<CreateProfilePage />} />
             <Route path="/account-activation" element={<AccountActivationPage />} />
-            <Route path="/client/:client_id" element={<ProtectedRoute component={ClientPage} />} />
-            <Route path="/client/:client_id/diet" element={<ProtectedRoute component={DietPage} />} />
-            <Route path="/client/:client_id/exercise" element={<ProtectedRoute component={ExercisePage} />} />
-            <Route path="/client/:client_id/profile" element={<ProtectedRoute component={ProfilePage} />} />
-            <Route path="/client/:client_id/weight-update" element={<ProtectedRoute component={WeightUpdatePage} />} />
-            <Route path="/client/recipes" element={<ProtectedRoute component={ClientRecipesPage} />} />
+            <Route path="/clients/:client_id" element={<ProtectedRoute component={ClientPage} />} />
+            <Route path="/clients/:client_id/diet" element={<ProtectedRoute component={DietPage} />} />
+            <Route path="/clients/:client_id/exercise" element={<ProtectedRoute component={ExercisePage} />} />
+            <Route path="/clients/:client_id/my_profile" element={<ProtectedRoute component={ProfilePage} />} />
+            <Route path="/clients/:client_id/weight-update" element={<ProtectedRoute component={WeightUpdatePage} />} />
+            <Route path="/clients/recipes" element={<ProtectedRoute component={ClientRecipesPage} />} />
             <Route path="/admin/appointments" element={<ProtectedRoute component={AppointmentsPage} />} />
             <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
             <Route path="/admin/dashboard" element={<ProtectedRoute requireduser_type="ADMIN" component={AdminDashboard} />} />

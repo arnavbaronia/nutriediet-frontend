@@ -1,83 +1,117 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import '../../styles/ProfilePage.css';
-import { getToken } from '../../auth/token';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "../../styles/ProfilePage.css";
+import { getToken } from "../../auth/token";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState({
-    name: '',
-    age: '',
-    email: '',
-    city: '',
-    phoneNumber: '',
-    height: '',
-    startingWeight: '',
-    dietaryPreference: '',
-    medicalHistory: '',
-    allergies: '',
-    stay: '',
-    exercise: '',
-    comments: '',
-    dietRecall: '',
-    locality: ''
+    name: "",
+    age: "",
+    email: "",
+    city: "",
+    phoneNumber: "",
+    height: "",
+    startingWeight: "",
+    dietaryPreference: "",
+    medicalHistory: "",
+    allergies: "",
+    stay: "",
+    exercise: "",
+    comments: "",
+    dietRecall: "",
+    locality: "",
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { client_id } = useParams();
-  
+  const navigate = useNavigate();
+
   useEffect(() => {
-    console.log(`Client ID: ${client_id}`);
+    console.log("Fetching profile for the logged-in user...");
     const token = getToken();
-    axios.get('http://localhost:8081/6/my_profile', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      withCredentials: true
-    })
-      .then(response => {
+    const clientId = localStorage.getItem("client_id");
+    const id = localStorage.getItem("clientId"); 
+
+    if (!token || !clientId || !id) {
+      console.error("Missing token, client ID, or id. Redirecting to login...");
+      setError("Authentication token, client ID, or id is missing. Please log in again.");
+      localStorage.clear();
+      navigate("/login");
+      return;
+    }
+
+    axios
+      .get(`http://localhost:8081/clients/${clientId}/my_profile`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Id: id, 
+        },
+        withCredentials: true,
+      })
+      .then((response) => {
         const profileData = response.data.response;
-        delete profileData.created_at;
-        delete profileData.updated_at;
-        delete profileData.dateOfJoining;
-        delete profileData.lastPaymentDate;
-        delete profileData.nextPaymentDate;
-        if (profileData.phoneNumber && !profileData.phoneNumber.startsWith('+91')) {
-          profileData.phoneNumber = '+91' + profileData.phoneNumber;
+        console.log("Fetched Profile Data:", profileData);
+
+        if (profileData.phoneNumber && !profileData.phoneNumber.startsWith("+91")) {
+          profileData.phoneNumber = "+91" + profileData.phoneNumber;
         }
 
         setProfile(profileData);
         setLoading(false);
       })
-      .catch(error => {
-        console.error('Error fetching profile:', error);
-        setError(error);
+      .catch((error) => {
+        console.error("Error fetching profile:", error);
+
+        if (error.response?.status === 401) {
+          setError("Session expired. Please log in again.");
+          localStorage.clear();
+          navigate("/login");
+        } else {
+          setError(error.response?.data?.message || "Error fetching profile.");
+        }
         setLoading(false);
       });
-  }, []);
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProfile({
-      ...profile,
-      [name]: value
-    });
+    setProfile((prevProfile) => ({
+      ...prevProfile,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const token = getToken();
-    axios.put('http://localhost:8081/6/my_profile', profile, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      withCredentials: true
-    })
-      .then(response => {
-        console.log('Profile updated successfully', response.data);
+    const clientId = localStorage.getItem("client_id");
+    const id = localStorage.getItem("clientId");
+
+    if (!token || !clientId || !id) {
+      setError("Cannot update profile. Authentication token, client ID, or id is missing.");
+      return;
+    }
+
+    console.log("Submitting updated profile...");
+    axios
+      .put(
+        `http://localhost:8081/clients/${clientId}/update_profile`,
+        { ...profile, id }, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      )
+      .then((response) => {
+        console.log("Profile updated successfully:", response.data);
+        alert("Profile updated successfully!");
       })
-      .catch(error => {
-        console.error('There was an error updating the profile!', error);
+      .catch((error) => {
+        console.error("Error updating profile:", error);
+        setError(error.response?.data?.message || "Error updating profile.");
       });
   };
 
@@ -86,7 +120,7 @@ const ProfilePage = () => {
   }
 
   if (error) {
-    return <p>Error: {error.message}</p>;
+    return <p className="error-message">Error: {error}</p>;
   }
 
   return (
