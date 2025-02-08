@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../../styles/ProfilePage.css";
 import { getToken } from "../../auth/token";
 import { useNavigate } from "react-router-dom";
 
@@ -22,19 +21,26 @@ const ProfilePage = () => {
     dietRecall: "",
     locality: "",
   });
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Fetching profile for the logged-in user...");
+    console.log("ProfilePage Mounted");
+
     const token = getToken();
     const clientId = localStorage.getItem("client_id");
-    const id = localStorage.getItem("clientId"); 
+    const email = localStorage.getItem("email");
 
-    if (!token || !clientId || !id) {
-      console.error("Missing token, client ID, or id. Redirecting to login...");
-      setError("Authentication token, client ID, or id is missing. Please log in again.");
+    console.log("Retrieved from localStorage:");
+    console.log("Token:", token);
+    console.log("Client ID:", clientId);
+    console.log("Email:", email);
+
+    if (!token || !clientId || !email) {
+      console.error("Missing token, client ID, or email.");
+      setError("Session expired. Please log in again.");
       localStorage.clear();
       navigate("/login");
       return;
@@ -42,91 +48,90 @@ const ProfilePage = () => {
 
     axios
       .get(`http://localhost:8081/clients/${clientId}/my_profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Id: id, 
-        },
+        headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       })
       .then((response) => {
-        const profileData = response.data.response;
-        console.log("Fetched Profile Data:", profileData);
-
-        if (profileData.phoneNumber && !profileData.phoneNumber.startsWith("+91")) {
-          profileData.phoneNumber = "+91" + profileData.phoneNumber;
+        console.log("Fetched Profile Data:", response.data);
+        if (response.data.response) {
+          setProfile({
+            ...response.data.response,
+            phoneNumber: response.data.response.phone_number || "",
+            email: email || "",
+            dietaryPreference: response.data.response.dietary_preference || "",
+            medicalHistory: response.data.response.medical_history || "",
+            startingWeight: response.data.response.starting_weight || "",
+          });
+        } else {
+          console.error("Unexpected response structure:", response.data);
+          setError("Failed to fetch profile data.");
         }
-
-        setProfile(profileData);
         setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching profile:", error);
-
-        if (error.response?.status === 401) {
-          setError("Session expired. Please log in again.");
-          localStorage.clear();
-          navigate("/login");
-        } else {
-          setError(error.response?.data?.message || "Error fetching profile.");
-        }
+        console.error("Error response:", error.response);
+        setError(error.response?.data?.error || "Error fetching profile.");
         setLoading(false);
       });
   }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log(`Updating field ${name} with value ${value}`);
     setProfile((prevProfile) => ({
       ...prevProfile,
       [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    console.log("Submitting Profile Update...");
+    console.log("Updated Profile Data:", profile);
 
     const token = getToken();
     const clientId = localStorage.getItem("client_id");
-    const id = localStorage.getItem("clientId");
+    const email = localStorage.getItem("email");
 
-    if (!token || !clientId || !id) {
-      setError("Cannot update profile. Authentication token, client ID, or id is missing.");
+    if (!token || !clientId || !email) {
+      console.error("Authentication details missing. Cannot update profile.");
+      setError("Cannot update profile. Authentication details are missing.");
       return;
     }
 
-    console.log("Submitting updated profile...");
-    axios
-      .put(
-        `http://localhost:8081/clients/${clientId}/update_profile`,
-        { ...profile, id }, 
+    try {
+      const response = await axios.post(
+        `http://localhost:8081/clients/${clientId}/my_profile`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          ...profile,
+          email, 
+          phone_number: profile.phoneNumber,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         }
-      )
-      .then((response) => {
-        console.log("Profile updated successfully:", response.data);
-        alert("Profile updated successfully!");
-      })
-      .catch((error) => {
-        console.error("Error updating profile:", error);
-        setError(error.response?.data?.message || "Error updating profile.");
-      });
+      );
+
+      console.log("Profile updated successfully:", response.data);
+      alert("Profile updated successfully!");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      console.error("Error response:", error.response);
+      setError(error.response?.data?.error || "Error updating profile.");
+    }
   };
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p className="error-message">Error: {error}</p>;
-  }
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="error-message">Error: {error}</p>;
 
   return (
     <div className="profile-container">
       <h2 className="profile-heading">My Profile</h2>
       <form onSubmit={handleSubmit} className="profile-form">
+        {/* Inline group for Name, Phone Number, and Email */}
         <div className="form-group-inline">
           <div className="form-group inline-input-wide">
             <label htmlFor="name">Name</label>
@@ -162,6 +167,8 @@ const ProfilePage = () => {
             />
           </div>
         </div>
+
+        {/* Inline group for Age, City, and Locality */}
         <div className="form-group-inline">
           <div className="form-group inline-input-wide">
             <label htmlFor="age">Age</label>
@@ -197,36 +204,45 @@ const ProfilePage = () => {
             />
           </div>
         </div>
-        <div className="form-group">
-          <label htmlFor="height">Height</label>
-          <textarea
-            id="height"
-            name="height"
-            value={profile.height}
-            onChange={handleChange}
-            className="profile-textarea profile-textarea-large"
-          />
+
+        {/* Inline group for Height, Starting Weight, and Dietary Preference */}
+        <div className="form-group-inline">
+          <div className="form-group inline-input-wide">
+            <label htmlFor="height">Height</label>
+            <input
+              type="text"
+              id="height"
+              name="height"
+              value={profile.height}
+              onChange={handleChange}
+              className="profile-input"
+            />
+          </div>
+          <div className="form-group inline-input-wide">
+            <label htmlFor="startingWeight">Starting Weight</label>
+            <input
+              type="text"
+              id="startingWeight"
+              name="startingWeight"
+              value={profile.startingWeight}
+              onChange={handleChange}
+              className="profile-input"
+            />
+          </div>
+          <div className="form-group inline-input-wide">
+            <label htmlFor="dietaryPreference">Dietary Preference</label>
+            <input
+              type="text"
+              id="dietaryPreference"
+              name="dietaryPreference"
+              value={profile.dietaryPreference}
+              onChange={handleChange}
+              className="profile-input"
+            />
+          </div>
         </div>
-        <div className="form-group">
-          <label htmlFor="startingWeight">Starting Weight</label>
-          <textarea
-            id="startingWeight"
-            name="startingWeight"
-            value={profile.startingWeight}
-            onChange={handleChange}
-            className="profile-textarea profile-textarea-large"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="dietaryPreference">Dietary Preference</label>
-          <textarea
-            id="dietaryPreference"
-            name="dietaryPreference"
-            value={profile.dietaryPreference}
-            onChange={handleChange}
-            className="profile-textarea profile-textarea-large"
-          />
-        </div>
+
+        {/* Remaining form fields */}
         <div className="form-group">
           <label htmlFor="medicalHistory">Medical History</label>
           <textarea
@@ -287,7 +303,9 @@ const ProfilePage = () => {
             className="profile-textarea profile-textarea-large"
           />
         </div>
-        <button type="submit" className="update-button">Update</button>
+        <button type="submit" className="update-button">
+          Update
+        </button>
       </form>
     </div>
   );
