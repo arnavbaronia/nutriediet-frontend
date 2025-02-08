@@ -48,7 +48,7 @@ const Login = () => {
       if (user_type === "CLIENT") {
         if (is_active === true) {
           console.log("Client is active. Navigating to client dashboard...");
-          setTimeout(() => navigate("/client"), 1000); 
+          setTimeout(() => navigate("/clients"), 1000); 
         } else if (is_active === false) {
           console.log("Client is inactive. Navigating to account activation page...");
           setTimeout(() => navigate("/account-activation", { state: { token } }), 1000);

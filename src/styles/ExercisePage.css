@@ -1,83 +1,48 @@
 .exercise-page {
   padding: 20px;
   color: black;
+  text-align: center;
 }
 
-.exercise-schedule {
+.exercise-title {
+  font-size: 24px;
+  font-weight: bold;
   margin-bottom: 20px;
-}
-
-.schedule-box {
-  background-color: #A5D6A7;
-  border-radius: 15px;
-  padding: 20px;
-  height: 120px;
 }
 
 .exercise-search {
-  margin-bottom: 20px;
-}
-
-.search-container {
-  display: flex;
-  align-items: center;
-  width: 25%;
-  max-width: 400px;
-  border: 1px solid #ccc;
-  border-radius: 15px;
-  overflow: hidden;
-}
-
-.search-bar {
-  flex-grow: 1;
-  padding: 10px;
-  border: none;
-  font-size: 1rem;
-}
-
-.search-button {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  color: #555;
+  width: 20%;
   padding: 8px;
-  display: flex;
-  align-items: center;
-}
-
-.search-button:hover {
-  color: #8fbe00;
+  font-size: 1rem;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  background-color: #f8f8f8;
+  text-align: center;
+  outline: none;
+  margin-bottom: 20px;
 }
 
 .exercise-videos {
   display: flex;
-  gap: 20px;
   flex-wrap: wrap;
-  justify-content: space-between;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
 }
 
 .video-box {
   background-color: #A5D6A7;
   border-radius: 15px;
-  padding: 20px;
-  width: calc(30% - 20px);
+  padding: 15px;
   text-align: center;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.video-thumbnail {
-  background-color: #DDD;
-  border-radius: 10px;
-  height: 150px;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 300px;
+  height: 235px;
 }
 
 .video-thumbnail img {
   width: 100%;
-  height: auto;
+  height: 180px;
   border-radius: 10px;
 }
 

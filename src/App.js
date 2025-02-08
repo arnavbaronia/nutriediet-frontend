@@ -53,7 +53,7 @@ function App() {
         <Routes>
           <Route path="/admin/*" element={<AdminNavBar />} />
           <Route path="/*" element={<HomeNavBar />} />
-          <Route path="/client/*" element={<NavigationBar />} />
+          <Route path="/clients/*" element={<NavigationBar />} />
         </Routes>
         <div className="main-content">
           <Routes>
