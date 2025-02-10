@@ -1,216 +1,175 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import "../../styles/ClientRecipesPage.css";
+import NavigationBar from "../../components/NavigationBar";
 
-const ClientRecipesPage = () => {
-    const [recipes, setRecipes] = useState([]);
-    const [selectedRecipe, setSelectedRecipe] = useState(null);
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(true);
-    const [dropdownVisible, setDropdownVisible] = useState(false);
+const dummyRecipes = [
+  {
+    RecipeID: 1,
+    Name: "Grilled Chicken Salad",
+    Ingredients: ["Chicken Breast", "Lettuce", "Tomatoes", "Cucumber", "Olive Oil"],
+    Preparation: [
+      "Grill the chicken breast.",
+      "Chop vegetables and mix in a bowl.",
+      "Drizzle olive oil and toss well.",
+    ],
+  },
+  {
+    RecipeID: 2,
+    Name: "Avocado Toast",
+    Ingredients: ["Whole grain bread", "Avocado", "Salt", "Lemon Juice"],
+    Preparation: [
+      "Toast the bread.",
+      "Mash avocado and mix with lemon juice & salt.",
+      "Spread on toast and serve.",
+    ],
+  },
+  {
+    RecipeID: 3,
+    Name: "Banana Smoothie",
+    Ingredients: ["Banana", "Milk", "Honey", "Ice Cubes"],
+    Preparation: [
+      "Blend all ingredients until smooth.",
+      "Pour into a glass and serve chilled.",
+    ],
+  },
+  {
+    RecipeID: 4,
+    Name: "Oatmeal Bowl",
+    Ingredients: ["Oats", "Milk", "Honey", "Fruits (Banana, Berries)"],
+    Preparation: [
+      "Cook oats with milk.",
+      "Add honey and mix well.",
+      "Top with fruits and serve warm.",
+    ],
+  },
+  {
+    RecipeID: 5,
+    Name: "Quinoa Stir-Fry",
+    Ingredients: ["Quinoa", "Bell Peppers", "Carrots", "Soy Sauce", "Tofu"],
+    Preparation: [
+      "Cook quinoa as per instructions.",
+      "Sauté vegetables and tofu with soy sauce.",
+      "Mix with cooked quinoa and serve.",
+    ],
+  },
+  {
+    RecipeID: 6,
+    Name: "Greek Yogurt Parfait",
+    Ingredients: ["Greek Yogurt", "Granola", "Honey", "Strawberries"],
+    Preparation: [
+      "Layer Greek yogurt, granola, and honey in a bowl.",
+      "Top with sliced strawberries.",
+      "Serve immediately.",
+    ],
+  },
+  {
+    RecipeID: 7,
+    Name: "Lentil Soup",
+    Ingredients: ["Lentils", "Carrots", "Onion", "Garlic", "Vegetable Broth", "Spices"],
+    Preparation: [
+      "Sauté onions, garlic, and carrots in a pot.",
+      "Add lentils and vegetable broth.",
+      "Simmer until lentils are soft and serve warm.",
+    ],
+  },
+  {
+    RecipeID: 8,
+    Name: "Peanut Butter Bites",
+    Ingredients: ["Oats", "Peanut Butter", "Honey", "Chia Seeds", "Dark Chocolate Chips"],
+    Preparation: [
+      "Mix all ingredients in a bowl.",
+      "Roll into small bite-sized balls.",
+      "Refrigerate for 30 minutes and enjoy.",
+    ],
+  },
+];
 
-    useEffect(() => {
-        const fetchRecipes = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) throw new Error('Unauthorized: No token found');
+const ClientRecipeListPage = () => {
+  const [recipes, setRecipes] = useState([]);
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
-                const response = await axios.get('http://localhost:8081/clients/recipes', {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
+  useEffect(() => {
+    setRecipes(dummyRecipes);
+    setFilteredRecipes(dummyRecipes);
+  }, []);
 
-                if (response.data.recipes && Array.isArray(response.data.recipes)) {
-                    setRecipes(response.data.recipes);
-                } else {
-                    throw new Error('Invalid API response: Expected an array of recipes.');
-                }
-            } catch (err) {
-                setError(err.response?.data?.error || err.message || 'Failed to fetch recipes.');
-            } finally {
-                setLoading(false);
-            }
-        };
+  const handleSearch = (event) => {
+    const query = event.target.value.toLowerCase();
+    setSearchTerm(query);
 
-        fetchRecipes();
-    }, []);
-
-    const fetchRecipeDetails = async (mealID) => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) throw new Error('Unauthorized: No token found');
-
-            // Corrected URL: Use template literals for dynamic mealID
-            const response = await axios.get(`http://localhost:8081/clients/${mealID}/recipe`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
-            if (response.data.recipe) {
-                setSelectedRecipe(response.data.recipe);
-            } else {
-                throw new Error('Recipe details not found.');
-            }
-        } catch (err) {
-            setError(err.response?.data?.error || err.message || 'Failed to fetch recipe details.');
-        }
-    };
-
-    const toggleDropdown = () => {
-        setDropdownVisible(!dropdownVisible);
-    };
-
-    if (loading) return <p>Loading recipes...</p>;
+    if (!query) {
+      setFilteredRecipes(recipes);
+    } else {
+      const filtered = recipes.filter((recipe) =>
+        recipe.Name.toLowerCase().includes(query)
+      );
+      setFilteredRecipes(filtered);
+    }
+  };
 
   return (
-    <div style={{ fontFamily: 'Rubik, sans-serif', padding: '20px', width: '90vw', margin: '0 auto' }}>
-      <h1 style={{ textAlign: 'center', color: '#333', fontSize: '2rem', fontWeight: 'bold' }}>Client Recipe List</h1>
-      {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+    <div className="recipe-page">
+      <NavigationBar />
 
-      <div style={{ textAlign: 'center', margin: '20px 0', position: 'relative' }}>
-        <button
-          type="button"
-          onClick={toggleDropdown}
-          style={{
-            padding: '12px 24px',
-            background: '#28a745',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '12px',
-            fontSize: '16px',
-            fontWeight: 'bold',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            width: '200px',
-            margin: '0 auto',
-          }}
-        >
-          Select a Recipe
-          <span style={{ marginLeft: '8px', fontSize: '16px' }}>▼</span>
-        </button>
-      </div>
+      <div className="recipe-content">
+        <h1 className="recipe-title">Recipes</h1>
+        <input
+          type="text"
+          className="recipe-search"
+          placeholder="Search for a recipe..."
+          value={searchTerm}
+          onChange={handleSearch}
+        />
 
-      {dropdownVisible && (
-        <ul
-          style={{
-            position: 'absolute',
-            background: '#f8f9fa',
-            border: '1px solid #ccc',
-            borderRadius: '12px',
-            listStyle: 'none',
-            padding: '10px 0',
-            margin: '5px 0',
-            width: '250px',
-            zIndex: 1000,
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-            left: '50%',
-            transform: 'translateX(-50%)',
-          }}
-        >
-          {recipes.map((recipe) => (
-            <li
-              key={recipe.id}
-              onClick={() => {
-                fetchRecipeDetails(recipe.id);
-                setDropdownVisible(false);
-              }}
-              style={{
-                padding: '12px 20px',
-                cursor: 'pointer',
-                fontSize: '14px',
-                color: '#333',
-                borderBottom: '1px solid #ddd',
-                textAlign: 'center',
-              }}
-            >
-              {recipe.name}
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {selectedRecipe && (
-        <div style={{ marginTop: '30px', textAlign: 'center' }}>
-          <h2 style={{ color: 'black', fontSize: '1.5rem', marginBottom: '20px' }}>{selectedRecipe.name}</h2>
-
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'stretch',
-              gap: '20px',
-              flexWrap: 'wrap',
-              margin: '0 auto',
-              maxWidth: '80%',
-            }}
-          >
-            <div
-              style={{
-                background: '#A5D6A7',
-                borderRadius: '20px',
-                padding: '20px',
-                flex: '1 1 300px',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                minWidth: '300px',
-                maxWidth: '400px',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <h3 style={{ color: 'black', marginBottom: '10px', fontSize: '1.25rem', textAlign: 'center' }}>Ingredients</h3>
-              <ul
-                style={{
-                  fontSize: '16px',
-                  color: '#555',
-                  lineHeight: '1.6',
-                  paddingLeft: '20px',
-                  margin: '0',
-                  textAlign: 'left',
-                }}
+        <div className="recipe-container">
+          {filteredRecipes.length > 0 ? (
+            filteredRecipes.map((recipe) => (
+              <div
+                key={recipe.RecipeID}
+                className="recipe-box"
+                onClick={() => setSelectedRecipe(recipe)}
               >
-                {selectedRecipe.ingredients.map((ingredient, index) => (
-                  <li key={index} style={{ marginBottom: '5px' }}>
-                    {ingredient}
-                  </li>
-                ))}
-              </ul>
-            </div>
+                <h3>{recipe.Name}</h3>
+              </div>
+            ))
+          ) : (
+            <p className="no-recipes">No recipes found</p>
+          )}
+        </div>
 
-            <div
-              style={{
-                background: '#A5D6A7',
-                borderRadius: '20px',
-                padding: '20px',
-                flex: '1 1 300px',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                minWidth: '300px',
-                maxWidth: '400px',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <h3 style={{ color: 'black', marginBottom: '10px', fontSize: '1.25rem', textAlign: 'center' }}>Preparation</h3>
-              <ul
-                style={{
-                  fontSize: '16px',
-                  color: '#555',
-                  lineHeight: '1.6',
-                  paddingLeft: '20px',
-                  margin: '0',
-                  textAlign: 'left',
-                }}
-              >
-                {selectedRecipe.preparation.map((step, index) => (
-                  <li key={index} style={{ marginBottom: '5px' }}>
-                    {step}
-                  </li>
-                ))}
-              </ul>
+        {selectedRecipe && (
+          <div className="recipe-popup-overlay" onClick={() => setSelectedRecipe(null)}>
+            <div className="recipe-popup" onClick={(e) => e.stopPropagation()}>
+              <button className="close-btn" onClick={() => setSelectedRecipe(null)}>✖</button>
+              <h2>{selectedRecipe.Name}</h2>
+
+              <div className="recipe-sections">
+                <div className="recipe-section ingredients">
+                  <h3>Ingredients</h3>
+                  <ul>
+                    {selectedRecipe.Ingredients.map((ingredient, index) => (
+                      <li key={index}>{ingredient}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="recipe-section preparation">
+                  <h3>Preparation</h3>
+                  <ol>
+                    {selectedRecipe.Preparation.map((step, index) => (
+                      <li key={index}>{step}</li>
+                    ))}
+                  </ol>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
 
-export default ClientRecipesPage;
+export default ClientRecipeListPage;

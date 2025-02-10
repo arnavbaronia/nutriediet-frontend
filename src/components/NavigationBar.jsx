@@ -17,6 +17,7 @@ const NavigationBar = () => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const client_id = localStorage.getItem("client_id");
+  const meal_id = localStorage.getItem("meal_id");
 
   const handleLogout = () => {
     localStorage.clear();
@@ -49,8 +50,8 @@ const NavigationBar = () => {
           <span>Diet Plan</span>
         </Link>
         <Link
-          to={`/clients/${client_id}/recipes`}
-          className={`nav-link ${isActive(`/clients/${client_id}/recipes`)}`}
+          to={`/${meal_id}/recipe`}
+          className={`nav-link ${isActive(`/${meal_id}/recipe`)}`}
         >
           <MenuBookIcon className="nav-icon" />
           <span>Recipes</span>

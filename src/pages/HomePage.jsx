@@ -32,7 +32,7 @@ const HomePage = () => {
     <div>
       <h1>Home Page</h1>
       <button onClick={() => navigate('/admin')}>Go to Admin Page</button>
-      <button onClick={() => navigate('/client')}>Go to Client Page</button>
+      <button onClick={() => navigate('/clients')}>Go to Client Page</button>
 
       <h2>API 1 Response</h2>
       {api1Response ? <pre>{JSON.stringify(api1Response, null, 2)}</pre> : <p>Loading...</p>}

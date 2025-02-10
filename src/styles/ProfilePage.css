@@ -2,17 +2,19 @@
 
 body {
   font-family: 'Rubik', sans-serif;
-  background-color: #F0F8E7; 
+  background-color: #F0F8E7;
   margin: 0;
   padding: 0;
 }
 
 .profile-container {
-  background-color: #A5D6A7; 
+  background-color: #A5D6A7;
   border-radius: 20px;
   padding: 30px;
-  width: 75%; 
+  width: 75%;
+  max-width: 800px;
   margin: 50px auto;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .profile-heading {
@@ -26,36 +28,37 @@ body {
 .profile-form {
   display: flex;
   flex-direction: column;
-  align-items: center; 
 }
 
 .form-group {
-  margin-bottom: 30px; 
-  width: 100%; 
+  margin-bottom: 30px;
+  width: 100%;
 }
 
 .form-group label {
-  font-weight: bold; 
+  font-weight: bold;
   color: #004D40;
-  margin-bottom: 10px; 
+  margin-bottom: 10px;
+  display: block;
 }
 
 .form-group-inline {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: 20px; 
+  margin-bottom: 20px;
 }
 
 .inline-input {
-  width: 23%; 
+  width: 23%;
 }
 
 .inline-input-wide {
-  width: 31%; 
+  width: 31%;
 }
 
-.profile-input, .profile-textarea {
+.profile-input,
+.profile-textarea {
   width: 100%;
   padding: 10px;
   border: 1px solid #B0BEC5;
@@ -72,7 +75,7 @@ body {
 }
 
 .profile-textarea-large {
-  height: 160px; 
+  height: 160px;
 }
 
 .update-button {
@@ -84,10 +87,57 @@ body {
   font-weight: bold;
   border-radius: 15px;
   cursor: pointer;
-  width: 15%;
+  width: 100%;
+  max-width: 200px;
   text-align: center;
 }
 
 .update-button:hover {
-  background-color: #004D40;
+  background-color: #00332F;
+}
+
+@media (min-width: 601px) {
+  .form-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .form-group {
+    flex: 1;
+  }
+
+  .form-group-inline {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .update-button {
+    width: 20%; 
+    max-width: 150px; 
+  }
+}
+
+@media (max-width: 600px) {
+  .profile-container {
+    width: 80%;
+    padding: 20px;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
+  .form-group-inline {
+    flex-direction: column;
+  }
+
+  .inline-input,
+  .inline-input-wide {
+    width: 100%;
+  }
+
+  .update-button {
+    width: 100%;
+  }
 }
