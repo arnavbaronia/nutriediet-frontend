@@ -82,7 +82,7 @@ function App() {
             <Route path="/admin/exercises" element={<ProtectedRoute requireduser_type="ADMIN" component={ExercisesPage} />} />
             <Route path="/admin/exercise/new" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateExercisePage} />} />
             <Route path="/admin/exercise/:id" element={<ProtectedRoute requireduser_type="ADMIN" component={EditExercisePage} />} />
-            <Route path="/admin/creatediet" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateDietPage} />} />
+            <Route path="/admin/:client_id/creatediet" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateDietPage} />} />
             <Route path="/admin/reminders" element={<ProtectedRoute requireduser_type="ADMIN" component={RemindersPage} />} />
             <Route path="/admin/faq-content" element={<ProtectedRoute requireduser_type="ADMIN" component={FaqContentPage} />} />
           </Routes>

@@ -18,9 +18,7 @@ const ClientsPage = () => {
     const fetchClients = async () => {
       try {
         const response = await axios.get('http://localhost:8081/admin/clients', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         const clientsWithNames = response.data.clients.map((client) => ({
@@ -90,6 +88,11 @@ const ClientsPage = () => {
     navigate(`/admin/client/${clientId}`);
   };
 
+  const handleCreateDietClick = (client) => {
+    localStorage.setItem('selectedClient', JSON.stringify(client));
+    navigate(`/admin/${client.id}/creatediet`);
+  };
+
   return (
     <div className="clients-page-container">
       <h1>Clients</h1>
@@ -136,6 +139,9 @@ const ClientsPage = () => {
               <td>
                 <button onClick={() => handleMoreDetailsClick(client.id)} className="details-button">
                   More Details
+                </button>
+                <button onClick={() => handleCreateDietClick(client)} className="create-diet-button">
+                  Create Diet
                 </button>
               </td>
             </tr>

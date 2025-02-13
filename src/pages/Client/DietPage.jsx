@@ -1,155 +1,132 @@
-// import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
-// import { useParams } from 'react-router-dom';
-// import { getToken } from '../../auth/token'; 
-// import '../../styles/DietPage.css';
-
-// const DietPage = () => {
-//   const { clientId } = useParams(); 
-//   const [diet, setDiet] = useState(null);
-//   const [selectedDiet, setSelectedDiet] = useState('Regular Diet');
-//   const [error, setError] = useState(null);
-
-//   useEffect(() => {
-//     console.log('Client ID:', clientId); 
-//     const token = getToken();
-//     axios.get(`http://localhost:8081/clients/${clientId}/diet`, {
-//       headers: {
-//         Authorization: `Bearer ${token}`
-//       },
-//       withCredentials: true
-//     })
-//       .then(response => {
-//         setDiet(response.data);
-//       })
-//       .catch(error => {
-//         console.error('Error fetching diet:', error);
-//         setError(error);
-//       });
-//   }, [clientId]);
-
-//   if (error) {
-//     return <div>Error: {error.message}</div>;
-//   }
-
-//   if (!diet) {
-//     return <div>Loading...</div>;
-//   }
-
-//   return (
-//     <div className="diet-page">
-//       <div className="diet-content">
-//         {Object.keys(diet).map(time => (
-//           <div key={time} className="meal-section">
-//             <h2 className="meal-time">{time}</h2>
-//             <div className="meal-category">
-//               <h3 className="meal-category-heading">Primary</h3>
-//               <div className="meal-items">
-//                 {diet[time].Primary.map(item => (
-//                   <div key={item.ID} className={`meal-box ${diet[time].Primary.length === 1 ? 'single-box' : ''}`}>
-//                     <p><strong>{item.Name}</strong></p>
-//                     <p>{item.Quantity}</p>
-//                     <p>{item.Preparation}</p>
-//                     {item.Consumption && <p>{item.Consumption}</p>}
-//                   </div>
-//                 ))}
-//               </div>
-//             </div>
-//             {diet[time].Alternative && (
-//               <div className="meal-category">
-//                 <h3 className="meal-category-heading">Alternatives</h3>
-//                 <div className="meal-items">
-//                   {diet[time].Alternative.map(item => (
-//                     <div key={item.ID} className={`meal-box ${diet[time].Alternative.length === 1 ? 'single-box' : ''}`}>
-//                       <p><strong>{item.Name}</strong></p>
-//                       <p>{item.Quantity}</p>
-//                       <p>{item.Preparation}</p>
-//                       {item.Consumption && <p>{item.Consumption}</p>}
-//                     </div>
-//                   ))}
-//                 </div>
-//               </div>
-//             )}
-//           </div>
-//         ))}
-//       </div>
-//       <div className="diet-buttons">
-//         <button
-//           className={`diet-type-button ${selectedDiet === 'Regular Diet' ? 'active-diet' : ''}`}
-//           onClick={() => setSelectedDiet('Regular Diet')}
-//         >
-//           Regular Diet
-//         </button>
-//         <button
-//           className={`diet-type-button ${selectedDiet === 'Detox Diet' ? 'active-diet' : ''}`}
-//           onClick={() => setSelectedDiet('Detox Diet')}
-//         >
-//           Detox Diet
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default DietPage;
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { Form, Button, Alert, Spinner } from 'react-bootstrap';
+import '../../styles/DietPage.css';
 
 const DietPage = () => {
-  const [diet, setDiet] = useState(null);
+  const { client_id } = useParams();
+  const [diet, setDiet] = useState({});
+  const [dietType, setDietType] = useState('0');
+  const [isActive, setIsActive] = useState(true);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchDiet = async () => {
-      const token = localStorage.getItem("token");
-      const clientId = localStorage.getItem("clientId");
-      const userType = localStorage.getItem("user_type");
-      
-      console.log("Stored user_type:", userType);
-      console.log("Stored clientId:", clientId);
-      console.log("Stored token:", token);
+    fetchDiet(dietType);
+  }, [dietType]);
 
-      if (!token || !clientId || userType !== "CLIENT") {
-        setError("You must be logged in as a client to view this page.");
-        return;
-      }
-
-      try {
-        const response = await axios.get(
-          `http://localhost:8081/clients/${clientId}/diet`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setDiet(response.data);
-      } catch (err) {
-        if (err.response?.status === 401) {
-          setError("Session expired. Please log in again.");
-          // localStorage.clear();
-          // window.location.href = "/login";
-        } else {
-          setError("Failed to fetch diet. Please try again later.");
-        }
-      }
-    };
-
-    fetchDiet();
+  useEffect(() => {
+    if (localStorage.getItem('dietUpdated') === 'true') {
+      fetchDiet(dietType);
+      localStorage.removeItem('dietUpdated');
+    }
   }, []);
 
-  if (error) {
-    return <div style={{ color: "red" }}>{error}</div>;
-  }
+  const fetchDiet = async (type) => {
+    setLoading(true);
+    setError(null);
 
-  if (!diet) {
-    return <div>Loading...</div>;
-  }
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('Authorization token is missing. Please log in again.');
+      setLoading(false);
+      return;
+    }
+
+    const endpoint = type === '2' 
+      ? `http://localhost:8081/clients/${client_id}/detox_diet`
+      : `http://localhost:8081/clients/${client_id}/diet`;
+
+    try {
+      const response = await axios.get(endpoint, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.data.isActive) {
+        setDiet(response.data.diet || {});
+        setIsActive(true);
+      } else {
+        setIsActive(false);
+        setDiet({});
+      }
+    } catch (error) {
+      console.error('Error fetching diet:', error);
+      setError(error.response?.data?.error || 'Failed to fetch diet.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderMealSection = (mealType, mealData) => {
+    if (!mealData) return null; 
+  
+    return (
+      <div className="meal-section" key={mealType}>
+        <h3>{mealType}</h3>
+        <p><strong>Timing:</strong> {mealData.Timing || 'Not specified'}</p>
+  
+        {mealData.Primary && mealData.Primary.length > 0 && (
+          <>
+            <h4>Primary Meals</h4>
+            {mealData.Primary.map((meal, index) => (
+              <div key={index} className="meal-box">
+                <p><strong>Name:</strong> {meal.Name || 'N/A'}</p>
+                <p><strong>Quantity:</strong> {meal.Quantity || 'N/A'}</p>
+                <p><strong>Preparation:</strong> {meal.Preparation || 'N/A'}</p>
+                <p><strong>Consumption:</strong> {meal.Consumption || 'N/A'}</p>
+              </div>
+            ))}
+          </>
+        )}
+  
+        {mealData.Alternative && Array.isArray(mealData.Alternative) && mealData.Alternative.length > 0 && (
+          <>
+            <h4>Alternative Meals</h4>
+            {mealData.Alternative.map((meal, index) => (
+              <div key={index} className="meal-box">
+                <p><strong>Name:</strong> {meal.Name || 'N/A'}</p>
+                <p><strong>Quantity:</strong> {meal.Quantity || 'N/A'}</p>
+                <p><strong>Preparation:</strong> {meal.Preparation || 'N/A'}</p>
+                <p><strong>Consumption:</strong> {meal.Consumption || 'N/A'}</p>
+              </div>
+            ))}
+          </>
+        )}
+      </div>
+    );
+  };  
 
   return (
-    <div>
-      <h1>Your Diet</h1>
-      <pre>{JSON.stringify(diet, null, 2)}</pre>
+    <div className="client-diet-page">
+      <h1>Your Diet Plan</h1>
+
+      {error && <Alert variant="danger">{error}</Alert>}
+      {!isActive && <Alert variant="warning">Your diet plan is not active.</Alert>}
+
+      <Form.Group>
+        <Form.Label>Select Diet Type</Form.Label>
+        <Form.Control as="select" value={dietType} onChange={(e) => setDietType(e.target.value)}>
+          <option value="0">Regular Diet</option>
+          <option value="2">Detox Diet</option>
+        </Form.Control>
+      </Form.Group>
+
+      {loading ? (
+        <div className="loading-spinner">
+          <Spinner animation="border" role="status">
+            <span className="sr-only">Loading diet...</span>
+          </Spinner>
+        </div>
+      ) : (
+        Object.keys(diet).length > 0 ? (
+          Object.entries(diet).map(([mealType, mealData]) => renderMealSection(mealType, mealData))
+        ) : (
+          <p>No diet data available.</p>
+        )
+      )}
+
+      <Button variant="primary" onClick={() => fetchDiet(dietType)}>Refresh</Button>
     </div>
   );
 };
