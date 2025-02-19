@@ -1,149 +1,115 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
-import '../../styles/CreateRecipePage.css';
+import React, { useState, useEffect } from "react";
+import { Form, Button } from "react-bootstrap";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import "../../styles/EditDietTemplatePage.css";
 
 const EditDietTemplatePage = () => {
-  const { dietTemplateId } = useParams(); // Get the diet template ID from the URL
-  const [dietTemplate, setDietTemplate] = useState({
-    name: '',
-    diet: [], // Initialize diet as an empty array
-  });
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
+  const { diet_template_id } = useParams();
   const navigate = useNavigate();
-
-  const token = localStorage.getItem('token');
-  const api = axios.create({
-    baseURL: 'http://localhost:8081',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+  const [formData, setFormData] = useState({
+    name: "",
+    diet: "",
   });
+  const [loading, setLoading] = useState(true);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // Fetch the diet template by ID
-  const fetchDietTemplate = async () => {
-    try {
-      const response = await api.get(`/admin/diet_templates/${dietTemplateId}`);
-      setDietTemplate(response.data.template || { name: '', diet: [] }); // Ensure a default structure
-      setError(null);
-    } catch (err) {
-      console.error('Error fetching diet template:', err);
-      setError('Failed to fetch diet template.');
-    }
-  };
+  const token = localStorage.getItem("token");
 
-  // Update the diet template
-  const updateDietTemplate = async () => {
-    try {
-      await api.post(`/admin/diet_templates/${dietTemplateId}`, dietTemplate);
-      setSuccess('Diet template updated successfully!');
-      setError(null);
-      setTimeout(() => navigate('/admin/diet-templates'), 1500); // Redirect after success
-    } catch (err) {
-      console.error('Error updating diet template:', err);
-      setError('Failed to update diet template.');
-      setSuccess(null);
-    }
-  };
-
-  // Handle changes to the diet template name or meals
-  const handleInputChange = (field, value) => {
-    setDietTemplate({ ...dietTemplate, [field]: value });
-  };
-
-  // Handle changes to a specific meal in the diet
-  const handleMealChange = (index, field, value) => {
-    const updatedDiet = dietTemplate.diet.map((meal, i) =>
-      i === index ? { ...meal, [field]: value } : meal
-    );
-    setDietTemplate({ ...dietTemplate, diet: updatedDiet });
-  };
-
-  // Add a new meal to the diet
-  const addMeal = () => {
-    setDietTemplate({
-      ...dietTemplate,
-      diet: [...dietTemplate.diet, { meal: '', description: '' }],
-    });
-  };
-
-  // Remove a meal from the diet
-  const removeMeal = (index) => {
-    const updatedDiet = dietTemplate.diet.filter((_, i) => i !== index);
-    setDietTemplate({ ...dietTemplate, diet: updatedDiet });
-  };
+  const api = axios.create({
+    baseURL: "http://localhost:8081",
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
   useEffect(() => {
+    const fetchDietTemplate = async () => {
+      try {
+        const response = await api.get(`/admin/diet_templates/${diet_template_id}`);
+        const { Name, DietString } = response.data;
+        setFormData({ name: Name, diet: DietString || "" });
+        setLoading(false);
+      } catch (err) {
+        setErrorMessage("Failed to load diet template.");
+        setLoading(false);
+      }
+    };
+
     fetchDietTemplate();
-  }, [dietTemplateId]);
+  }, [diet_template_id]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSuccessMessage("");
+    setErrorMessage("");
+
+    try {
+      const payload = {
+        ID: parseInt(diet_template_id),
+        Name: formData.name,
+        Diet: formData.diet,
+      };
+
+      await api.put(`/admin/diet_templates/${diet_template_id}`, payload);
+      setSuccessMessage("Diet template updated successfully!");
+    } catch (err) {
+      setErrorMessage("Failed to update diet template. Please try again.");
+    }
+  };
 
   return (
-    <div className="admin-create-recipe">
-      <h1>Edit Diet Template</h1>
-      {success && <div className="success-message">{success}</div>}
-      {error && <div className="error-message">{error}</div>}
+    <div className="edit-diet-template-page">
+      <h1 className="page-title">Edit Diet Template</h1>
 
-      <form onSubmit={(e) => e.preventDefault()}>
-        {/* Template Name Input */}
-        <label>Template Name</label>
-        <input
-          type="text"
-          value={dietTemplate.name}
-          onChange={(e) => handleInputChange('name', e.target.value)}
-          placeholder="Enter template name"
-        />
+      {loading ? (
+        <p className="loading-text">Loading...</p>
+      ) : (
+        <Form onSubmit={handleSubmit}>
+          <Form.Group controlId="name">
+            <Form.Label><strong>Template Name</strong></Form.Label>
+            <Form.Control
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              placeholder="Enter diet template name"
+              required
+              className="small-input"
+            />
+          </Form.Group>
 
-        {/* Meals Section */}
-        <h3>Meals</h3>
-        {dietTemplate.diet && Array.isArray(dietTemplate.diet) ? ( // Safeguard against undefined or non-array values
-          dietTemplate.diet.map((meal, index) => (
-            <div key={index} style={{ marginBottom: '10px' }}>
-              <input
-                type="text"
-                value={meal.meal}
-                onChange={(e) => handleMealChange(index, 'meal', e.target.value)}
-                placeholder="Enter meal name"
-                required
-              />
-              <textarea
-                value={meal.description}
-                onChange={(e) =>
-                  handleMealChange(index, 'description', e.target.value)
-                }
-                placeholder="Enter meal description"
-                required
-              ></textarea>
-              <button
-                type="button"
-                onClick={() => removeMeal(index)}
-                style={{ marginLeft: '10px' }}
-              >
-                Remove
-              </button>
-            </div>
-          ))
-        ) : (
-          <p>No meals available. Add one below.</p>
-        )}
+          <Form.Group controlId="diet">
+            <Form.Label><strong>Diet Plan</strong></Form.Label>
+            <Form.Control
+              as="textarea"
+              name="diet"
+              value={formData.diet}
+              onChange={handleInputChange}
+              rows="6"
+              placeholder="Enter diet details"
+              required
+              className="large-input"
+            />
+          </Form.Group>
 
-        {/* Add New Meal Button */}
-        <button type="button" onClick={addMeal}>
-          Add Meal
-        </button>
+          <div className="button-group">
+            <Button type="submit" className="btn-update">
+              Update
+            </Button>
+            <Button variant="secondary" onClick={() => navigate("/admin/diet_templates")} className="btn-cancel">
+              Cancel
+            </Button>
+          </div>
 
-        {/* Update and Cancel Buttons */}
-        <div style={{ marginTop: '20px' }}>
-          <button onClick={updateDietTemplate}>Update Template</button>
-          <button
-            type="button"
-            onClick={() => navigate('/admin/diet-templates')}
-            style={{ marginLeft: '10px' }}
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
+          {successMessage && <p className="success-message">{successMessage}</p>}
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
+        </Form>
+      )}
     </div>
   );
 };

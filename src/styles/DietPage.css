@@ -1,141 +1,101 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
-@import './Colors.css';
 
 body {
-  background-color: var(--main-background-color);
+  background-color: #f8f9fa;
   margin: 0;
   font-family: 'Rubik', sans-serif;
 }
 
 .diet-page {
+  padding: 20px;
+  text-align: left;
+}
+
+.diet-title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.diet-type-selector {
   display: flex;
-  padding: 25px 20px 20px;
-  color: black;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px;
+  margin: 20px 0;
 }
 
-.diet-content {
-  flex: 5.5;
-  padding: 10px;
-  width: 100%;
+.diet-type-selector label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #444;
 }
 
-.diet-heading {
-  text-align: center;
-  margin-bottom: 10px;
+.diet-type-selector select {
+  width: 20%;
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #fff;
 }
 
 .meal-section {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
-.meal-category {
-  margin-bottom: 10px;
-}
-
-.meal-category h3 {
-  text-align: center;
-}
-
-.meal-items {
+.meal-header {
   display: flex;
-  gap: 30px;
+  align-items: center;
+  gap: 15px;
+}
+
+.meal-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #555;
+  margin: 0;
+}
+
+.meal-timing {
+  font-size: 16px;
+  color: #777;
+  font-style: italic;
+  margin: 0;
+}
+
+.meal-subtitle {
+  font-size: 20px;
+  font-weight: bold;
+  color: #444;
+  margin-top: 15px;
+}
+
+.meal-box-container {
+  display: flex;
   flex-wrap: wrap;
-  justify-content: center; 
+  gap: 20px;
+  justify-content: space-between;
 }
 
 .meal-box {
-  background-color: var(--meal-box-color);
-  color: black;
-  padding: 15px;
-  border-radius: 15px;
-  flex: 1 1 calc(33% - 20px);
-  max-width: calc(33% - 20px);
-  box-sizing: border-box;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.meal-box.single-box {
-  flex: 1 1 calc(30% - 20px);
-  max-width: calc(30% - 20px);
-}
-
-.meal-box p {
-  margin: 10px 0;
-}
-
-.diet-buttons {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  flex: 1;
-  margin-left: 20px; 
-  border-left: 2px solid black;
-  padding-left: 20px;
-}
-
-.diet-type-button {
-  display: block;
-  background-color: var(--button-color);
-  color: black;
-  border: none;
-  padding: 15px 10px;
-  margin-top: 20px;
-  margin-bottom: 5px;
-  border-radius: 10px;
-  cursor: pointer;
-  text-align: center;
-  width: 100%;
-  font-family: 'Rubik', sans-serif; 
-  font-weight: bold; 
-  font-size: 130%; 
-}
-
-.diet-type-button.active-diet {
-  background-color: var(--highlight-color);
-}
-
-.footer {
-  background-color: var(--footer-background-color);
-  color: white;
-  text-align: center;
-  padding: 10px 0;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  flex: 1 1 calc(33.33% - 20px);
+  max-width: calc(33.33% - 20px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  border: 1px solid #ddd;
 }
 
 @media (max-width: 768px) {
-  .meal-box {
-    flex: 1 1 100%;
-    max-width: 100%;
-  }
-
-  .diet-page {
+  .meal-box-container {
     flex-direction: column;
   }
 
-  .diet-content {
-    width: 100%;
-  }
-
-  .diet-buttons {
-    width: 100%;
-    align-items: center;
-    margin-left: 0;
-    border-left: none;
-    padding-left: 0;
-    margin-bottom: 20px;
-    order: -1; 
-    flex-direction: row;
-    justify-content: space-around; 
-  }
-
-  .diet-type-button {
-    width: 45%; 
-    margin-top: 0;
-    margin-bottom: 0;
+  .meal-box {
+    flex: 1 1 100%;
+    max-width: 100%;
   }
 }

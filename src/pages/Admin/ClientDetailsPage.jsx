@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import 'chart.js/auto';
+import { Line } from 'react-chartjs-2';
 import '../../styles/ClientDetailsPage.css';
 
 const ClientDetailsPage = () => {
@@ -34,6 +36,7 @@ const ClientDetailsPage = () => {
   const [successMessage, setSuccessMessage] = useState(null);
   const [isActive, setIsActive] = useState(true);
   const [diets, setDiets] = useState([]);
+  const [weightHistory, setWeightHistory] = useState([]);
   console.log('Client ID:', client_id);
 
   const formatDateForInput = (date) => {
@@ -71,14 +74,44 @@ const ClientDetailsPage = () => {
 
         setDiets(response.data.diets);
         setIsActive(clientData.is_active);
+        return axios
+        .get(`http://localhost:8081/admin/client/${client_id}/weight_history`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+      })
+      .then((response) => {
+        setWeightHistory(response.data.weights || []);
         setLoading(false);
       })
       .catch((error) => {
         console.error('Error fetching client details:', error);
         setError('Error fetching client details. Please try again later.');
         setLoading(false);
-      });
+    });
   }, [client_id]);
+  
+  const weightData = {
+    labels: weightHistory.map((entry) =>
+      new Date(entry.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })
+    ),
+    datasets: [
+      {
+        label: 'Weight (kg)',
+        data: weightHistory.map((entry) => entry.weight),
+        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderWidth: 2,
+        pointRadius: 5,
+        pointBackgroundColor: weightHistory.map((entry, index) => {
+          if (index > 0) {
+            return entry.weight > weightHistory[index - 1].weight ? 'red' : 'green';
+          }
+          return 'blue';
+        }),
+        tension: 0.4,
+      },
+    ],
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -424,6 +457,14 @@ const ClientDetailsPage = () => {
             <li key={diet.id}>Week {diet.week_number}</li>
           ))}
         </ul>
+        <h2>Weight History</h2>
+        {weightHistory.length > 0 ? (
+          <div className="weight-history-graph">
+            <Line data={weightData} />
+          </div>
+        ) : (
+          <p>No weight history available.</p>
+        )}
       </div>
     </div>
   );

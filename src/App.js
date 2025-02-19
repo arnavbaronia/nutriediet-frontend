@@ -66,7 +66,7 @@ function App() {
             <Route path="/clients/:client_id/diet" element={<ProtectedRoute component={DietPage} />} />
             <Route path="/clients/:client_id/exercise" element={<ProtectedRoute component={ExercisePage} />} />
             <Route path="/clients/:client_id/my_profile" element={<ProtectedRoute component={ProfilePage} />} />
-            <Route path="/clients/:client_id/weight-update" element={<ProtectedRoute component={WeightUpdatePage} />} />
+            <Route path="/clients/:client_id/weight_update" element={<ProtectedRoute component={WeightUpdatePage} />} />
             <Route path="/:meal_id/recipe" element={<ProtectedRoute component={ClientRecipesPage} />} />
             <Route path="/admin/appointments" element={<ProtectedRoute component={AppointmentsPage} />} />
             <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
@@ -75,7 +75,7 @@ function App() {
             <Route path="/admin/client/:client_id" element={<ProtectedRoute requireduser_type="ADMIN" component={ClientDetailsPage} />} />
             <Route path="/admin/diet_templates" element={<ProtectedRoute requireduser_type="ADMIN" component={DietTemplatesPage} />} />
             <Route path="/admin/diet_templates/new" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateDietTemplatePage} />} />
-            <Route path="/admin/diet_templates/:dietTemplateId" element={<ProtectedRoute requireduser_type="ADMIN" component={EditDietTemplatePage} />} />
+            <Route path="/admin/diet_templates/:diet_template_id" element={<ProtectedRoute requireduser_type="ADMIN" component={EditDietTemplatePage} />} />
             <Route path="/admin/recipes" element={<AdminRecipeListPage />} />
             <Route path="/admin/recipes/new" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateRecipePage} />} />
             <Route path="/admin/recipe/:meal_id" element={<ProtectedRoute requireduser_type="ADMIN" component={UpdateRecipePage} />} />

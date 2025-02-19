@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "../../styles/CreateDietTemplatePage.css";
 
 const CreateDietTemplatePage = () => {
-  const [newTemplate, setNewTemplate] = useState({ name: "", diet: "" });
-  const [error, setError] = useState(null);
+  const [name, setName] = useState("");
+  const [diet, setDiet] = useState(""); // Kept as string
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -16,39 +19,54 @@ const CreateDietTemplatePage = () => {
   const handleCreateTemplate = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/admin/diet_templates/new", {
-        name: newTemplate.name,
-        diet: JSON.parse(newTemplate.diet),
-      });
-      navigate("/");
+      await api.post("/admin/diet_templates/new", { name, diet });
+      setSuccessMessage("Diet template created successfully!");
+      setErrorMessage("");
+      setName("");
+      setDiet("");
     } catch (err) {
-      console.error("Error creating diet template:", err.response || err.message);
-      setError("Failed to create diet template. Please try again.");
+      setErrorMessage("Failed to create diet template. Please try again.");
+      setSuccessMessage("");
     }
   };
 
   return (
-    <form onSubmit={handleCreateTemplate}>
-      <h2>Create New Diet Template</h2>
-      <input
-        type="text"
-        placeholder="Template Name"
-        value={newTemplate.name}
-        onChange={(e) => setNewTemplate({ ...newTemplate, name: e.target.value })}
-        required
-      />
-      <textarea
-        placeholder="Diet JSON"
-        value={newTemplate.diet}
-        onChange={(e) => setNewTemplate({ ...newTemplate, diet: e.target.value })}
-        required
-      ></textarea>
-      <button type="submit">Save</button>
-      <button type="button" onClick={() => navigate("/")}>
-        Cancel
-      </button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-    </form>
+    <div className="admin-create-diet">
+      <h1>Create a New Diet Template</h1>
+      <form onSubmit={handleCreateTemplate}>
+        <div>
+          <label htmlFor="name">Template Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter template name"
+            className="small-input"
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="diet">Diet Plan</label>
+          <textarea
+            id="diet"
+            name="diet"
+            value={diet}
+            onChange={(e) => setDiet(e.target.value)}
+            placeholder="Enter diet details"
+            className="large-input"
+            required
+          ></textarea>
+        </div>
+        <button type="submit">Save Template</button>
+        <button type="button" className="cancel-btn" onClick={() => navigate("/admin/diet_templates")}>
+          Cancel
+        </button>
+      </form>
+      {successMessage && <p className="success-message">{successMessage}</p>}
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
+    </div>
   );
 };
 

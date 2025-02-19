@@ -1,27 +1,45 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 import "../../styles/WeightUpdatePage.css";
 
 const WeightUpdatePage = () => {
+  const { client_id } = useParams();
   const [weight, setWeight] = useState("");
   const [isAllowed, setIsAllowed] = useState(false);
-  const [latestDietDate, setLatestDietDate] = useState("2025-01-01"); // Dummy date
+  const [latestDietDate, setLatestDietDate] = useState("2025-02-10"); 
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    fetchWeightUpdateStatus();
+    fetchLatestDietDate();
   }, []);
 
-  const fetchWeightUpdateStatus = () => {
-    const lastDietDate = new Date(latestDietDate);
-    const currentDate = new Date();
-    const daysSinceLastDiet = Math.floor(
-      (currentDate - lastDietDate) / (1000 * 60 * 60 * 24)
-    );
+  const fetchLatestDietDate = async () => {
+    try {
+      const response = await axios.get(`/admin/client/${client_id}/weight_history`); 
 
-    setIsAllowed(daysSinceLastDiet >= 4);
+      if (response.status === 200 && response.data.length > 0) {
+        const latestEntry = response.data[response.data.length - 1];
+        setLatestDietDate(latestEntry.date);
+
+        const lastDietDate = new Date(latestEntry.date);
+        const currentDate = new Date();
+        const daysSinceLastUpdate = Math.floor((currentDate - lastDietDate) / (1000 * 60 * 60 * 24));
+
+        setIsAllowed(daysSinceLastUpdate >= 4);
+      } else {
+        throw new Error("No weight history found.");
+      }
+    } catch (error) {
+      console.error("Error fetching weight history:", error);
+      setErrorMessage("⚠️ Failed to load weight history. Using dummy data.");
+
+      // Fallback dummy data for testing
+      setLatestDietDate("2025-02-10");
+      setIsAllowed(true);
+    }
   };
 
   const handleWeightUpdate = async () => {
@@ -34,13 +52,18 @@ const WeightUpdatePage = () => {
     setErrorMessage("");
 
     try {
-      setTimeout(() => {
-        console.log("Weight updated successfully:", weight);
-        setShowPopup(true);
-        setLoading(false);
-      }, 1500);
+      await axios.post(`/clients/${client_id}/weight_update`, {
+        weight: parseFloat(weight),
+        date: new Date().toISOString().split("T")[0],
+      });
+
+      setShowPopup(true);
+      setWeight("");
+      fetchLatestDietDate();
     } catch (error) {
+      console.error("Error updating weight:", error);
       setErrorMessage("❌ Failed to update weight. Try again later.");
+    } finally {
       setLoading(false);
     }
   };

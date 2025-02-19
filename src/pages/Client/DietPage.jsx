@@ -59,52 +59,58 @@ const DietPage = () => {
   };
 
   const renderMealSection = (mealType, mealData) => {
-    if (!mealData) return null; 
-  
+    if (!mealData) return null;
+
     return (
       <div className="meal-section" key={mealType}>
-        <h3>{mealType}</h3>
-        <p><strong>Timing:</strong> {mealData.Timing || 'Not specified'}</p>
-  
+        <div className="meal-header">
+          <h3 className="meal-title">{mealType}</h3>
+          <p className="meal-timing"><strong>Timing:</strong> {mealData.Timing || 'Not specified'}</p>
+        </div>
+
         {mealData.Primary && mealData.Primary.length > 0 && (
           <>
-            <h4>Primary Meals</h4>
-            {mealData.Primary.map((meal, index) => (
-              <div key={index} className="meal-box">
-                <p><strong>Name:</strong> {meal.Name || 'N/A'}</p>
-                <p><strong>Quantity:</strong> {meal.Quantity || 'N/A'}</p>
-                <p><strong>Preparation:</strong> {meal.Preparation || 'N/A'}</p>
-                <p><strong>Consumption:</strong> {meal.Consumption || 'N/A'}</p>
-              </div>
-            ))}
+            <h4 className="meal-subtitle">Primary Meals</h4>
+            <div className="meal-box-container">
+              {mealData.Primary.map((meal, index) => (
+                <div key={index} className="meal-box">
+                  <p><strong>Name:</strong> {meal.Name || 'N/A'}</p>
+                  <p><strong>Quantity:</strong> {meal.Quantity || 'N/A'}</p>
+                  <p><strong>Preparation:</strong> {meal.Preparation || 'N/A'}</p>
+                  <p><strong>Consumption:</strong> {meal.Consumption || 'N/A'}</p>
+                </div>
+              ))}
+            </div>
           </>
         )}
-  
+
         {mealData.Alternative && Array.isArray(mealData.Alternative) && mealData.Alternative.length > 0 && (
           <>
-            <h4>Alternative Meals</h4>
-            {mealData.Alternative.map((meal, index) => (
-              <div key={index} className="meal-box">
-                <p><strong>Name:</strong> {meal.Name || 'N/A'}</p>
-                <p><strong>Quantity:</strong> {meal.Quantity || 'N/A'}</p>
-                <p><strong>Preparation:</strong> {meal.Preparation || 'N/A'}</p>
-                <p><strong>Consumption:</strong> {meal.Consumption || 'N/A'}</p>
-              </div>
-            ))}
+            <h4 className="meal-subtitle">Alternative Meals</h4>
+            <div className="meal-box-container">
+              {mealData.Alternative.map((meal, index) => (
+                <div key={index} className="meal-box">
+                  <p><strong>Name:</strong> {meal.Name || 'N/A'}</p>
+                  <p><strong>Quantity:</strong> {meal.Quantity || 'N/A'}</p>
+                  <p><strong>Preparation:</strong> {meal.Preparation || 'N/A'}</p>
+                  <p><strong>Consumption:</strong> {meal.Consumption || 'N/A'}</p>
+                </div>
+              ))}
+            </div>
           </>
         )}
       </div>
     );
-  };  
+  };
 
   return (
-    <div className="client-diet-page">
-      <h1>Your Diet Plan</h1>
+    <div className="diet-page">
+      <h1 className="diet-title">Your Diet Plan</h1>
 
       {error && <Alert variant="danger">{error}</Alert>}
       {!isActive && <Alert variant="warning">Your diet plan is not active.</Alert>}
 
-      <Form.Group>
+      <Form.Group className="diet-type-selector">
         <Form.Label>Select Diet Type</Form.Label>
         <Form.Control as="select" value={dietType} onChange={(e) => setDietType(e.target.value)}>
           <option value="0">Regular Diet</option>

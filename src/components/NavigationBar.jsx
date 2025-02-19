@@ -36,8 +36,8 @@ const NavigationBar = () => {
       </div>
       <div className={`nav-buttons ${isMobileMenuOpen ? "show-menu" : ""}`}>
         <Link
-          to={`/clients/${client_id}/weight-update`}
-          className={`nav-link ${isActive(`/clients/${client_id}/weight-update`)}`}
+          to={`/clients/${client_id}/weight_update`}
+          className={`nav-link ${isActive(`/clients/${client_id}/weight_update`)}`}
         >
           <MonitorWeightOutlinedIcon className="nav-icon" />
           <span>Weight Update</span>
