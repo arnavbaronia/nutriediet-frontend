@@ -8,6 +8,41 @@ h1 {
   margin-bottom: 20px;
 }
 
+.search-and-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.selected-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-tag {
+  background-color: #4caf50;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.remove-filter {
+  margin-left: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.filters-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .filters-container {
   display: flex;
   justify-content: space-between;

@@ -70,7 +70,6 @@ const ExercisesPage = () => {
     try {
       const response = await api.post(`/admin/exercise/${exerciseId}/delete`);
       if (response.data.success) {
-        // Re-fetch the exercises to reflect the updated list
         await fetchExercises();
         setSelectedExerciseDetails(null);
         setSelectedExerciseId('');
@@ -84,6 +83,11 @@ const ExercisesPage = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const extractYouTubeThumbnail = (url) => {
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:.*v=|embed\/|v\/|.*\/vi\/))([\w-]{11})/);
+    return match ? `https://img.youtube.com/vi/${match[1]}/0.jpg` : null;
   };
 
   useEffect(() => {
@@ -122,20 +126,31 @@ const ExercisesPage = () => {
 
       <div className="right-section">
         {selectedExerciseDetails ? (
-          <div>
-            <h2>{selectedExerciseDetails.name}</h2>
-            <p>{selectedExerciseDetails.description}</p>
-            <a href={selectedExerciseDetails.link} target="_blank" rel="noopener noreferrer">
-              {selectedExerciseDetails.link}
-            </a>
+          <div className="exercise-card">
+            <div className="video-container">
+              {selectedExerciseDetails.link && (
+                <img
+                  src={extractYouTubeThumbnail(selectedExerciseDetails.link)}
+                  alt="Exercise Thumbnail"
+                  className="video-thumbnail"
+                />
+              )}
+              <h3 className="exercise-title">{selectedExerciseDetails.name}</h3>
+              <a
+                href={selectedExerciseDetails.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="exercise-link"
+              >
+                Watch Video
+              </a>
+            </div>
+
             <div className="action-buttons">
               <button onClick={() => navigate(`/admin/exercise/${selectedExerciseId}`)}>
                 Edit
               </button>
-              <button
-                className="delete"
-                onClick={() => deleteExercise(selectedExerciseId)}
-              >
+              <button className="delete" onClick={() => deleteExercise(selectedExerciseId)}>
                 Delete
               </button>
             </div>

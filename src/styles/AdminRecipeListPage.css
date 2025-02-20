@@ -1,13 +1,37 @@
+.custom-dropdown {
+  width: 100%;
+  max-width: 250px;
+}
+
+.controls-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.new-recipe-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.new-recipe-button:hover {
+  background-color: #0056b3;
+}
+
 .admin-recipes-container {
   display: flex;
   height: 100vh;
-  font-family: 'Rubik', sans-serif;
+  font-family: "Rubik", sans-serif;
 }
 
 .left-section {
   margin-top: 20px;
   flex: 1;
-  border-right: 0px solid black;
   padding: 20px;
 }
 
@@ -21,9 +45,7 @@ h2 {
   text-align: center;
 }
 
-.dropdown-container {
-  text-align: center;
-  margin: 20px 0;
+.dropdown-wrapper {
   position: relative;
 }
 
@@ -45,12 +67,12 @@ h2 {
   border-radius: 12px;
   list-style: none;
   padding: 10px 0;
-  margin: 5px 0;
+  margin-top: 5px;
   width: 250px;
   z-index: 1000;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  left: 50%;
-  transform: translateX(-50%);
+  overflow-y: auto;
+  max-height: 200px;
 }
 
 .dropdown-item {
@@ -58,12 +80,7 @@ h2 {
   cursor: pointer;
   font-size: 14px;
   color: #333;
-  border-bottom: 1px solid #ddd;
   text-align: center;
-}
-
-.dropdown-item:last-child {
-  border-bottom: none;
 }
 
 .dropdown-item:hover {
@@ -74,6 +91,7 @@ h2 {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .recipe-section {
@@ -83,7 +101,7 @@ h2 {
   flex: 1 1 300px;
   max-width: 400px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-left: 20px;
+  text-align: center;
 }
 
 .recipe-section h3 {
@@ -91,17 +109,9 @@ h2 {
   margin-bottom: 10px;
 }
 
-.recipe-section ul,
-.recipe-section ol {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.recipe-section li {
-  font-size: 16px;
-  line-height: 1.6;
-  margin-bottom: 5px;
+.bullet-list {
+  text-align: left;
+  padding-left: 20px;
 }
 
 .action-buttons {
@@ -119,72 +129,6 @@ h2 {
   cursor: pointer;
 }
 
-.action-buttons button.delete {
+.action-buttons .delete {
   background: #dc3545;
-}
-
-.error-text {
-  color: red;
-  text-align: center;
-}
-
-.centered-message {
-display: flex;
-justify-content: center;
-align-items: center;
-height: 35%;
-text-align: center;
-font-size: 1.2rem;
-color: black;
-}
-
-.controls-container {
-display: flex;
-justify-content: center;
-align-items: center;
-gap: 10px;
-}
-
-.new-recipe-button {
-padding: 10px 20px;
-background-color: #007bff;
-color: white;
-border: none;
-border-radius: 8px;
-font-size: 1rem;
-cursor: pointer;
-}
-
-.new-recipe-button:hover {
-background-color: #0056b3;
-}
-
-.dropdown-container {
-position: relative;
-}
-
-.dropdown-button {
-padding: 12px 24px;
-background: #28a745;
-color: #fff;
-border: none;
-border-radius: 12px;
-font-size: 16px;
-font-weight: bold;
-cursor: pointer;
-}
-
-.dropdown-menu {
-position: absolute;
-background: #f8f9fa;
-border: 1px solid #ccc;
-border-radius: 12px;
-list-style: none;
-padding: 10px 0;
-margin: 5px 0;
-width: 250px;
-z-index: 1000;
-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-left: 50%;
-transform: translateX(-50%);
 }
