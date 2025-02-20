@@ -368,15 +368,25 @@ const ClientDetailsPage = () => {
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="package">Package</label>
-              <input
-                type="text"
+              <select
                 id="package"
                 name="package"
                 value={client.package}
                 className="client-input"
                 onChange={handleChange}
-              />
+                style={{
+                  border: '2px solid black', 
+                  borderRadius: '10px', 
+                  padding: '8px',
+                }}
+              >
+                <option value="">Select</option>
+                <option value="1 Month">1 Month</option>
+                <option value="3 Months">3 Months</option>
+                <option value="6 Months">6 Months</option>
+              </select>
             </div>
+
             <div className="form-group">
               <label htmlFor="amount_paid">Amount Paid (₹)</label>
               <input
