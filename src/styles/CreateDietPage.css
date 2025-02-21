@@ -84,11 +84,11 @@
   .diet-input-scrollable {
     overflow-y: auto;
     scrollbar-width: none;
-    -ms-overflow-style: none;
+    -ms-overflow-style: none; 
   }
   
-  .diet-input-scrollable:hover {
-    scrollbar-width: thin;
+  .diet-input-scrollable::-webkit-scrollbar {
+    width: 0px;
   }
 
   .save-btn { background-color: #4CAF50; color: white; }
