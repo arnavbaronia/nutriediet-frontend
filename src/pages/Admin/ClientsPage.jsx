@@ -8,6 +8,8 @@ const ClientsPage = () => {
   const [filteredClients, setFilteredClients] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedFilters, setSelectedFilters] = useState([]);
+  const [selectedDietitian, setSelectedDietitian] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState("");
   const [sortConfig, setSortConfig] = useState(null);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -21,16 +23,8 @@ const ClientsPage = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        const clientsWithNames = response.data.clients.map((client) => ({
-          ...client,
-          name:
-            client.name ||
-            `${client.first_name || ""} ${client.last_name || ""}`.trim() ||
-            "N/A",
-        }));
-
-        setClients(clientsWithNames);
-        setFilteredClients(clientsWithNames);
+        setClients(response.data.clients);
+        setFilteredClients(response.data.clients);
       } catch (error) {
         console.error("Error fetching clients:", error);
         setError(error.response?.data?.err || "An error occurred. Please try again.");
@@ -50,23 +44,23 @@ const ClientsPage = () => {
       if (selectedFilters.includes("diets_due_today")) {
         matchesFilters =
           matchesFilters &&
-          new Date(client.next_diet_date).toDateString() === new Date().toDateString();
+          new Date(client.last_diet_date).toDateString() === new Date().toDateString();
       }
       if (selectedFilters.includes("payment_due")) {
         matchesFilters = matchesFilters && new Date(client.next_payment_date) < new Date();
       }
-      if (selectedFilters.includes("active_clients")) {
-        matchesFilters = matchesFilters && client.status === "active";
-      }
       if (selectedFilters.includes("inactive_clients")) {
-        matchesFilters = matchesFilters && client.status === "inactive";
+        matchesFilters = matchesFilters && client.is_active === false;
       }
 
-      return matchesSearch && matchesFilters;
+      const matchesDietitian = selectedDietitian ? client.dietitian_id === Number(selectedDietitian) : true;
+      const matchesGroup = selectedGroup ? client.group === Number(selectedGroup) : true;
+
+      return matchesSearch && matchesFilters && matchesDietitian && matchesGroup;
     });
 
     setFilteredClients(filtered);
-  }, [search, selectedFilters, clients]);
+  }, [search, selectedFilters, selectedDietitian, selectedGroup, clients]);
 
   const handleSort = (key) => {
     let direction = "ascending";
@@ -93,6 +87,14 @@ const ClientsPage = () => {
     if (!selectedFilters.includes(value)) {
       setSelectedFilters([...selectedFilters, value]);
     }
+  };
+
+  const handleDietitianChange = (e) => {
+    setSelectedDietitian(e.target.value);
+  };
+
+  const handleGroupChange = (e) => {
+    setSelectedGroup(e.target.value);
   };
 
   const removeFilter = (filter) => {
@@ -130,12 +132,29 @@ const ClientsPage = () => {
             ))}
           </div>
         </div>
+
         <select onChange={handleFilterChange} className="filter-dropdown">
           <option value="">Add Filter</option>
           <option value="diets_due_today">Diets Due Today</option>
           <option value="payment_due">Payment Due</option>
-          <option value="active_clients">Active Clients</option>
           <option value="inactive_clients">Inactive Clients</option>
+        </select>
+
+        <select onChange={handleDietitianChange} className="filter-dropdown">
+          <option value="">Dietitian</option>
+          <option value="1">Dietitian ID: 1</option>
+          <option value="2">Dietitian ID: 2</option>
+          <option value="3">Dietitian ID: 3</option>
+        </select>
+
+        <select onChange={handleGroupChange} className="filter-dropdown">
+          <option value="">Group</option>
+          <option value="1">Group: 1</option>
+          <option value="2">Group: 2</option>
+          <option value="3">Group: 3</option>
+          <option value="4">Group: 4</option>
+          <option value="5">Group: 5</option>
+          <option value="6">Group: 6</option>
         </select>
       </div>
 
@@ -145,6 +164,8 @@ const ClientsPage = () => {
             <th onClick={() => handleSort("id")}>ID</th>
             <th onClick={() => handleSort("name")}>Name</th>
             <th onClick={() => handleSort("email")}>Email</th>
+            <th onClick={() => handleSort("dietitian_id")}>Dietitian ID</th>
+            <th onClick={() => handleSort("group")}>Group</th>
             <th onClick={() => handleSort("next_payment_date")}>Next Payment Date</th>
             <th onClick={() => handleSort("last_diet_date")}>Last Diet Date</th>
             <th>Actions</th>
@@ -156,6 +177,8 @@ const ClientsPage = () => {
               <td>{client.id}</td>
               <td>{client.name}</td>
               <td>{client.email || "N/A"}</td>
+              <td>{client.dietitian_id || "N/A"}</td>
+              <td>{client.group || "N/A"}</td>
               <td>
                 {client.next_payment_date === "0001-01-01T00:00:00Z"
                   ? "N/A"

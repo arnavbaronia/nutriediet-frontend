@@ -7,21 +7,14 @@ import '../../styles/DietPage.css';
 const DietPage = () => {
   const { client_id } = useParams();
   const [diet, setDiet] = useState({});
-  const [dietType, setDietType] = useState('0');
+  const [dietType, setDietType] = useState('0'); 
   const [isActive, setIsActive] = useState(true);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchDiet(dietType);
-  }, [dietType]);
-
-  useEffect(() => {
-    if (localStorage.getItem('dietUpdated') === 'true') {
-      fetchDiet(dietType);
-      localStorage.removeItem('dietUpdated');
-    }
-  }, []);
+  }, [dietType, client_id]);
 
   const fetchDiet = async (type) => {
     setLoading(true);
@@ -39,9 +32,12 @@ const DietPage = () => {
       : `http://localhost:8081/clients/${client_id}/diet`;
 
     try {
+      console.log("Fetching diet from:", endpoint);
       const response = await axios.get(endpoint, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
+      console.log("Diet response:", response.data);
 
       if (response.data.isActive) {
         setDiet(response.data.diet || {});
