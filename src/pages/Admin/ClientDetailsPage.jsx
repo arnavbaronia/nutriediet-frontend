@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import 'chart.js/auto';
@@ -37,6 +38,7 @@ const ClientDetailsPage = () => {
   const [isActive, setIsActive] = useState(true);
   const [diets, setDiets] = useState([]);
   const [weightHistory, setWeightHistory] = useState([]);
+  const navigate=useNavigate();
   console.log('Client ID:', client_id);
 
   const formatDateForInput = (date) => {
@@ -147,6 +149,11 @@ const ClientDetailsPage = () => {
       setError('Error activating/deactivating client. Please try again later.');
     }
   };  
+
+  const handleCreateDietClick = (client) => {
+    localStorage.setItem("selectedClient", JSON.stringify(client));
+    navigate(`/admin/${client.id}/creatediet`);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -456,6 +463,9 @@ const ClientDetailsPage = () => {
           </div>
 
           <button type="submit" className="update-button">Update</button>
+          <button onClick={() => handleCreateDietClick(client)} className="create-diet-button">
+                  Create Diet
+          </button>
           <button type="button" onClick={handleActivateDeactivate} className="toggle-button">
             {isActive ? 'Deactivate' : 'Activate'} Account
           </button>

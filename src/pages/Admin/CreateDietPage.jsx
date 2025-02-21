@@ -52,6 +52,12 @@ const CreateDietPage = () => {
     setPastDiet(selectedDiet ? selectedDiet.diet : "");
   };
 
+  const handleDietTypeChange = (e) => {
+    const selectedType = Number(e.target.value);
+    setDietType(selectedType);
+    console.log("Diet type selected:", selectedType); 
+  };
+
   const handleSubmit = async () => {
     const token = localStorage.getItem("token");
     const dietData = {
@@ -60,18 +66,22 @@ const CreateDietPage = () => {
       WeekNumber: Number(weekNumber),
     };
 
+    console.log("Submitting diet data:", dietData); 
+
     try {
-      await axios.post(`http://localhost:8081/admin/${client_id}/diet`, dietData, {
+      const response = await axios.post(`http://localhost:8081/admin/${client_id}/diet`, dietData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
 
+      console.log("Diet saved successfully:", response.data);
       alert("Diet saved successfully!");
       setWeekNumber(weekNumber + 1);
       fetchDietHistory();
     } catch (error) {
+      console.error("Failed to save diet:", error.response ? error.response.data : error.message);
       setError("Failed to save diet.");
     }
   };
@@ -85,7 +95,7 @@ const CreateDietPage = () => {
         <div className="diet-left">
           <h2>Create Diet</h2>
           <div className="dropdown-group">
-            <Form.Control as="select" value={dietType} onChange={(e) => setDietType(Number(e.target.value))} className="styled-dropdown">
+            <Form.Control as="select" value={dietType} onChange={handleDietTypeChange} className="styled-dropdown">
               <option value="0">Regular</option>
               <option value="2">Detox</option>
             </Form.Control>

@@ -103,11 +103,6 @@ const ClientsPage = () => {
     navigate(`/admin/client/${clientId}`);
   };
 
-  const handleCreateDietClick = (client) => {
-    localStorage.setItem("selectedClient", JSON.stringify(client));
-    navigate(`/admin/${client.id}/creatediet`);
-  };
-
   return (
     <div className="clients-page-container">
       <h1>Clients</h1>
@@ -170,9 +165,6 @@ const ClientsPage = () => {
               <td>
                 <button onClick={() => handleMoreDetailsClick(client.id)} className="details-button">
                   More Details
-                </button>
-                <button onClick={() => handleCreateDietClick(client)} className="create-diet-button">
-                  Create Diet
                 </button>
               </td>
             </tr>

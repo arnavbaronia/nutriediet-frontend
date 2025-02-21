@@ -54,7 +54,7 @@
 }
 
 .update-button,
-.toggle-button {
+.toggle-button, .create-diet-button {
     margin-top: 20px;
     padding: 10px 20px;
     font-size: 16px;
@@ -73,7 +73,16 @@
     transition: background-color 0.3s; 
 }
 
-.update-button:hover {
+.create-diet-button {
+    background-color: #e88905;
+    color: white;
+    border: none;
+    margin: auto;
+    width: 150px;
+    transition: background-color 0.3s;
+}
+
+.update-button:hover, .create-diet-button:hover {
     background-color: #ffffff; 
     color: #004D40; 
     border: 2px solid #004D40; 
