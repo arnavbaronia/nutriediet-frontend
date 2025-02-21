@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import '../styles/NavigationBar.css';
-import logo from '../assets/Nutriediet_Logo_Transparent.png';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import MenuIcon from '@mui/icons-material/Menu';
+import React, { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import "../styles/NavigationBar.css";
+import logo from "../assets/Nutriediet_Logo_Transparent.png";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import MenuIcon from "@mui/icons-material/Menu";
+import RecentActorsIcon from "@mui/icons-material/RecentActors";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import BentoIcon from "@mui/icons-material/Bento";
 
 const AdminNavBar = () => {
   const location = useLocation();
@@ -12,12 +16,12 @@ const AdminNavBar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const isActive = (path) => {
-    return location.pathname === path ? 'active' : '';
+    return location.pathname === path ? "active" : "";
   };
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
@@ -30,15 +34,23 @@ const AdminNavBar = () => {
       <div className="menu-icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
         <MenuIcon />
       </div>
-      <div className={`nav-buttons ${isMobileMenuOpen ? 'show-menu' : ''}`}>
-        <Link to="/admin/appointments" className={`nav-link ${isActive('/admin/appointments')}`}>Appointments</Link>
-        <Link to="/admin/clients" className={`nav-link ${isActive('/admin/clients')}`}>Clients</Link>
-        <Link to="/admin/diet_templates" className={`nav-link ${isActive('/admin/diet_templates')}`}>Diet Templates</Link>
-        <Link to="/admin/recipes" className={`nav-link ${isActive('/admin/recipes')}`}>Recipes</Link>
-        <Link to="/admin/exercises" className={`nav-link ${isActive('/admin/exercises')}`}>Exercises</Link>
-        <Link to="/admin/creatediet" className={`nav-link ${isActive('/admin/creatediet')}`}>Create Diet</Link>
-        <Link to="/admin/reminders" className={`nav-link ${isActive('/admin/reminders')}`}>Reminders</Link>
-        <Link to="/admin/faq-content" className={`nav-link ${isActive('/admin/faq-content')}`}>FAQ Content</Link>
+      <div className={`nav-buttons ${isMobileMenuOpen ? "show-menu" : ""}`}>
+        <Link to="/admin/clients" className={`nav-link ${isActive("/admin/clients")}`}>
+          <RecentActorsIcon className="nav-icon" />
+          <span>Clients</span>
+        </Link>
+        <Link to="/admin/diet_templates" className={`nav-link ${isActive("/admin/diet_templates")}`}>
+          <BentoIcon className="nav-icon" />
+          <span>Diet Templates</span>
+        </Link>
+        <Link to="/admin/recipes" className={`nav-link ${isActive("/admin/recipes")}`}>
+          <MenuBookIcon className="nav-icon" />
+          <span>Recipes</span>
+        </Link>
+        <Link to="/admin/exercises" className={`nav-link ${isActive("/admin/exercises")}`}>
+          <FitnessCenterIcon className="nav-icon" />
+          <span>Exercises</span>
+        </Link>
         <button className="logout-button nav-link" onClick={() => setShowLogoutModal(true)}>
           <ExitToAppIcon className="nav-icon" />
           <span>Logout</span>

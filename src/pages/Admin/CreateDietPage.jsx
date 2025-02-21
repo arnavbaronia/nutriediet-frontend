@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../styles/CreateDietPage.css";
 
@@ -16,6 +16,7 @@ const CreateDietPage = () => {
   const [selectedHistoryWeek, setSelectedHistoryWeek] = useState("");
   const [pastDiet, setPastDiet] = useState("");
   const [selectedPastTemplate, setSelectedPastTemplate] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchDietTemplates();
@@ -97,7 +98,7 @@ const CreateDietPage = () => {
           <div className="dropdown-group">
             <Form.Control as="select" value={dietType} onChange={handleDietTypeChange} className="styled-dropdown">
               <option value="0">Regular</option>
-              <option value="2">Detox</option>
+              <option value="1">Detox</option>
             </Form.Control>
             <Form.Control as="select" value={selectedTemplate} onChange={(e) => setSelectedTemplate(e.target.value)} className="styled-dropdown">
               <option value="">-- Select a Template --</option>
@@ -130,7 +131,6 @@ const CreateDietPage = () => {
           <Form.Control as="textarea" className="diet-input diet-input-scrollable" value={pastDiet} readOnly />
           <div className="button-group">
             <Button className="edit-btn">Edit</Button>
-            <Button className="delete-btn">Delete</Button>
           </div>
         </div>
       </div>

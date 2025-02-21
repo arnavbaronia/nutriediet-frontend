@@ -11,7 +11,6 @@ import CreateProfilePage from './pages/Client/CreateProfilePage';
 import AccountActivationPage from './pages/Client/AccountActivationPage';
 import WeightUpdatePage from './pages/Client/WeightUpdatePage';
 import ClientRecipesPage from './pages/Client/ClientRecipesPage';
-import AppointmentsPage from './pages/Admin/AppointmentsPage';
 import ClientsPage from './pages/Admin/ClientsPage';
 import ClientDetailsPage from './pages/Admin/ClientDetailsPage';
 import DietTemplatesPage from './pages/Admin/DietTemplatesPage';
@@ -24,8 +23,6 @@ import ExercisesPage from './pages/Admin/ExercisesPage';
 import CreateExercisePage from './pages/Admin/CreateExercisePage';
 import EditExercisePage from './pages/Admin/EditExercisePage';
 import CreateDietPage from './pages/Admin/CreateDietPage';
-import RemindersPage from './pages/Admin/RemindersPage';
-import FaqContentPage from './pages/Admin/FaqContentPage';
 import NavigationBar from './components/NavigationBar';
 import AdminNavBar from './components/AdminNavBar';
 import HomeNavBar from './components/HomeNavBar';
@@ -68,7 +65,6 @@ function App() {
             <Route path="/clients/:client_id/my_profile" element={<ProtectedRoute component={ProfilePage} />} />
             <Route path="/clients/:client_id/weight_update" element={<ProtectedRoute component={WeightUpdatePage} />} />
             <Route path="/:meal_id/recipe" element={<ProtectedRoute component={ClientRecipesPage} />} />
-            <Route path="/admin/appointments" element={<ProtectedRoute component={AppointmentsPage} />} />
             <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
             <Route path="/admin/dashboard" element={<ProtectedRoute requireduser_type="ADMIN" component={AdminDashboard} />} />
             <Route path="/admin/clients" element={<ProtectedRoute requireduser_type="ADMIN" component={ClientsPage} />} />
@@ -83,8 +79,6 @@ function App() {
             <Route path="/admin/exercise/new" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateExercisePage} />} />
             <Route path="/admin/exercise/:id" element={<ProtectedRoute requireduser_type="ADMIN" component={EditExercisePage} />} />
             <Route path="/admin/:client_id/creatediet" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateDietPage} />} />
-            <Route path="/admin/reminders" element={<ProtectedRoute requireduser_type="ADMIN" component={RemindersPage} />} />
-            <Route path="/admin/faq-content" element={<ProtectedRoute requireduser_type="ADMIN" component={FaqContentPage} />} />
           </Routes>
         </div>
         <Footer />

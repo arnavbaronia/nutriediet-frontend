@@ -90,7 +90,7 @@
   .diet-input-scrollable:hover {
     scrollbar-width: thin;
   }
-    
+
   .save-btn { background-color: #4CAF50; color: white; }
   .edit-btn { background-color: #FFA500; color: white; }
   .delete-btn { background-color: #DC3545; color: white; }
@@ -98,4 +98,3 @@
   .save-btn:hover { background-color: #45a049; }
   .edit-btn:hover { background-color: #e69500; }
   .delete-btn:hover { background-color: #c82333; }
-  

@@ -31,7 +31,6 @@
     font-family: 'Arial', sans-serif;
   }
   
-  /* Smaller input for Template Name */
   .admin-create-diet .small-input {
     padding: 10px;
     height: 40px;
@@ -45,7 +44,6 @@
     transition: all 0.3s ease;
   }
   
-  /* Bigger input for Diet Plan */
   .admin-create-diet .large-input {
     padding: 15px;
     height: 150px;
@@ -57,7 +55,7 @@
     box-sizing: border-box;
     background-color: #f9f9f9;
     transition: all 0.3s ease;
-    resize: vertical; /* Allows resizing vertically */
+    resize: vertical; 
   }
   
   .admin-create-diet input:focus,

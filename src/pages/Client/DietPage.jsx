@@ -27,7 +27,7 @@ const DietPage = () => {
       return;
     }
 
-    const endpoint = type === '2' 
+    const endpoint = type === '1' 
       ? `http://localhost:8081/clients/${client_id}/detox_diet`
       : `http://localhost:8081/clients/${client_id}/diet`;
 
