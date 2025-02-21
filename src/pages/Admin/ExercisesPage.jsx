@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Select from "react-select";
+import { Button } from "react-bootstrap";
+import { FaPlusCircle } from "react-icons/fa";
 import '../../styles/AdminExercisesPage.css';
 
 const ExercisesPage = () => {
@@ -51,12 +54,12 @@ const ExercisesPage = () => {
     }
   };
 
-  const handleDropdownChange = (e) => {
-    const selectedId = e.target.value;
-    setSelectedExerciseId(selectedId);
-    if (selectedId) {
-      fetchExerciseById(selectedId);
+  const handleDropdownChange = (selectedOption) => {
+    if (selectedOption) {
+      setSelectedExerciseId(selectedOption.value);
+      fetchExerciseById(selectedOption.value);
     } else {
+      setSelectedExerciseId('');
       setSelectedExerciseDetails(null);
     }
   };
@@ -99,27 +102,22 @@ const ExercisesPage = () => {
       <div className="left-section">
         <h2>Exercises</h2>
         <div className="controls-container">
-          <div className="dropdown-container">
-            <select
-              value={selectedExerciseId}
-              onChange={handleDropdownChange}
-              className="dropdown-menu"
-            >
-              <option value="">-- Select an Exercise --</option>
-              {exercises.map((exercise) => (
-                <option key={exercise.id} value={exercise.id}>
-                  {exercise.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <button
-            type="button"
-            className="new-exercise-button"
+          <Select
+            options={exercises.map((exercise) => ({
+              value: exercise.id,
+              label: exercise.name,
+            }))}
+            placeholder="Select an Exercise"
+            onChange={handleDropdownChange}
+            className="custom-dropdown"
+            isSearchable
+          />
+          <Button
+            className="btn-create"
             onClick={() => navigate('/admin/exercise/new')}
           >
-            + New Exercise
-          </button>
+            <FaPlusCircle /> New Exercise
+          </Button>
         </div>
         {error && <p className="error-text">{error}</p>}
       </div>
@@ -147,12 +145,18 @@ const ExercisesPage = () => {
             </div>
 
             <div className="action-buttons">
-              <button onClick={() => navigate(`/admin/exercise/${selectedExerciseId}`)}>
+              <Button
+                className="btn-edit"
+                onClick={() => navigate(`/admin/exercise/${selectedExerciseId}`)}
+              >
                 Edit
-              </button>
-              <button className="delete" onClick={() => deleteExercise(selectedExerciseId)}>
+              </Button>
+              <Button
+                className="btn-delete"
+                onClick={() => deleteExercise(selectedExerciseId)}
+              >
                 Delete
-              </button>
+              </Button>
             </div>
           </div>
         ) : (

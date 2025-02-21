@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Select from "react-select";
+import { FaPlusCircle } from "react-icons/fa";
 import "../../styles/AdminRecipeListPage.css";
 
 const AdminRecipeListPage = () => {
@@ -78,8 +79,8 @@ const AdminRecipeListPage = () => {
             className="custom-dropdown"
             isSearchable
           />
-          <button type="button" className="new-recipe-button" onClick={() => navigate("/admin/recipes/new")}>
-            + New Recipe
+          <button type="button" className="btn-create" onClick={() => navigate("/admin/recipes/new")}>
+            <FaPlusCircle /> New Recipe
           </button>
         </div>
         {error && <p className="error-text">{error}</p>}

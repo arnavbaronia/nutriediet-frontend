@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { FaTrashAlt, FaPlusCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Select from "react-select";
 import "../../styles/DietTemplatesPage.css";
 
 const DietTemplatesPage = () => {
@@ -19,19 +20,21 @@ const DietTemplatesPage = () => {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  const fetchDietTemplates = async () => {
-    try {
-      const response = await api.get("/admin/diet_templates");
-      setDietTemplates(response.data.list || []);
-      setError(null);
-    } catch (err) {
-      setError("Failed to fetch diet templates. Please try again.");
-    }
-  };
+  useEffect(() => {
+    const fetchDietTemplates = async () => {
+      try {
+        const response = await api.get("/admin/diet_templates");
+        setDietTemplates(response.data.list || []);
+        setError(null);
+      } catch (err) {
+        setError("Failed to fetch diet templates. Please try again.");
+      }
+    };
+    fetchDietTemplates();
+  }, []);
 
   const fetchDietTemplateById = async (dietTemplateId) => {
     if (!dietTemplateId) return;
-
     try {
       const response = await api.get(`/admin/diet_templates/${dietTemplateId}`);
       if (response.data && response.data.template) {
@@ -42,14 +45,8 @@ const DietTemplatesPage = () => {
     }
   };
 
-  useEffect(() => {
-    fetchDietTemplates();
-  }, []);
-
-  const handleTemplateSelect = (e) => {
-    const selectedId = parseInt(e.target.value);
-    const selectedTemplate = dietTemplates.find((t) => t.ID === selectedId);
-
+  const handleTemplateSelect = (selectedOption) => {
+    const selectedTemplate = dietTemplates.find((t) => t.ID === selectedOption.value);
     setSelectedDietTemplate(selectedTemplate || null);
     if (selectedTemplate) {
       fetchDietTemplateById(selectedTemplate.ID);
@@ -60,13 +57,10 @@ const DietTemplatesPage = () => {
 
   const handleDelete = async () => {
     if (!selectedDietTemplate) return;
-
     const confirmDelete = window.confirm(
       `Are you sure you want to delete the diet template: "${selectedDietTemplate.Name}"?`
     );
-
     if (!confirmDelete) return;
-
     try {
       await api.post(`/admin/diet_templates/${selectedDietTemplate.ID}/delete`);
       setDietTemplates(dietTemplates.filter((t) => t.ID !== selectedDietTemplate.ID));
@@ -83,20 +77,18 @@ const DietTemplatesPage = () => {
       <div className="top-section">
         <h1 className="page-title">Diet Templates</h1>
         <div className="header-section">
-          <Form.Group controlId="templateSelect" className="template-select">
-            <Form.Control
-              as="select"
+          <div className="template-select">
+            <Select
+              options={dietTemplates.map((template) => ({
+                value: template.ID,
+                label: template.Name,
+              }))}
+              placeholder="Select a Diet Template"
               onChange={handleTemplateSelect}
               className="custom-dropdown"
-            >
-              <option value="">-- Select a Diet Template --</option>
-              {dietTemplates.map((template) => (
-                <option key={template.ID} value={template.ID}>
-                  {template.Name}
-                </option>
-              ))}
-            </Form.Control>
-          </Form.Group>
+              isSearchable
+            />
+          </div>
           <div className="action-buttons">
             <Button onClick={() => navigate("/admin/diet_templates/new")} className="btn-create">
               <FaPlusCircle /> Create
@@ -108,11 +100,7 @@ const DietTemplatesPage = () => {
             >
               Edit
             </Button>
-            <Button
-              onClick={handleDelete}
-              disabled={!selectedDietTemplate}
-              className="btn-delete"
-            >
+            <Button onClick={handleDelete} disabled={!selectedDietTemplate} className="btn-delete">
               <FaTrashAlt /> Delete
             </Button>
           </div>

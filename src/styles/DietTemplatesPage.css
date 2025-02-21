@@ -9,6 +9,11 @@
   font-family: 'Arial', sans-serif;
 }
 
+.custom-dropdown {
+  width: 100%;
+  max-width: 250px;
+}
+
 .page-title {
   text-align: center;
   font-size: 28px;
@@ -62,15 +67,15 @@
 }
 
 .btn-create:hover {
-  background: #2E7D32; /* Darker green */
+  background: #2E7D32; 
 }
 
 .btn-edit:hover {
-  background: #1565C0; /* Darker blue */
+  background: #1565C0; 
 }
 
 .btn-delete:hover {
-  background: #B71C1C; /* Darker red */
+  background: #B71C1C; 
 }
 
 .template-details {

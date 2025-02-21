@@ -48,17 +48,17 @@ const Login = () => {
       if (user_type === "CLIENT") {
         if (is_active === true) {
           console.log("Client is active. Navigating to client dashboard...");
-          setTimeout(() => navigate("/clients"), 1000); 
+          setTimeout(() => navigate("/clients"), 10); 
         } else if (is_active === false) {
           console.log("Client is inactive. Navigating to account activation page...");
-          setTimeout(() => navigate("/account-activation", { state: { token } }), 1000);
+          setTimeout(() => navigate("/account-activation", { state: { token } }), 10);
         } else {
           console.error("Unexpected value for is_active:", is_active);
           setError("An unexpected error occurred. Please try again.");
         }
       } else {
         console.log("Admin login. Navigating to admin dashboard...");
-        setTimeout(() => navigate("/admin/dashboard"), 1000);
+        setTimeout(() => navigate("/admin/dashboard"), 10);
       }
     } catch (err) {
       console.error("Error during login:", err);
