@@ -71,15 +71,15 @@
     width: 30%;
   }
   
-  .edit-btn, .delete-btn {
-    flex: 1;
-    padding: 12px 20px;
-    font-size: 18px;
-    border-radius: 12px;
-    text-align: center;
-    transition: background 0.3s ease;
+  .edit-btn {
+    width: 120px; 
+    padding: 10px 15px;
+    margin-left: -55px; 
+    font-size: 16px; 
+    border-radius: 12px; 
+    text-align: center; 
+    transition: background 0.3s ease; 
   }
-  
   
   .diet-input-scrollable {
     overflow-y: auto;
@@ -93,8 +93,6 @@
 
   .save-btn { background-color: #4CAF50; color: white; }
   .edit-btn { background-color: #FFA500; color: white; }
-  .delete-btn { background-color: #DC3545; color: white; }
   
   .save-btn:hover { background-color: #45a049; }
   .edit-btn:hover { background-color: #e69500; }
-  .delete-btn:hover { background-color: #c82333; }

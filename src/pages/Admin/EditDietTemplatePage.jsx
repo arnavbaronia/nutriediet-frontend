@@ -7,13 +7,9 @@ import "../../styles/EditDietTemplatePage.css";
 const EditDietTemplatePage = () => {
   const { diet_template_id } = useParams();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    name: "",
-    diet: "",
-  });
+  const [formData, setFormData] = useState({ name: "", diet: "" });
   const [loading, setLoading] = useState(true);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [message, setMessage] = useState({ text: "", type: "" });
 
   const token = localStorage.getItem("token");
 
@@ -23,20 +19,20 @@ const EditDietTemplatePage = () => {
   });
 
   useEffect(() => {
-    const fetchDietTemplate = async () => {
-      try {
-        const response = await api.get(`/admin/diet_templates/${diet_template_id}`);
-        const { Name, DietString } = response.data;
-        setFormData({ name: Name, diet: DietString || "" });
-        setLoading(false);
-      } catch (err) {
-        setErrorMessage("Failed to load diet template.");
-        setLoading(false);
-      }
-    };
-
     fetchDietTemplate();
-  }, [diet_template_id]);
+  }, []);
+
+  const fetchDietTemplate = async () => {
+    try {
+      const response = await api.get(`/admin/diet_templates/${diet_template_id}`);
+      const { Name, template } = response.data;
+      setFormData({ name: Name, diet: template || "" });
+      setLoading(false);
+    } catch (error) {
+      setMessage({ text: "Failed to load diet template.", type: "error" });
+      setLoading(false);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -45,20 +41,18 @@ const EditDietTemplatePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccessMessage("");
-    setErrorMessage("");
+    setMessage({ text: "", type: "" });
 
     try {
-      const payload = {
+      await api.post(`/admin/diet_templates/${diet_template_id}`, {
         ID: parseInt(diet_template_id),
         Name: formData.name,
         Diet: formData.diet,
-      };
+      });
 
-      await api.put(`/admin/diet_templates/${diet_template_id}`, payload);
-      setSuccessMessage("Diet template updated successfully!");
-    } catch (err) {
-      setErrorMessage("Failed to update diet template. Please try again.");
+      setMessage({ text: "Diet template updated successfully!", type: "success" });
+    } catch (error) {
+      setMessage({ text: "Failed to update diet template.", type: "error" });
     }
   };
 
@@ -77,7 +71,6 @@ const EditDietTemplatePage = () => {
               name="name"
               value={formData.name}
               onChange={handleInputChange}
-              placeholder="Enter diet template name"
               required
               className="small-input"
             />
@@ -91,23 +84,19 @@ const EditDietTemplatePage = () => {
               value={formData.diet}
               onChange={handleInputChange}
               rows="6"
-              placeholder="Enter diet details"
               required
               className="large-input"
             />
           </Form.Group>
 
           <div className="button-group">
-            <Button type="submit" className="btn-update">
-              Update
-            </Button>
+            <Button type="submit" className="btn-update">Update</Button>
             <Button variant="secondary" onClick={() => navigate("/admin/diet_templates")} className="btn-cancel">
               Cancel
             </Button>
           </div>
 
-          {successMessage && <p className="success-message">{successMessage}</p>}
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
+          {message.text && <p className={message.type === "success" ? "success-message" : "error-message"}>{message.text}</p>}
         </Form>
       )}
     </div>

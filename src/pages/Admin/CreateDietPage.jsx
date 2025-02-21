@@ -35,6 +35,23 @@ const CreateDietPage = () => {
     }
   };
 
+  const fetchDietTemplateById = async (dietTemplateId, setDietFunction) => {
+    if (!dietTemplateId) return;
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`http://localhost:8081/admin/diet_templates/${dietTemplateId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.data && response.data.template) {
+        setDietFunction(response.data.template);
+      }
+    } catch (error) {
+      setError("Failed to load diet template details.");
+    }
+  };
+
   const fetchDietHistory = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -54,9 +71,27 @@ const CreateDietPage = () => {
   };
 
   const handleDietTypeChange = (e) => {
-    const selectedType = Number(e.target.value);
-    setDietType(selectedType);
-    console.log("Diet type selected:", selectedType); 
+    setDietType(Number(e.target.value));
+  };
+
+  const handleTemplateSelect = (e) => {
+    const templateId = e.target.value;
+    setSelectedTemplate(templateId);
+    if (templateId) {
+      fetchDietTemplateById(templateId, setDiet);
+    } else {
+      setDiet("");
+    }
+  };
+
+  const handlePastTemplateSelect = (e) => {
+    const templateId = e.target.value;
+    setSelectedPastTemplate(templateId);
+    if (templateId) {
+      fetchDietTemplateById(templateId, setPastDiet);
+    } else {
+      setPastDiet("");
+    }
   };
 
   const handleSubmit = async () => {
@@ -67,8 +102,6 @@ const CreateDietPage = () => {
       WeekNumber: Number(weekNumber),
     };
 
-    console.log("Submitting diet data:", dietData); 
-
     try {
       const response = await axios.post(`http://localhost:8081/admin/${client_id}/diet`, dietData, {
         headers: {
@@ -77,12 +110,10 @@ const CreateDietPage = () => {
         },
       });
 
-      console.log("Diet saved successfully:", response.data);
       alert("Diet saved successfully!");
       setWeekNumber(weekNumber + 1);
       fetchDietHistory();
     } catch (error) {
-      console.error("Failed to save diet:", error.response ? error.response.data : error.message);
       setError("Failed to save diet.");
     }
   };
@@ -100,7 +131,7 @@ const CreateDietPage = () => {
               <option value="0">Regular</option>
               <option value="1">Detox</option>
             </Form.Control>
-            <Form.Control as="select" value={selectedTemplate} onChange={(e) => setSelectedTemplate(e.target.value)} className="styled-dropdown">
+            <Form.Control as="select" value={selectedTemplate} onChange={handleTemplateSelect} className="styled-dropdown">
               <option value="">-- Select a Template --</option>
               {dietTemplates.map((template) => (
                 <option key={template.ID} value={template.ID}>{template.Name}</option>
@@ -121,7 +152,7 @@ const CreateDietPage = () => {
                 <option key={entry.week_number} value={entry.week_number}>Week {entry.week_number}</option>
               ))}
             </Form.Control>
-            <Form.Control as="select" value={selectedPastTemplate} onChange={(e) => setSelectedPastTemplate(e.target.value)} className="styled-dropdown">
+            <Form.Control as="select" value={selectedPastTemplate} onChange={handlePastTemplateSelect} className="styled-dropdown">
               <option value="">-- Select a Template --</option>
               {dietTemplates.map((template) => (
                 <option key={template.ID} value={template.ID}>{template.Name}</option>
