@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
@@ -11,13 +11,11 @@ import "../styles/NavigationBar.css";
 import logo from "../assets/Nutriediet_Logo_Transparent.png";
 
 const NavigationBar = () => {
-  // const { client_id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const client_id = localStorage.getItem("client_id");
-  const meal_id = localStorage.getItem("meal_id");
 
   const handleLogout = () => {
     localStorage.clear();
@@ -50,8 +48,8 @@ const NavigationBar = () => {
           <span>Diet Plan</span>
         </Link>
         <Link
-          to={`/${meal_id}/recipe`}
-          className={`nav-link ${isActive(`/${meal_id}/recipe`)}`}
+          to={`/clients/recipe`}
+          className={`nav-link ${isActive(`/clients/recipe`)}`}
         >
           <MenuBookIcon className="nav-icon" />
           <span>Recipes</span>

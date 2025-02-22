@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate, useParams } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import ClientPage from './pages/Client/ClientPage';
-import AdminPage from './pages/Admin/AdminPage';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import DietPage from './pages/Client/DietPage';
 import ExercisePage from './pages/Client/ExercisePage';
@@ -64,7 +63,7 @@ function App() {
             <Route path="/clients/:client_id/exercise" element={<ProtectedRoute component={ExercisePage} />} />
             <Route path="/clients/:client_id/my_profile" element={<ProtectedRoute component={ProfilePage} />} />
             <Route path="/clients/:client_id/weight_update" element={<ProtectedRoute component={WeightUpdatePage} />} />
-            <Route path="/:meal_id/recipe" element={<ProtectedRoute component={ClientRecipesPage} />} />
+            <Route path="/clients/recipe" element={<ProtectedRoute component={ClientRecipesPage} />} />
             <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
             <Route path="/admin/dashboard" element={<ProtectedRoute requireduser_type="ADMIN" component={AdminDashboard} />} />
             <Route path="/admin/clients" element={<ProtectedRoute requireduser_type="ADMIN" component={ClientsPage} />} />

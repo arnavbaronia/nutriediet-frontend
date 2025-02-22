@@ -55,7 +55,8 @@
   
   .save-btn {
     margin-top: 30px; 
-    width: 23%; 
+    width: 26%; 
+    height: 45px;
     background-color: #4CAF50;
     color: white;
     padding: 12px 20px;
@@ -72,9 +73,11 @@
   }
   
   .edit-btn {
-    width: 120px; 
+    margin-top: 0px;
+    width: 100px; 
     padding: 10px 15px;
-    margin-left: -55px; 
+    margin-left: -50px; 
+    height: 45px;
     font-size: 16px; 
     border-radius: 12px; 
     text-align: center; 

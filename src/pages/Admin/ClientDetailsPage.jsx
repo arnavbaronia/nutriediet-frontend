@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import 'chart.js/auto';
 import { Line } from 'react-chartjs-2';
+import CreateDietPage from "./CreateDietPage";
 import '../../styles/ClientDetailsPage.css';
 
 const ClientDetailsPage = () => {
@@ -325,6 +326,11 @@ const ClientDetailsPage = () => {
                   value={client.dietary_preference}
                   className="client-input"
                   onChange={handleChange}
+                  style={{
+                    border: '2px solid black', 
+                    borderRadius: '10px', 
+                    padding: '8px',
+                  }}
                 >
                   <option value="">Select</option>
                   <option value="Veg">Veg</option>
@@ -462,30 +468,22 @@ const ClientDetailsPage = () => {
             />
           </div>
 
+          <h2>Weight History</h2>
+          {weightHistory.length > 0 ? (
+            <div className="weight-history-graph">
+              <Line data={weightData} />
+            </div>
+            ) : (
+            <p>No weight history available.</p>
+          )}
+
           <button type="submit" className="update-button">Update</button>
-          <button onClick={() => handleCreateDietClick(client)} className="create-diet-button">
-                  Create Diet
-          </button>
           <button type="button" onClick={handleActivateDeactivate} className="toggle-button">
             {isActive ? 'Deactivate' : 'Activate'} Account
           </button>
         </form>
-
-        <h2>Diet Histories</h2>
-        <ul>
-          {diets.map(diet => (
-            <li key={diet.id}>Week {diet.week_number}</li>
-          ))}
-        </ul>
-        <h2>Weight History</h2>
-        {weightHistory.length > 0 ? (
-          <div className="weight-history-graph">
-            <Line data={weightData} />
-          </div>
-        ) : (
-          <p>No weight history available.</p>
-        )}
       </div>
+      <CreateDietPage />
     </div>
   );
 };

@@ -58,11 +58,23 @@ const CreateDietPage = () => {
       const response = await axios.get(`http://localhost:8081/admin/client/${client_id}/diet_history`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setDietHistory(response.data.diet_history || []);
+  
+      const { diet_history_detox, diet_history_regular } = response.data;
+  
+      const selectedHistory =
+        diet_history_regular.length > 0
+          ? diet_history_regular
+          : diet_history_detox.length > 0
+          ? diet_history_detox
+          : [];
+  
+      console.log("Final Selected Diet History:", selectedHistory);
+      setDietHistory(selectedHistory);
     } catch (error) {
+      console.error("Failed to load diet history:", error);
       setError("Failed to load diet history.");
     }
-  };
+  };  
 
   const handleHistorySelect = (week) => {
     setSelectedHistoryWeek(week);
