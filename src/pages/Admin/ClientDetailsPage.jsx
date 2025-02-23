@@ -53,7 +53,8 @@ const ClientDetailsPage = () => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
+  
     axios
       .get(`http://localhost:8081/admin/client/${client_id}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -61,60 +62,72 @@ const ClientDetailsPage = () => {
       .then((response) => {
         const clientData = response.data.client;
         console.log("Client details response:", response);
-        const name = clientData.name?.trim() || 
-          `${clientData.first_name?.trim() || ''} ${clientData.last_name?.trim() || ''}`.trim() || 
-          'N/A';
-
+  
+        const name =
+          clientData.name?.trim() ||
+          `${clientData.first_name?.trim() || ""} ${
+            clientData.last_name?.trim() || ""
+          }`.trim() ||
+          "N/A";
+  
         setClient({
           ...clientData,
           name,
-          amount_paid: clientData.amount_paid?.toString() || '',
+          amount_paid: clientData.amount_paid?.toString() || "",
           next_payment_date: formatDateForInput(clientData.next_payment_date),
           last_payment_date: formatDateForInput(clientData.last_payment_date),
           date_of_joining: formatDateForInput(clientData.date_of_joining),
           created_at: formatDateForInput(clientData.created_at),
         });
-
+  
         setDiets(response.data.diets);
         setIsActive(clientData.is_active);
-        return axios
-        .get(`http://localhost:8081/admin/client/${client_id}/weight_history`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+  
+        return axios.get(
+          `http://localhost:8081/admin/client/${client_id}/weight_history`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
       })
       .then((response) => {
-        setWeightHistory(response.data.weights || []);
+        console.log("Weight history response:", response);
+  
+        setWeightHistory(response.data.response || []);
         setLoading(false);
       })
       .catch((error) => {
-        console.error('Error fetching client details:', error);
-        setError('Error fetching client details. Please try again later.');
+        console.error("Error fetching client details:", error);
+        setError("Error fetching client details. Please try again later.");
         setLoading(false);
-    });
+      });
   }, [client_id]);
   
   const weightData = {
     labels: weightHistory.map((entry) =>
-      new Date(entry.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })
+      new Date(entry.date).toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+      })
     ),
     datasets: [
       {
-        label: 'Weight (kg)',
+        label: "Weight (kg)",
         data: weightHistory.map((entry) => entry.weight),
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: "rgba(75, 192, 192, 1)",
+        backgroundColor: "rgba(75, 192, 192, 0.2)",
         borderWidth: 2,
         pointRadius: 5,
         pointBackgroundColor: weightHistory.map((entry, index) => {
           if (index > 0) {
-            return entry.weight > weightHistory[index - 1].weight ? 'red' : 'green';
+            return entry.weight > weightHistory[index - 1].weight ? "red" : "green";
           }
-          return 'blue';
+          return "blue";
         }),
         tension: 0.4,
       },
     ],
-  };
+  };  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -470,10 +483,10 @@ const ClientDetailsPage = () => {
 
           <h2>Weight History</h2>
           {weightHistory.length > 0 ? (
-            <div className="weight-history-graph">
-              <Line data={weightData} />
-            </div>
-            ) : (
+          <div className="weight-history-graph">
+            <Line data={weightData} />
+          </div>
+          ) : (
             <p>No weight history available.</p>
           )}
 

@@ -7,74 +7,81 @@ const WeightUpdatePage = () => {
   const { client_id } = useParams();
   const [weight, setWeight] = useState("");
   const [isAllowed, setIsAllowed] = useState(false);
-  const [latestDietDate, setLatestDietDate] = useState("2025-02-10"); 
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    fetchLatestDietDate();
+    checkWeightUpdateStatus();
   }, []);
 
-  const fetchLatestDietDate = async () => {
+  const checkWeightUpdateStatus = async () => {
     try {
-      const response = await axios.get(`/admin/client/${client_id}/weight_history`); 
-
-      if (response.status === 200 && response.data.length > 0) {
-        const latestEntry = response.data[response.data.length - 1];
-        setLatestDietDate(latestEntry.date);
-
-        const lastDietDate = new Date(latestEntry.date);
-        const currentDate = new Date();
-        const daysSinceLastUpdate = Math.floor((currentDate - lastDietDate) / (1000 * 60 * 60 * 24));
-
-        setIsAllowed(daysSinceLastUpdate >= 4);
+      const token = localStorage.getItem("token"); 
+      if (!token) {
+        setErrorMessage("❌ Authentication failed. Please log in again.");
+        return;
+      }
+  
+      const response = await axios.get(`http://localhost:8081/clients/${client_id}/weight_update`, {
+        headers: {
+          Authorization: `Bearer ${token}`, 
+        },
+      });
+  
+      if (response.status === 200 && response.data.isActive) {
+        setIsAllowed(response.data.status === "allowed");
       } else {
-        throw new Error("No weight history found.");
+        setIsAllowed(false);
       }
     } catch (error) {
-      console.error("Error fetching weight history:", error);
-      setErrorMessage("⚠️ Failed to load weight history. Using dummy data.");
-
-      // Fallback dummy data for testing
-      setLatestDietDate("2025-02-10");
-      setIsAllowed(true);
+      console.error("Error fetching weight update status:", error);
+      setErrorMessage("⚠️ Unable to fetch weight update status. Please try again later.");
     }
-  };
+  };  
 
   const handleWeightUpdate = async () => {
     if (!weight || isNaN(weight) || parseFloat(weight) <= 0) {
       setErrorMessage("⚠️ Please enter a valid weight.");
       return;
     }
-
+  
     setLoading(true);
     setErrorMessage("");
-
+  
     try {
-      await axios.post(`/clients/${client_id}/weight_update`, {
-        weight: parseFloat(weight),
-        date: new Date().toISOString().split("T")[0],
-      });
-
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setErrorMessage("❌ Authentication failed. Please log in again.");
+        return;
+      }
+  
+      await axios.post(
+        `http://localhost:8081/clients/${client_id}/weight_update`,
+        JSON.stringify(parseFloat(weight)),        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
       setShowPopup(true);
       setWeight("");
-      fetchLatestDietDate();
+      checkWeightUpdateStatus();
     } catch (error) {
       console.error("Error updating weight:", error);
       setErrorMessage("❌ Failed to update weight. Try again later.");
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   return (
     <div className="weight-update-page">
       <h1 className="weight-title">Update Your Weight</h1>
 
       <div className="weight-container">
-        <p>📅 Last Diet Given On: <strong>{latestDietDate}</strong></p>
-
         {errorMessage && <p className="error-text">{errorMessage}</p>}
 
         {isAllowed ? (
