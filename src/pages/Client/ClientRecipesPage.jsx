@@ -1,98 +1,50 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/ClientRecipesPage.css";
 import NavigationBar from "../../components/NavigationBar";
-
-const dummyRecipes = [
-  {
-    RecipeID: 1,
-    Name: "Grilled Chicken Salad",
-    Ingredients: ["Chicken Breast", "Lettuce", "Tomatoes", "Cucumber", "Olive Oil"],
-    Preparation: [
-      "Grill the chicken breast.",
-      "Chop vegetables and mix in a bowl.",
-      "Drizzle olive oil and toss well.",
-    ],
-  },
-  {
-    RecipeID: 2,
-    Name: "Avocado Toast",
-    Ingredients: ["Whole grain bread", "Avocado", "Salt", "Lemon Juice"],
-    Preparation: [
-      "Toast the bread.",
-      "Mash avocado and mix with lemon juice & salt.",
-      "Spread on toast and serve.",
-    ],
-  },
-  {
-    RecipeID: 3,
-    Name: "Banana Smoothie",
-    Ingredients: ["Banana", "Milk", "Honey", "Ice Cubes"],
-    Preparation: [
-      "Blend all ingredients until smooth.",
-      "Pour into a glass and serve chilled.",
-    ],
-  },
-  {
-    RecipeID: 4,
-    Name: "Oatmeal Bowl",
-    Ingredients: ["Oats", "Milk", "Honey", "Fruits (Banana, Berries)"],
-    Preparation: [
-      "Cook oats with milk.",
-      "Add honey and mix well.",
-      "Top with fruits and serve warm.",
-    ],
-  },
-  {
-    RecipeID: 5,
-    Name: "Quinoa Stir-Fry",
-    Ingredients: ["Quinoa", "Bell Peppers", "Carrots", "Soy Sauce", "Tofu"],
-    Preparation: [
-      "Cook quinoa as per instructions.",
-      "Sauté vegetables and tofu with soy sauce.",
-      "Mix with cooked quinoa and serve.",
-    ],
-  },
-  {
-    RecipeID: 6,
-    Name: "Greek Yogurt Parfait",
-    Ingredients: ["Greek Yogurt", "Granola", "Honey", "Strawberries"],
-    Preparation: [
-      "Layer Greek yogurt, granola, and honey in a bowl.",
-      "Top with sliced strawberries.",
-      "Serve immediately.",
-    ],
-  },
-  {
-    RecipeID: 7,
-    Name: "Lentil Soup",
-    Ingredients: ["Lentils", "Carrots", "Onion", "Garlic", "Vegetable Broth", "Spices"],
-    Preparation: [
-      "Sauté onions, garlic, and carrots in a pot.",
-      "Add lentils and vegetable broth.",
-      "Simmer until lentils are soft and serve warm.",
-    ],
-  },
-  {
-    RecipeID: 8,
-    Name: "Peanut Butter Bites",
-    Ingredients: ["Oats", "Peanut Butter", "Honey", "Chia Seeds", "Dark Chocolate Chips"],
-    Preparation: [
-      "Mix all ingredients in a bowl.",
-      "Roll into small bite-sized balls.",
-      "Refrigerate for 30 minutes and enjoy.",
-    ],
-  },
-];
+import axios from "axios";
 
 const ClientRecipeListPage = () => {
   const [recipes, setRecipes] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    setRecipes(dummyRecipes);
-    setFilteredRecipes(dummyRecipes);
+    const fetchRecipes = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const clientEmail = localStorage.getItem("email") || "";
+        const clientID = localStorage.getItem("client_id") || "";
+
+        if (!token || !clientID) {
+          setError("Authentication error. Please log in.");
+          return;
+        }
+
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Client-Email": clientEmail,
+        };
+
+        console.log("Requesting recipes for client ID:", clientID);
+
+        const response = await axios.get(`http://localhost:8081/clients/${clientID}/recipe`, { headers });
+
+        if (response.data.isActive === false) {
+          setError("Your account is inactive. Please contact support.");
+          return;
+        }
+
+        setRecipes(response.data.recipe);
+        setFilteredRecipes(response.data.recipe);
+      } catch (err) {
+        console.error("Error fetching recipes:", err.response?.data || err);
+        setError("Failed to fetch recipes. Please try again.");
+      }
+    };
+
+    fetchRecipes();
   }, []);
 
   const handleSearch = (event) => {
@@ -103,7 +55,7 @@ const ClientRecipeListPage = () => {
       setFilteredRecipes(recipes);
     } else {
       const filtered = recipes.filter((recipe) =>
-        recipe.Name.toLowerCase().includes(query)
+        recipe.name.toLowerCase().includes(query)
       );
       setFilteredRecipes(filtered);
     }
@@ -112,9 +64,9 @@ const ClientRecipeListPage = () => {
   return (
     <div className="recipe-page">
       <NavigationBar />
-
       <div className="recipe-content">
         <h1 className="recipe-title">Recipes</h1>
+        {error && <p style={{ color: "red" }}>{error}</p>}
         <input
           type="text"
           className="recipe-search"
@@ -127,11 +79,11 @@ const ClientRecipeListPage = () => {
           {filteredRecipes.length > 0 ? (
             filteredRecipes.map((recipe) => (
               <div
-                key={recipe.RecipeID}
+                key={recipe.id}
                 className="recipe-box"
                 onClick={() => setSelectedRecipe(recipe)}
               >
-                <h3>{recipe.Name}</h3>
+                <h3>{recipe?.Name}</h3>
               </div>
             ))
           ) : (
@@ -149,18 +101,18 @@ const ClientRecipeListPage = () => {
                 <div className="recipe-section ingredients">
                   <h3>Ingredients</h3>
                   <ul>
-                    {selectedRecipe.Ingredients.map((ingredient, index) => (
+                    {selectedRecipe.Ingredients?.map((ingredient, index) => (
                       <li key={index}>{ingredient}</li>
-                    ))}
+                    )) || <p>No ingredients available</p>}
                   </ul>
                 </div>
 
                 <div className="recipe-section preparation">
                   <h3>Preparation</h3>
                   <ol>
-                    {selectedRecipe.Preparation.map((step, index) => (
+                    {selectedRecipe.Preparation?.map((step, index) => (
                       <li key={index}>{step}</li>
-                    ))}
+                    )) || <p>No preparation steps available</p>}
                   </ol>
                 </div>
               </div>

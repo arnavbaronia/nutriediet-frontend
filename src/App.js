@@ -63,7 +63,7 @@ function App() {
             <Route path="/clients/:client_id/exercise" element={<ProtectedRoute component={ExercisePage} />} />
             <Route path="/clients/:client_id/my_profile" element={<ProtectedRoute component={ProfilePage} />} />
             <Route path="/clients/:client_id/weight_update" element={<ProtectedRoute component={WeightUpdatePage} />} />
-            <Route path="/clients/recipe" element={<ProtectedRoute component={ClientRecipesPage} />} />
+            <Route path="/clients/:client_id/recipe" element={<ProtectedRoute component={ClientRecipesPage} />} />
             <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
             <Route path="/admin/dashboard" element={<ProtectedRoute requireduser_type="ADMIN" component={AdminDashboard} />} />
             <Route path="/admin/clients" element={<ProtectedRoute requireduser_type="ADMIN" component={ClientsPage} />} />

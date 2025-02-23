@@ -50,6 +50,38 @@ const DietPage = () => {
     }
   };
 
+  // const fetchDiet = async (type) => {
+  //   setLoading(true);
+  //   setError(null);
+  
+  //   const token = localStorage.getItem('token');
+  //   if (!token) {
+  //     setError('Authorization token is missing. Please log in again.');
+  //     setLoading(false);
+  //     return;
+  //   }
+  
+  //   const endpoint = `http://localhost:8081/clients/${client_id}/diet?dietType=${type}`;
+  
+  //   try {
+  //     const response = await axios.get(endpoint, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+  
+  //     if (response.data.isActive) {
+  //       setDiet(response.data.diet || '');
+  //       setIsActive(true);
+  //     } else {
+  //       setIsActive(false);
+  //       setDiet('');
+  //     }
+  //   } catch (error) {
+  //     setError(error.response?.data?.error || 'Failed to fetch diet.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+  
   return (
     <div className="diet-page">
       <h1 className="diet-title">Your Diet Plan</h1>

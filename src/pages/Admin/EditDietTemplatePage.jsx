@@ -25,14 +25,14 @@ const EditDietTemplatePage = () => {
   const fetchDietTemplate = async () => {
     try {
       const response = await api.get(`/admin/diet_templates/${diet_template_id}`);
-      const { Name, template } = response.data;
-      setFormData({ name: Name, diet: template || "" });
+      const { name, template } = response.data;
+      setFormData({ name: name || "", diet: template || "" }); 
       setLoading(false);
     } catch (error) {
       setMessage({ text: "Failed to load diet template.", type: "error" });
       setLoading(false);
     }
-  };
+  };  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

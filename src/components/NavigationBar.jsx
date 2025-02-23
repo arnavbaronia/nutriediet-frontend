@@ -48,8 +48,8 @@ const NavigationBar = () => {
           <span>Diet Plan</span>
         </Link>
         <Link
-          to={`/clients/recipe`}
-          className={`nav-link ${isActive(`/clients/recipe`)}`}
+          to={`/clients/${client_id}/recipe`}
+          className={`nav-link ${isActive(`/clients/${client_id}/recipe`)}`}
         >
           <MenuBookIcon className="nav-icon" />
           <span>Recipes</span>
