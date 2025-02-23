@@ -58,13 +58,14 @@ const WeightUpdatePage = () => {
   
       await axios.post(
         `http://localhost:8081/clients/${client_id}/weight_update`,
-        JSON.stringify(parseFloat(weight)),        {
+        JSON.stringify(parseFloat(weight)),
+        {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         }
-      );
+      );      
   
       setShowPopup(true);
       setWeight("");

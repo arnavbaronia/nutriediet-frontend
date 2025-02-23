@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import 'chart.js/auto';
 import { Line } from 'react-chartjs-2';
+import { LineChart, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
 import CreateDietPage from "./CreateDietPage";
 import '../../styles/ClientDetailsPage.css';
 
@@ -489,6 +490,29 @@ const ClientDetailsPage = () => {
           ) : (
             <p>No weight history available.</p>
           )}
+
+          <table className="weight-history-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Weight (kg)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {weightHistory.length > 0 ? (
+                weightHistory.map((entry, index) => (
+                  <tr key={index}>
+                    <td>{new Date(entry.date).toLocaleDateString()}</td>
+                    <td>{entry.weight} kg</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="2" className="no-data">No weight history available.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
 
           <button type="submit" className="update-button">Update</button>
           <button type="button" onClick={handleActivateDeactivate} className="toggle-button">

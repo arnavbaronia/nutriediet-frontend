@@ -120,3 +120,48 @@
     border-radius: 5px;
     font-weight: bold;
 }
+
+.weight-history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 16px;
+    text-align: left;
+    background: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .weight-history-table thead {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .weight-history-table th, 
+  .weight-history-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .weight-history-table tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .weight-history-table .no-data {
+    text-align: center;
+    font-style: italic;
+    color: #888;
+  }
+  
+  .weight-history-graph {
+    width: 100%;
+    max-width: 700px; 
+    margin: 20px auto;
+    padding: 15px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+  }  
