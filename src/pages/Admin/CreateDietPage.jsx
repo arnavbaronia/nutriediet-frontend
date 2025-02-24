@@ -69,10 +69,11 @@ const CreateDietPage = () => {
     }
   };
 
-  const handleHistorySelect = (week, setWeekState, setDietState, dietHistory) => {
-    setWeekState(week);
+  const handleHistorySelect = (week, setWeekState, setDietState, dietHistory, resetOtherDietState) => {
+    setWeekState(week);    
     const selectedDiet = dietHistory.find((d) => d.week_number === parseInt(week));
     setDietState(selectedDiet ? selectedDiet.diet : "");
+    resetOtherDietState(""); 
   };
 
   const handleDietTypeChange = (e) => {
@@ -153,14 +154,14 @@ const CreateDietPage = () => {
 
           {/* Regular Diet History, Detox Diet History, and Template Select in One Row */}
           <div className="history-dropdown-group">
-            <Form.Control as="select" value={selectedHistoryWeekRegular} onChange={(e) => handleHistorySelect(e.target.value, setSelectedHistoryWeekRegular, setPastDietRegular, dietHistoryRegular)} className="styled-dropdown">
+            <Form.Control as="select" value={selectedHistoryWeekRegular} onChange={(e) => handleHistorySelect(e.target.value, setSelectedHistoryWeekRegular, setPastDietRegular, dietHistoryRegular, setPastDietDetox)} className="styled-dropdown">
               <option value="">Regular Diet History</option>
               {dietHistoryRegular.map((entry) => (
                 <option key={entry.week_number} value={entry.week_number}>Week {entry.week_number}</option>
               ))}
             </Form.Control>
 
-            <Form.Control as="select" value={selectedHistoryWeekDetox} onChange={(e) => handleHistorySelect(e.target.value, setSelectedHistoryWeekDetox, setPastDietDetox, dietHistoryDetox)} className="styled-dropdown">
+            <Form.Control as="select" value={selectedHistoryWeekDetox} onChange={(e) => handleHistorySelect(e.target.value, setSelectedHistoryWeekDetox, setPastDietDetox, dietHistoryDetox, setPastDietRegular )} className="styled-dropdown">
               <option value="">Detox Diet History</option>
               {dietHistoryDetox.map((entry) => (
                 <option key={entry.week_number} value={entry.week_number}>Week {entry.week_number}</option>
