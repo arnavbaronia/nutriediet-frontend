@@ -28,6 +28,7 @@ import HomeNavBar from './components/HomeNavBar';
 import Footer from './components/Footer';
 import Signup from './components/Signup';
 import Login from './components/Login';
+import AdminLogin from './components/AdminLogin';
 import './App.css';
 
 const ProtectedRoute = ({ component: Component, requireduser_type, ...rest }) => {
@@ -56,6 +57,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/create_profile/:email" element={<CreateProfilePage />} />
             <Route path="/account-activation" element={<AccountActivationPage />} />
             <Route path="/clients/:client_id" element={<ProtectedRoute component={ClientPage} />} />
