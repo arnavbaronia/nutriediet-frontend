@@ -12,9 +12,12 @@ const CreateDietPage = () => {
   const [error, setError] = useState(null);
   const [dietTemplates, setDietTemplates] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState("");
-  const [dietHistory, setDietHistory] = useState([]);
-  const [selectedHistoryWeek, setSelectedHistoryWeek] = useState("");
-  const [pastDiet, setPastDiet] = useState("");
+  const [dietHistoryRegular, setDietHistoryRegular] = useState([]);
+  const [dietHistoryDetox, setDietHistoryDetox] = useState([]);
+  const [selectedHistoryWeekRegular, setSelectedHistoryWeekRegular] = useState("");
+  const [selectedHistoryWeekDetox, setSelectedHistoryWeekDetox] = useState("");
+  const [pastDietRegular, setPastDietRegular] = useState("");
+  const [pastDietDetox, setPastDietDetox] = useState("");
   const [selectedPastTemplate, setSelectedPastTemplate] = useState("");
   const navigate = useNavigate();
 
@@ -58,28 +61,18 @@ const CreateDietPage = () => {
       const response = await axios.get(`http://localhost:8081/admin/client/${client_id}/diet_history`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-  
-      const { diet_history_detox, diet_history_regular } = response.data;
-  
-      const selectedHistory =
-        diet_history_regular.length > 0
-          ? diet_history_regular
-          : diet_history_detox.length > 0
-          ? diet_history_detox
-          : [];
-  
-      console.log("Final Selected Diet History:", selectedHistory);
-      setDietHistory(selectedHistory);
+
+      setDietHistoryRegular(response.data.diet_history_regular || []);
+      setDietHistoryDetox(response.data.diet_history_detox || []);
     } catch (error) {
-      console.error("Failed to load diet history:", error);
       setError("Failed to load diet history.");
     }
-  };  
+  };
 
-  const handleHistorySelect = (week) => {
-    setSelectedHistoryWeek(week);
+  const handleHistorySelect = (week, setWeekState, setDietState, dietHistory) => {
+    setWeekState(week);
     const selectedDiet = dietHistory.find((d) => d.week_number === parseInt(week));
-    setPastDiet(selectedDiet ? selectedDiet.diet : "");
+    setDietState(selectedDiet ? selectedDiet.diet : "");
   };
 
   const handleDietTypeChange = (e) => {
@@ -100,9 +93,9 @@ const CreateDietPage = () => {
     const templateId = e.target.value;
     setSelectedPastTemplate(templateId);
     if (templateId) {
-      fetchDietTemplateById(templateId, setPastDiet);
+      fetchDietTemplateById(templateId, setPastDietRegular);
     } else {
-      setPastDiet("");
+      setPastDietRegular("");
     }
   };
 
@@ -115,7 +108,7 @@ const CreateDietPage = () => {
     };
 
     try {
-      const response = await axios.post(`http://localhost:8081/admin/${client_id}/diet`, dietData, {
+      await axios.post(`http://localhost:8081/admin/${client_id}/diet`, dietData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -157,21 +150,33 @@ const CreateDietPage = () => {
         {/* Right Side - View Past Diets & Templates */}
         <div className="diet-right">
           <h2>View Past Diets and Templates</h2>
-          <div className="dropdown-group">
-            <Form.Control as="select" value={selectedHistoryWeek} onChange={(e) => handleHistorySelect(e.target.value)} className="styled-dropdown">
-              <option value="">Select a week</option>
-              {dietHistory.map((entry) => (
+
+          {/* Regular Diet History, Detox Diet History, and Template Select in One Row */}
+          <div className="history-dropdown-group">
+            <Form.Control as="select" value={selectedHistoryWeekRegular} onChange={(e) => handleHistorySelect(e.target.value, setSelectedHistoryWeekRegular, setPastDietRegular, dietHistoryRegular)} className="styled-dropdown">
+              <option value="">Regular Diet History</option>
+              {dietHistoryRegular.map((entry) => (
                 <option key={entry.week_number} value={entry.week_number}>Week {entry.week_number}</option>
               ))}
             </Form.Control>
-            <Form.Control as="select" value={selectedPastTemplate} onChange={handlePastTemplateSelect} className="styled-dropdown">
+
+            <Form.Control as="select" value={selectedHistoryWeekDetox} onChange={(e) => handleHistorySelect(e.target.value, setSelectedHistoryWeekDetox, setPastDietDetox, dietHistoryDetox)} className="styled-dropdown">
+              <option value="">Detox Diet History</option>
+              {dietHistoryDetox.map((entry) => (
+                <option key={entry.week_number} value={entry.week_number}>Week {entry.week_number}</option>
+              ))}
+            </Form.Control>
+
+            <Form.Control as="select" value={selectedPastTemplate} onChange={handlePastTemplateSelect} className="styled-dropdown template-dropdown">
               <option value="">-- Select a Template --</option>
               {dietTemplates.map((template) => (
                 <option key={template.ID} value={template.ID}>{template.Name}</option>
               ))}
             </Form.Control>
           </div>
-          <Form.Control as="textarea" className="diet-input diet-input-scrollable" value={pastDiet} readOnly />
+
+          <Form.Control as="textarea" className="diet-input diet-input-scrollable" value={pastDietRegular || pastDietDetox} readOnly />
+          
           <div className="button-group">
             <Button className="edit-btn">Edit</Button>
           </div>

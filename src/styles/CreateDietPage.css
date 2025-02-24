@@ -19,7 +19,23 @@
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
+  .history-dropdown-group {
+    display: flex;
+    gap: 8px; 
+    justify-content: center; 
+  }
+
+  .history-dropdown-group .styled-dropdown {
+    width: 32%;
+    max-width: 180px;
+  }
+
+  .history-dropdown-group .template-dropdown {
+    width: 60%;
+    max-width: 280px;
+  }
+
   h2 {
     margin-bottom: 10px;
     font-size: 24px;
