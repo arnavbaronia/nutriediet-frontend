@@ -229,6 +229,7 @@ const ProfilePage = () => {
               value={profile.startingWeight}
               onChange={handleChange}
               className="profile-input"
+              readOnly
             />
           </div>
           <div className="form-group inline-input-wide">

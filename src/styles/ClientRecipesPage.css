@@ -45,6 +45,11 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 250px;
+  height: 80px;
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center; 
   cursor: pointer;
   transition: transform 0.2s;
 }

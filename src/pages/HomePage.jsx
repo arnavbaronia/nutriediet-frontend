@@ -131,7 +131,7 @@ const HomePage = () => {
       </div>
 
       <a
-        href="https://wa.me/YOUR_PHONE_NUMBER"
+        href="https://wa.me/+919391450725 "
         target="_blank"
         rel="noopener noreferrer"
         className="whatsapp-button"
