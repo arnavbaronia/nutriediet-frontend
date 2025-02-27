@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../styles/Login.css";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,15 @@ const Login = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const userType = localStorage.getItem("user_type");
+    if (userType === "CLIENT") {
+      navigate("/clients");
+    } else if (userType === "ADMIN") {
+      navigate("/admin/dashboard");
+    }
+  }, [navigate]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCredentials((prev) => ({ ...prev, [name]: value }));
@@ -24,6 +33,11 @@ const Login = () => {
     try {
       const response = await axios.post("http://localhost:8081/login", credentials);
       const { token, refreshToken, user_type, id, email, is_active, client_id } = response.data || {};
+
+      if (user_type === "ADMIN") {
+        setError("Admin login is not allowed here.");
+        return;
+      }
 
       localStorage.setItem("token", token);
       localStorage.setItem("refreshToken", refreshToken);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../styles/Login.css";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,15 @@ const AdminLogin = () => {
   });
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const userType = localStorage.getItem("user_type");
+    if (userType === "ADMIN") {
+      navigate("/admin/dashboard");
+    } else if (userType === "CLIENT") {
+      navigate("/clients");
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,12 +34,17 @@ const AdminLogin = () => {
       const response = await axios.post("http://localhost:8081/login", credentials);
       const { token, refreshToken, user_type, email } = response.data || {};
 
+      if (user_type !== "ADMIN") {
+        setError("Only admins can log in here.");
+        return;
+      }
+
       localStorage.setItem("token", token);
       localStorage.setItem("refreshToken", refreshToken);
       localStorage.setItem("user_type", user_type);
       localStorage.setItem("email", email);
 
-      console.log("Admin login. Navigating to admin dashboard...");
+      console.log("Admin login successful. Navigating to admin dashboard...");
       setTimeout(() => navigate("/admin/dashboard"), 10);
     } catch (err) {
       console.error("Error during login:", err);
