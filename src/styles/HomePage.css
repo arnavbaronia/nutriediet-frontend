@@ -1,53 +1,322 @@
-.home-container {
-    display: flex;
+body {
+  background-color: white;
+}
+
+.homepage-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  padding: 4rem;
+  margin-top: -40px;
+}
+
+.text-section {
+  width: 50%;
+}
+
+.title {
+  font-size: 4rem;
+  font-weight: bold;
+  color: black;
+}
+
+.subtitle {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: #555;
+  margin-top: 0.5rem;
+}
+
+.description {
+  font-size: 1.2rem;
+  color: #666;
+  margin-top: 1.5rem;
+  line-height: 1.8;
+}
+
+.image-section {
+  width: 50%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.diet-image {
+  width: 85%;
+  max-width: 500px;
+}
+
+.about-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4rem;
+  background-color: white;
+}
+
+.about-image-section {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.about-image {
+  width: 100%;
+  max-width: 280px;
+  border-radius: 10px;
+  border: 3px solid #333;
+}
+
+.founder-title {
+  margin-top: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.founder-name {
+  margin-top: 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.about-text-box {
+  width: 65%;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  border: 2px solid #333;
+}
+
+.about-heading {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 1rem;
+  color: #333;
+  text-align: center;
+}
+
+.about-text {
+  font-size: 1.1rem;
+  color: #555;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+.whatsapp-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  background-color: #25d366;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.3s ease;
+  z-index: 1000;
+}
+
+.whatsapp-button:hover {
+  background-color: #1ebe5d;
+}
+
+.whatsapp-icon {
+  font-size: 1.5rem;
+  margin-right: 10px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.step-icon {
+  font-size: 24px;
+  color: #4CAF50;
+}
+
+.step-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.step-description {
+  font-size: 16px;
+  line-height: 1.4;
+  margin: 5px 0 0 34px; 
+}
+
+h3 {
+  margin: 0;
+}
+
+p {
+  margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+  .homepage-container {
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem;
+    margin-top: -20px;
+  }
+
+  .text-section {
+    width: 100%;
+  }
+
+  .image-section {
+    width: 100%;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .diet-image {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .about-container {
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .about-image-section {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .about-image {
+    max-width: 220px;
+  }
+
+  .about-text-box {
+    width: 100%;
+    padding: 1.5rem;
+  }
+
+  .whatsapp-button {
+    bottom: 15px;
+    right: 15px;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
+
+  .whatsapp-icon {
+    font-size: 1.3rem;
+  }
+}
+
+.how-it-works-container {
+  padding: 4rem;
+  background-color: white;
+  text-align: center;
+}
+
+.how-it-works-heading {
+  font-size: 2.8rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.how-it-works-description {
+  font-size: 1.2rem;
+  color: #555;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+.how-it-works-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 3rem;
+}
+
+.how-it-works-image {
+  width: 45%;
+}
+
+.consultation-image {
+  width: 100%;
+  max-width: 450px;
+  border-radius: 10px;
+}
+
+.how-it-works-steps {
+  width: 50%;
+  text-align: left;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.icon {
+  font-size: 2rem;
+  margin-right: 15px;
+}
+
+.step h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.step p {
+  font-size: 1.1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .how-it-works-container {
+    padding: 2rem;
+  }
+
+  .how-it-works-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .how-it-works-image {
+    width: 100%;
+    margin-bottom: 2rem;
+    border: 3px solid #333;
+  }
+
+  .how-it-works-steps {
+    width: 100%;
+    text-align: center;
+  }
+
+  .step {
     flex-direction: column;
     align-items: center;
-    justify-content: center;
   }
-  
-  .home-title {
-    font-size: 2rem;
-    margin-bottom: 20px;
+
+  .icon {
+    margin-bottom: 10px;
   }
-  
-  .button-group {
-    display: flex;
-    gap: 15px;
-  }
-  
-  button {
-    padding: 12px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s ease;
-  }
-  
-  .admin-button {
-    background-color: #e53935;
-    color: white;
-  }
-  
-  .admin-button:hover {
-    background-color: #c62828;
-  }
-  
-  .client-button {
-    background-color: #43a047;
-    color: white;
-  }
-  
-  .client-button:hover {
-    background-color: #388e3c;
-  }
-  
-  .admin-login-button {
-    background-color: #d32f2f;
-    color: white;
-  }
-  
-  .admin-login-button:hover {
-    background-color: #b71c1c;
-  }  
+}

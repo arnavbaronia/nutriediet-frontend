@@ -82,7 +82,7 @@ function App() {
             <Route path="/admin/:client_id/creatediet" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateDietPage} />} />
           </Routes>
         </div>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </Router>
   );
