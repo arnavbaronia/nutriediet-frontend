@@ -4,7 +4,6 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import 'chart.js/auto';
 import { Line } from 'react-chartjs-2';
-import { LineChart, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
 import CreateDietPage from "./CreateDietPage";
 import '../../styles/ClientDetailsPage.css';
 
@@ -481,7 +480,7 @@ const ClientDetailsPage = () => {
               className="client-textarea client-textarea-large"
             />
           </div>
-
+          <button type="submit" className="update-button">Update</button>
           <h2>Weight History</h2>
           {weightHistory.length > 0 ? (
           <div className="weight-history-graph">
@@ -514,7 +513,6 @@ const ClientDetailsPage = () => {
             </tbody>
           </table>
 
-          <button type="submit" className="update-button">Update</button>
           <button type="button" onClick={handleActivateDeactivate} className="toggle-button">
             {isActive ? 'Deactivate' : 'Activate'} Account
           </button>
