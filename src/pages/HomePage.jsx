@@ -3,6 +3,10 @@ import { FaWhatsapp } from "react-icons/fa";
 import dietimage from "../assets/dietimage.jpg";
 import aboutus from "../assets/aboutus.jpg";
 import dietonphone from "../assets/dietonphone.jpg";
+import plan1 from "../assets/plan1.svg";
+import plan2 from "../assets/plan2.svg";
+import plan3 from "../assets/plan3.svg";
+import plan4 from "../assets/plan4.svg";
 import "../styles/HomePage.css";
 import HomeNavBar from "../components/HomeNavBar";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
@@ -98,6 +102,31 @@ const HomePage = () => {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      <div className="health-plans-container">
+        <h2 className="health-plans-heading">Comprehensive Health Plans You Get From Our Online Dietitian</h2>
+        <p className="health-plans-description">
+          We started off providing online dietitian consultations primarily for thyroid, diabetes, and PCOS/PCOD patients. Over time, we have also ventured into other conditions where our online health coaches have proven effective for many people to achieve a complete lifestyle transformation.
+        </p>
+        <p className="health-plans-description">
+          Now we also address conditions like post-pregnancy weight gain, high blood pressure, stress management and many others. Our dietician consultants work in the areas of regulating blood sugar levels, lipid profiles, hormonal balance, and many other parameters to improve your well-being more holistically.
+        </p>
+
+        <div className="health-plans-grid">
+          {[
+            { img: plan1, title: "Weight Gain Plan", desc: "Are you underweight? Do you always lose your appetite? If you are looking to build body mass and strength, our nutrition counselor can help you with a personalized diet plan to gain a healthy weight. Get tailored nutrition guidance and build a stronger, more confident you." },
+            { img: plan2, title: "Lifestyle Management Plan", desc: "Good food habits inspire a good life. But it doesn’t fix all your health needs. Let your online diet counsellor offer guidelines for food, exercise, sleep, relaxation, and recreational needs—tailored strategies to embrace positive changes and enhance your overall lifestyle." },
+            { img: plan3, title: "Post Pregnancy Plan", desc: "Postpartum fatigue, hormonal fluctuations, disturbed sleep and many other elements cause weight gain, stress, and lifestyle changes after childbirth. With a consultant nutritionist available on demand, you can get comprehensive wellness plans and enjoy motherhood." },
+            { img: plan4, title: "PCOS/PCOD Plan", desc: "Personalized plans for the DASH diet and low-blood pressure management is offered by registered dietitians and holistic nutritionists for different age groups. We will collaborate with your doctors and offer strategic foods compatible with your medications and wellness goals ." }
+          ].map((plan, index) => (
+            <div className="health-plan-box" key={index}>
+              <img src={plan.img} alt={plan.title} className="plan-image" />
+              <h3 className="plan-title">{plan.title}</h3>
+              <p className="plan-description">{plan.desc}</p>
+            </div>
+          ))}
         </div>
       </div>
 
