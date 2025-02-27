@@ -25,53 +25,55 @@ const NavigationBar = () => {
   const isActive = (path) => (location.pathname === path ? "active" : "");
 
   return (
-    <div className="navigation-bar">
-      <Link to="/" className="nav-logo">
-        <img src={logo} alt="Logo" className="nav-logo-img" />
-      </Link>
-      <div className="menu-icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-        <MenuIcon />
-      </div>
-      <div className={`nav-buttons ${isMobileMenuOpen ? "show-menu" : ""}`}>
-        <Link
-          to={`/clients/${client_id}/weight_update`}
-          className={`nav-link ${isActive(`/clients/${client_id}/weight_update`)}`}
-        >
-          <MonitorWeightOutlinedIcon className="nav-icon" />
-          <span>Weight Update</span>
+    <>
+      <div className="navigation-bar">
+        <Link to="/" className="nav-logo">
+          <img src={logo} alt="Logo" className="nav-logo-img" />
         </Link>
-        <Link
-          to={`/clients/${client_id}/diet`}
-          className={`nav-link ${isActive(`/clients/${client_id}/diet`)}`}
-        >
-          <ArticleOutlinedIcon className="nav-icon" />
-          <span>Diet Plan</span>
-        </Link>
-        <Link
-          to={`/clients/${client_id}/recipe`}
-          className={`nav-link ${isActive(`/clients/${client_id}/recipe`)}`}
-        >
-          <MenuBookIcon className="nav-icon" />
-          <span>Recipes</span>
-        </Link>
-        <Link
-          to={`/clients/${client_id}/exercise`}
-          className={`nav-link ${isActive(`/clients/${client_id}/exercise`)}`}
-        >
-          <FitnessCenterIcon className="nav-icon" />
-          <span>Exercise</span>
-        </Link>
-        <Link
-          to={`/clients/${client_id}/my_profile`}
-          className={`nav-link ${isActive(`/clients/${client_id}/my_profile`)}`}
-        >
-          <PersonRoundedIcon className="nav-icon" />
-          <span>My Profile</span>
-        </Link>
-        <button className="logout-button nav-link" onClick={() => setShowLogoutModal(true)}>
-          <ExitToAppIcon className="nav-icon" />
-          <span>Logout</span>
-        </button>
+        <div className="menu-icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          <MenuIcon />
+        </div>
+        <div className={`nav-buttons ${isMobileMenuOpen ? "show-menu" : ""}`}>
+          <Link
+            to={`/clients/${client_id}/weight_update`}
+            className={`nav-link ${isActive(`/clients/${client_id}/weight_update`)}`}
+          >
+            <MonitorWeightOutlinedIcon className="nav-icon" />
+            <span>Weight Update</span>
+          </Link>
+          <Link
+            to={`/clients/${client_id}/diet`}
+            className={`nav-link ${isActive(`/clients/${client_id}/diet`)}`}
+          >
+            <ArticleOutlinedIcon className="nav-icon" />
+            <span>Diet Plan</span>
+          </Link>
+          <Link
+            to={`/clients/${client_id}/recipe`}
+            className={`nav-link ${isActive(`/clients/${client_id}/recipe`)}`}
+          >
+            <MenuBookIcon className="nav-icon" />
+            <span>Recipes</span>
+          </Link>
+          <Link
+            to={`/clients/${client_id}/exercise`}
+            className={`nav-link ${isActive(`/clients/${client_id}/exercise`)}`}
+          >
+            <FitnessCenterIcon className="nav-icon" />
+            <span>Exercise</span>
+          </Link>
+          <Link
+            to={`/clients/${client_id}/my_profile`}
+            className={`nav-link ${isActive(`/clients/${client_id}/my_profile`)}`}
+          >
+            <PersonRoundedIcon className="nav-icon" />
+            <span>My Profile</span>
+          </Link>
+          <button className="logout-button nav-link" onClick={() => setShowLogoutModal(true)}>
+            <ExitToAppIcon className="nav-icon" />
+            <span>Logout</span>
+          </button>
+        </div>
       </div>
 
       {showLogoutModal && (
@@ -90,7 +92,7 @@ const NavigationBar = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

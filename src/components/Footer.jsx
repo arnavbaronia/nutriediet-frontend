@@ -46,10 +46,10 @@ const Footer = () => {
       <div className="footer-right">
         <h3 className="footer-heading">Follow Us</h3>
         <div className="footer-social-icons">
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="social-icon">
+          <a href="https://www.instagram.com/nutriediett?igsh=eHpiMHRrcmZrZGo3" target="_blank" rel="noopener noreferrer" className="social-icon">
             <FaInstagram />
           </a>
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-icon">
+          <a href="https://m.facebook.com/@NutrieDiet/?wtsid=rdr_01wTivPPFp1y4qSvP&hr=1" target="_blank" rel="noopener noreferrer" className="social-icon">
             <FaFacebookF />
           </a>
           <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="social-icon">
