@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useEffect} from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import dietimage from "../assets/dietimage.jpg";
 import aboutus from "../assets/aboutus.jpg";
@@ -16,8 +16,24 @@ import RestaurantIcon from "@mui/icons-material/Restaurant";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const HomePage = () => {
+  useEffect(() => {
+    const createLeaves = () => {
+      const leafContainer = document.querySelector(".falling-leaves");
+      for (let i = 0; i < 10; i++) { 
+        let leaf = document.createElement("div");
+        leaf.classList.add("leaf");
+        leaf.style.left = `${Math.random() * 100}vw`;
+        leaf.style.animationDuration = `${Math.random() * 5 + 5}s`;
+        leaf.style.animationDelay = `${Math.random() * 5}s`; 
+        leafContainer.appendChild(leaf);
+      }
+    };
+    createLeaves();
+  }, []);
+
   return (
     <>
+      <div className="falling-leaves"></div>
       <HomeNavBar />
       <div className="homepage-container">
         <div className="text-section">
