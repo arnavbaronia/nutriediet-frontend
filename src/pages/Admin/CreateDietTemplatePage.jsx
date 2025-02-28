@@ -5,7 +5,7 @@ import "../../styles/CreateDietTemplatePage.css";
 
 const CreateDietTemplatePage = () => {
   const [name, setName] = useState("");
-  const [diet, setDiet] = useState(""); // Kept as string
+  const [diet, setDiet] = useState(""); 
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ const CreateDietTemplatePage = () => {
 
   return (
     <div className="admin-create-diet">
-      <h1>Create a New Diet Template</h1>
+      <h1><strong>Create a New Diet Template</strong></h1>
       <form onSubmit={handleCreateTemplate}>
         <div>
           <label htmlFor="name">Template Name</label>

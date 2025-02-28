@@ -6,14 +6,14 @@
     width: 800px;
     max-width: 90%;
     margin: 50px auto;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Rubik', sans-serif;
   }
   
   .page-title {
     text-align: center;
     font-size: 28px;
     font-weight: 700;
-    color: black;
+    color: #333;
   }
   
   .loading-text {
@@ -28,6 +28,12 @@
     flex-direction: column;
     gap: 20px;
   }
+
+  label {
+    color: #333; 
+    font-size: 16px;
+    font-weight: 600;
+  }
   
   .small-input {
     padding: 10px;
@@ -36,6 +42,7 @@
     border: 1px solid #ddd;
     background-color: #f9f9f9;
     width: 97%;
+    margin-top: 8px;
   }
   
   .large-input {
@@ -46,6 +53,7 @@
     background-color: #f9f9f9;
     width: 96%;
     resize: vertical;
+    margin-top: 8px;
   }
   
   .small-input:focus,
@@ -75,7 +83,7 @@
   }
   
   .btn-cancel {
-    background: #6c757d;
+    background: red;
     color: white;
     padding: 12px 20px;
     font-size: 16px;

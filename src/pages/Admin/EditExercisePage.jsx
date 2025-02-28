@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import '../../styles/CreateRecipePage.css';
+import "../../styles/EditExercisePage.css";
 
 const EditExercisePage = () => {
   const { id } = useParams();
@@ -46,7 +46,7 @@ const EditExercisePage = () => {
   }, [id]);
 
   return (
-    <div className="admin-create-recipe">
+    <div className="edit-exercise-page">
       <h1>Edit Exercise</h1>
       {success && <div className="success-message">{success}</div>}
       {error && <div className="error-message">{error}</div>}
@@ -58,12 +58,14 @@ const EditExercisePage = () => {
           onChange={(e) => setEditExercise({ ...editExercise, name: e.target.value })}
           placeholder="Enter exercise name"
         />
+
         <label>Description</label>
         <textarea
           value={editExercise.description}
           onChange={(e) => setEditExercise({ ...editExercise, description: e.target.value })}
           placeholder="Enter exercise description"
         ></textarea>
+        
         <label>Link</label>
         <input
           type="text"
@@ -71,6 +73,7 @@ const EditExercisePage = () => {
           onChange={(e) => setEditExercise({ ...editExercise, link: e.target.value })}
           placeholder="Enter exercise link"
         />
+
         <button onClick={updateExercise}>Update Exercise</button>
       </form>
     </div>

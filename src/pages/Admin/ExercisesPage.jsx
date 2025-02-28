@@ -133,7 +133,7 @@ const ExercisesPage = () => {
                   className="video-thumbnail"
                 />
               )}
-              <h3 className="exercise-title">{selectedExerciseDetails.name}</h3>
+              <h3 className="selected-exercise-title">{selectedExerciseDetails.name}</h3>
               <a
                 href={selectedExerciseDetails.link}
                 target="_blank"
