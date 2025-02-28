@@ -1,3 +1,7 @@
+body {
+  font-family: 'Rubik', sans-serif;
+}
+
 .exercise-page {
   padding: 20px;
   color: black;
@@ -5,7 +9,7 @@
 }
 
 .exercise-title {
-  font-size: 24px;
+  font-size: 32px !important;
   font-weight: bold;
   margin-bottom: 20px;
 }

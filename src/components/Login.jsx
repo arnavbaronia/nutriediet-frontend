@@ -45,6 +45,7 @@ const Login = () => {
       localStorage.setItem("clientId", id);
       localStorage.setItem("email", email);
       localStorage.setItem("client_id", client_id);
+      localStorage.setItem('user', JSON.stringify(response.data));
 
       if (is_active) {
         console.log("Client is active. Navigating to client dashboard...");

@@ -69,7 +69,7 @@ function AppContent() {
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/create_profile/:email" element={<CreateProfilePage />} />
           <Route path="/account-activation" element={<AccountActivationPage />} />
-          <Route path="/clients/:client_id" element={<ProtectedRoute component={ClientPage} />} />
+          <Route path="/clients" element={<ProtectedRoute component={ClientPage} />} />
           <Route path="/clients/:client_id/diet" element={<ProtectedRoute component={DietPage} />} />
           <Route path="/clients/:client_id/exercise" element={<ProtectedRoute component={ExercisePage} />} />
           <Route path="/clients/:client_id/my_profile" element={<ProtectedRoute component={ProfilePage} />} />

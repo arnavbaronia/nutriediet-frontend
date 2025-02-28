@@ -6,7 +6,7 @@
   width: 800px;
   max-width: 90%;
   margin: 50px auto;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Rubik', sans-serif;
 }
 
 .custom-dropdown {
@@ -16,9 +16,9 @@
 
 .page-title {
   text-align: center;
-  font-size: 28px;
+  font-size: 32px !important;
   font-weight: 700;
-  color: black;
+  color: #333 !important;
 }
 
 .header-section {

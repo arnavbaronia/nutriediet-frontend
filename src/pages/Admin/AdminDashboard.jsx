@@ -2,9 +2,8 @@ import React from 'react';
 
 const AdminDashboard = () => {
   return (
-    <div>
-      <h1>Admin Dashboard</h1>
-      <p>Welcome, Admin!</p>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '30vh' }}>
+      <h1>Hello Admin!</h1>
     </div>
   );
 };

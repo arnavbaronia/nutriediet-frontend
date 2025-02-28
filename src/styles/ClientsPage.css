@@ -1,11 +1,12 @@
 .clients-page-container {
   padding: 20px;
-  font-family: Arial, sans-serif;
+  font-family: 'Rubik', sans-serif;
 }
 
 h1 {
   color: #333;
   margin-bottom: 20px;
+  font-size: 32px;
 }
 
 .search-and-filters {
