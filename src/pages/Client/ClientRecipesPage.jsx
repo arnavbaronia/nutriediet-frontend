@@ -31,13 +31,15 @@ const ClientRecipeListPage = () => {
 
         const response = await axios.get(`http://localhost:8081/clients/${clientID}/recipe`, { headers });
 
-        if (response.data.isActive === false) {
+        if (!response.data.isActive) {
           setError("Your account is inactive. Please contact support.");
           return;
         }
 
-        setRecipes(response.data.recipe);
-        setFilteredRecipes(response.data.recipe);
+        const recipeList = response.data.recipe || [];
+
+        setRecipes(recipeList);
+        setFilteredRecipes(recipeList);
       } catch (err) {
         console.error("Error fetching recipes:", err.response?.data || err);
         setError("Failed to fetch recipes. Please try again.");
@@ -55,7 +57,7 @@ const ClientRecipeListPage = () => {
       setFilteredRecipes(recipes);
     } else {
       const filtered = recipes.filter((recipe) =>
-        recipe.name.toLowerCase().includes(query)
+        recipe?.Name?.toLowerCase().includes(query)
       );
       setFilteredRecipes(filtered);
     }
@@ -79,11 +81,11 @@ const ClientRecipeListPage = () => {
           {filteredRecipes.length > 0 ? (
             filteredRecipes.map((recipe) => (
               <div
-                key={recipe.id}
+                key={recipe.ID}
                 className="recipe-box"
                 onClick={() => setSelectedRecipe(recipe)}
               >
-                <h3>{recipe?.Name}</h3>
+                <h3>{recipe?.Name || "Unnamed Recipe"}</h3> 
               </div>
             ))
           ) : (
@@ -95,24 +97,32 @@ const ClientRecipeListPage = () => {
           <div className="recipe-popup-overlay" onClick={() => setSelectedRecipe(null)}>
             <div className="recipe-popup" onClick={(e) => e.stopPropagation()}>
               <button className="close-btn" onClick={() => setSelectedRecipe(null)}>✖</button>
-              <h2>{selectedRecipe.Name}</h2>
+              <h2>{selectedRecipe?.Name || "Unnamed Recipe"}</h2> 
 
               <div className="recipe-sections">
                 <div className="recipe-section ingredients">
                   <h3>Ingredients</h3>
                   <ul>
-                    {selectedRecipe.Ingredients?.map((ingredient, index) => (
-                      <li key={index}>{ingredient}</li>
-                    )) || <p>No ingredients available</p>}
+                    {selectedRecipe?.Ingredients?.length > 0 ? (
+                      selectedRecipe.Ingredients.map((ingredient, index) => (
+                        <li key={index}>{ingredient || "Unknown ingredient"}</li>
+                      ))
+                    ) : (
+                      <p>No ingredients available</p>
+                    )}
                   </ul>
                 </div>
 
                 <div className="recipe-section preparation">
                   <h3>Preparation</h3>
                   <ol>
-                    {selectedRecipe.Preparation?.map((step, index) => (
-                      <li key={index}>{step}</li>
-                    )) || <p>No preparation steps available</p>}
+                    {selectedRecipe?.Preparation?.length > 0 ? (
+                      selectedRecipe.Preparation.map((step, index) => (
+                        <li key={index}>{step || "Unknown step"}</li>
+                      ))
+                    ) : (
+                      <p>No preparation steps available</p>
+                    )}
                   </ol>
                 </div>
               </div>
