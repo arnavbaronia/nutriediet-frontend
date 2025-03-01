@@ -57,8 +57,20 @@ const ExercisePage = () => {
   };
 
   const extractYouTubeID = (url) => {
-    const match = url.match(/embed\/([a-zA-Z0-9_-]+)/);
-    return match ? match[1] : null;
+    if (!url) return null;
+    
+    let match;
+    
+    match = url.match(/embed\/([a-zA-Z0-9_-]+)/);
+    if (match) return match[1];
+
+    match = url.match(/[?&]v=([a-zA-Z0-9_-]+)/);
+    if (match) return match[1];
+
+    match = url.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
+    if (match) return match[1];
+
+    return null;
   };
 
   const handleSearch = (event) => {

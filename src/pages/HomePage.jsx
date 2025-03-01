@@ -19,7 +19,7 @@ const HomePage = () => {
   useEffect(() => {
     const createLeaves = () => {
       const leafContainer = document.querySelector(".falling-leaves");
-      for (let i = 0; i < 10; i++) { 
+      for (let i = 0; i < 5; i++) { 
         let leaf = document.createElement("div");
         leaf.classList.add("leaf");
         leaf.style.left = `${Math.random() * 100}vw`;

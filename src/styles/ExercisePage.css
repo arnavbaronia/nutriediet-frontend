@@ -31,7 +31,9 @@ body {
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
-  margin-top: 20px;
+  align-items: center;
+  max-width: 1380px; 
+  margin: 0 auto;
 }
 
 .video-box {
@@ -42,13 +44,16 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 300px;
   height: 235px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .video-thumbnail img {
   width: 100%;
   height: 180px;
   border-radius: 10px;
-  margin-left: 15px;
 }
 
 .video-title {
