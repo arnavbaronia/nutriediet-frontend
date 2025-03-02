@@ -138,7 +138,7 @@ const CreateDietPage = () => {
               <option value="1">Detox</option>
             </Form.Control>
             <Form.Control as="select" value={selectedTemplate} onChange={handleTemplateSelect} className="styled-dropdown">
-              <option value="">-- Select a Template --</option>
+              <option value="">-- Template --</option>
               {dietTemplates.map((template) => (
                 <option key={template.ID} value={template.ID}>{template.Name}</option>
               ))}
@@ -169,7 +169,7 @@ const CreateDietPage = () => {
             </Form.Control>
 
             <Form.Control as="select" value={selectedPastTemplate} onChange={handlePastTemplateSelect} className="styled-dropdown template-dropdown">
-              <option value="">-- Select a Template --</option>
+              <option value="">-- Template --</option>
               {dietTemplates.map((template) => (
                 <option key={template.ID} value={template.ID}>{template.Name}</option>
               ))}
