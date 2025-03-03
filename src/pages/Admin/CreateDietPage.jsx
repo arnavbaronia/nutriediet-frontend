@@ -78,7 +78,7 @@ const CreateDietPage = () => {
     if (selectedDiet) {
       setSelectedHistory(selectedDiet);
       setPastDiet(selectedDiet.diet);
-      setDietType(type); // Ensure dietType is set correctly based on history type
+      setDietType(type); 
     }
   };
 

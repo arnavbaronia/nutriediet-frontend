@@ -165,3 +165,34 @@
     display: flex;
     justify-content: center;
   }  
+  
+  .weight-update-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+#updated_weight {
+    width: 20%;
+    text-align: center;
+}
+
+.update-weight-btn {
+    background-color: #FFA500;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 20px;
+    transition: background-color 0.3s;
+}
+
+.update-weight-btn:hover {
+    background-color: #2673ef;
+    color: #ffffff;
+    border: 2px solid #004D40;
+}

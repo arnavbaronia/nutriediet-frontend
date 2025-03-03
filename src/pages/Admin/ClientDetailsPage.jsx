@@ -39,6 +39,9 @@ const ClientDetailsPage = () => {
   const [isActive, setIsActive] = useState(true);
   const [diets, setDiets] = useState([]);
   const [weightHistory, setWeightHistory] = useState([]);
+  const [updatedWeight, setUpdatedWeight] = useState("");
+  const [weightUpdateSuccess, setWeightUpdateSuccess] = useState(null);
+  
   const navigate=useNavigate();
   console.log('Client ID:', client_id);
 
@@ -102,6 +105,45 @@ const ClientDetailsPage = () => {
         setLoading(false);
       });
   }, [client_id]);
+
+  const handleWeightUpdate = async () => {
+    const token = localStorage.getItem("token");
+  
+    if (!updatedWeight) {
+      setError("Please enter a valid weight.");
+      return;
+    }
+  
+    try {
+      const response = await axios.post(
+        `http://localhost:8081/admin/${client_id}/weight_update`,
+        parseFloat(updatedWeight),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      if (response.status === 200) {
+        setWeightUpdateSuccess("Weight updated successfully!");
+        setUpdatedWeight("");
+  
+        setTimeout(() => setWeightUpdateSuccess(null), 3000); 
+  
+        const weightResponse = await axios.get(
+          `http://localhost:8081/admin/client/${client_id}/weight_history`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+  
+        setWeightHistory(weightResponse.data.response || []);
+      }
+    } catch (error) {
+      console.error("Error updating weight:", error);
+      setError("Failed to update weight. Please try again.");
+    }
+  };  
   
   const weightData = {
     labels: weightHistory.map((entry) =>
@@ -512,6 +554,23 @@ const ClientDetailsPage = () => {
               )}
             </tbody>
           </table>
+
+          <div className="form-group weight-update-container">
+            <label htmlFor="updated_weight">Update Weight (kg)</label>
+            <input
+              type="number"
+              id="updated_weight"
+              name="updated_weight"
+              value={updatedWeight}
+              className="client-input"
+              onChange={(e) => setUpdatedWeight(e.target.value)}
+            />
+            <button className="update-weight-btn" onClick={handleWeightUpdate}>
+              Update Weight
+            </button>
+
+            {weightUpdateSuccess && (<div className="success-message">{weightUpdateSuccess}</div>)}
+          </div>
 
           <button type="button" onClick={handleActivateDeactivate} className="toggle-button">
             {isActive ? 'Deactivate' : 'Activate'} Account
