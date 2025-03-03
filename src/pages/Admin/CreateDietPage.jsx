@@ -17,7 +17,6 @@ const CreateDietPage = () => {
   const [selectedHistory, setSelectedHistory] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [selectedPastTemplate, setSelectedPastTemplate] = useState("");
-  const [dietHistoryTemplates, setDietHistoryTemplates] = useState([]);
   const [pastDiet, setPastDiet] = useState("");
 
   useEffect(() => {
@@ -63,21 +62,31 @@ const CreateDietPage = () => {
 
       setDietHistoryRegular(response.data.diet_history_regular || []);
       setDietHistoryDetox(response.data.diet_history_detox || []);
-      setDietHistoryTemplates(response.data.diet_history_templates || []);
     } catch {
       setError("Failed to load diet history.");
     }
   };
 
-  const handleHistorySelect = (dietItem) => {
-    setSelectedHistory(dietItem || null);
-    setPastDiet(dietItem ? dietItem.diet : "");
+  const handleHistorySelect = (dietId, type) => {
+    if (!dietId) return;
+
+    const selectedDiet =
+      type === 0
+        ? dietHistoryRegular.find((d) => d.diet_id === parseInt(dietId))
+        : dietHistoryDetox.find((d) => d.diet_id === parseInt(dietId));
+
+    if (selectedDiet) {
+      setSelectedHistory(selectedDiet);
+      setPastDiet(selectedDiet.diet);
+      setDietType(type); // Ensure dietType is set correctly based on history type
+    }
   };
 
   const handleEdit = () => {
     if (selectedHistory) {
+      console.log("Selected Diet for Edit:", selectedHistory);
       setDiet(selectedHistory.diet);
-      setDietType(selectedHistory.diet_type);
+      setDietType(selectedHistory.diet_type ?? (dietHistoryDetox.includes(selectedHistory) ? 1 : 0));
       setWeekNumber(selectedHistory.week_number);
       setEditMode(true);
     }
@@ -105,11 +114,15 @@ const CreateDietPage = () => {
 
   const handleSubmit = async () => {
     const token = localStorage.getItem("token");
+    const validDietType = isNaN(dietType) ? 0 : Number(dietType);
+
     const dietData = {
-      Diet: diet,
-      DietType: Number(dietType),
-      WeekNumber: Number(weekNumber),
+      diet_id: selectedHistory ? selectedHistory.diet_id : null,
+      DietType: validDietType,
+      diet: diet,
     };
+
+    console.log("Diet data to be saved/updated:", dietData);
 
     try {
       if (editMode) {
@@ -139,7 +152,7 @@ const CreateDietPage = () => {
       <div className="diet-section">
         {/* Left Side - Create/Edit Diet */}
         <div className="diet-left">
-          <h2>{editMode ? "Edit Diet" : "Create Diet"}</h2>
+          <h2>{editMode ? "Update" : "Save"}</h2>
           <div className="dropdown-group">
             <Form.Control as="select" value={dietType} onChange={(e) => setDietType(Number(e.target.value))} className="styled-dropdown">
               <option value="0">Regular</option>
@@ -164,36 +177,31 @@ const CreateDietPage = () => {
         <div className="diet-right">
           <h2>View Past Diets & Templates</h2>
           <div className="history-dropdown-group">
-            <Form.Control as="select" onChange={(e) => handleHistorySelect(dietHistoryRegular.find(d => d.week_number === parseInt(e.target.value)))} className="styled-dropdown">
+            <Form.Control as="select" onChange={(e) => handleHistorySelect(e.target.value, 0)} className="styled-dropdown small-dropdown">
               <option value="">Regular Diet History</option>
               {dietHistoryRegular.map((entry) => (
-                <option key={entry.diet_id} value={entry.week_number}>Week {entry.week_number}</option>
+                <option key={entry.diet_id} value={entry.diet_id}>Week {entry.week_number}</option>
               ))}
             </Form.Control>
 
-            <Form.Control as="select" onChange={(e) => handleHistorySelect(dietHistoryDetox.find(d => d.week_number === parseInt(e.target.value)))} className="styled-dropdown">
+            <Form.Control as="select" onChange={(e) => handleHistorySelect(e.target.value, 1)} className="styled-dropdown small-dropdown">
               <option value="">Detox Diet History</option>
               {dietHistoryDetox.map((entry) => (
-                <option key={entry.diet_id} value={entry.week_number}>Week {entry.week_number}</option>
+                <option key={entry.diet_id} value={entry.diet_id}>Week {entry.week_number}</option>
               ))}
             </Form.Control>
 
-            <Form.Control as="select" value={selectedPastTemplate} onChange={handlePastTemplateSelect} className="styled-dropdown template-dropdown">
+            <Form.Control as="select" value={selectedPastTemplate} onChange={handlePastTemplateSelect} className="styled-dropdown small-dropdown">
               <option value="">Select Template</option>
               {dietTemplates.map((template) => (
                 <option key={template.ID} value={template.ID}>{template.Name}</option>
               ))}
             </Form.Control>
-
           </div>
 
           <Form.Control as="textarea" className="diet-input diet-input-scrollable" value={pastDiet} readOnly />
 
-          <div className="button-group">
-            <Button className="edit-btn" onClick={handleEdit} disabled={!selectedHistory}>
-              Edit
-            </Button>
-          </div>
+          <Button className="edit-butn" onClick={handleEdit} disabled={!selectedHistory}>Edit</Button>
         </div>
       </div>
     </div>
