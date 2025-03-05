@@ -18,6 +18,8 @@ const CreateDietPage = () => {
   const [editMode, setEditMode] = useState(false);
   const [selectedPastTemplate, setSelectedPastTemplate] = useState("");
   const [pastDiet, setPastDiet] = useState("");
+  const [latestEditableDiets, setLatestEditableDiets] = useState({ regular: null, detox: null });
+  const [latestDietIds, setLatestDietIds] = useState({ regular: null, detox: null });
 
   useEffect(() => {
     fetchDietTemplates();
@@ -42,7 +44,7 @@ const CreateDietPage = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(`http://localhost:8081/admin/diet_templates/${dietTemplateId}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}`},
       });
 
       if (response.data && response.data.template) {
@@ -59,38 +61,78 @@ const CreateDietPage = () => {
       const response = await axios.get(`http://localhost:8081/admin/client/${client_id}/diet_history`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
-      setDietHistoryRegular(response.data.diet_history_regular || []);
-      setDietHistoryDetox(response.data.diet_history_detox || []);
-    } catch {
+  
+      const { diet_history_regular, diet_history_detox } = response.data;
+      setDietHistoryRegular(diet_history_regular || []);
+      setDietHistoryDetox(diet_history_detox || []);
+  
+      const latestRegular = diet_history_regular.length
+        ? diet_history_regular.reduce((latest, diet) =>
+            diet.week_number > latest.week_number ? diet : latest,
+          diet_history_regular[0])
+        : null;
+  
+      const latestDetox = diet_history_detox.length
+        ? diet_history_detox.reduce((latest, diet) =>
+            diet.week_number > latest.week_number ? diet : latest,
+          diet_history_detox[0])
+        : null;
+  
+      setLatestEditableDiets({
+        regular: latestRegular ? latestRegular.diet_id : null,
+        detox: latestDetox ? latestDetox.diet_id : null,
+      });
+  
+    } catch (error) {
+      console.error("Error fetching diet history:", error);
       setError("Failed to load diet history.");
     }
-  };
+  };  
 
+  useEffect(() => {
+    console.log("Updated latestEditableDiets:", latestEditableDiets);
+  }, [latestEditableDiets]);
+  
   const handleHistorySelect = (dietId, type) => {
-    if (!dietId) return;
-
+    if (!dietId) {
+      setSelectedHistory(null);
+      setPastDiet("");
+      setEditMode(false);
+      return;
+    }
+  
     const selectedDiet =
       type === 0
-        ? dietHistoryRegular.find((d) => d.diet_id === parseInt(dietId))
-        : dietHistoryDetox.find((d) => d.diet_id === parseInt(dietId));
-
+        ? dietHistoryRegular.find(d => d.diet_id === parseInt(dietId))
+        : dietHistoryDetox.find(d => d.diet_id === parseInt(dietId));
+  
     if (selectedDiet) {
       setSelectedHistory(selectedDiet);
       setPastDiet(selectedDiet.diet);
-      setDietType(type); 
+      setDietType(type);
+  
+      setEditMode(
+        (type === 0 && selectedDiet.diet_id === latestDietIds.regular) ||
+        (type === 1 && selectedDiet.diet_id === latestDietIds.detox)
+      );
     }
-  };
-
+  };  
+  
   const handleEdit = () => {
-    if (selectedHistory) {
-      console.log("Selected Diet for Edit:", selectedHistory);
-      setDiet(selectedHistory.diet);
-      setDietType(selectedHistory.diet_type ?? (dietHistoryDetox.includes(selectedHistory) ? 1 : 0));
-      setWeekNumber(selectedHistory.week_number);
-      setEditMode(true);
+    if (!selectedHistory) return;
+  
+    if (
+      (selectedHistory.diet_type === 0 && selectedHistory.diet_id !== latestEditableDiets.regular) ||
+      (selectedHistory.diet_type === 1 && selectedHistory.diet_id !== latestEditableDiets.detox)
+    ) {
+      return; 
     }
-  };
+  
+    setDiet(selectedHistory.diet);
+    setDietType(selectedHistory.diet_type ?? (dietHistoryDetox.includes(selectedHistory) ? 1 : 0));
+    setWeekNumber(selectedHistory.week_number);
+    setEditMode(true);
+  };    
 
   const handleTemplateSelect = (e) => {
     const templateId = e.target.value;
@@ -200,8 +242,18 @@ const CreateDietPage = () => {
           </div>
 
           <Form.Control as="textarea" className="diet-input diet-input-scrollable" value={pastDiet} readOnly />
-
-          <Button className="edit-butn" onClick={handleEdit} disabled={!selectedHistory}>Edit</Button>
+          
+          <Button 
+            className="edit-butn" 
+            onClick={handleEdit} 
+            disabled={
+              !selectedHistory || 
+              (selectedHistory.diet_type === 0 && selectedHistory.diet_id !== latestDietIds.regular) || 
+              (selectedHistory.diet_type === 1 && selectedHistory.diet_id !== latestDietIds.detox)
+            }
+          >
+            Edit
+          </Button>
         </div>
       </div>
     </div>
