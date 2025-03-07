@@ -310,6 +310,17 @@ const ClientDetailsPage = () => {
           {/* Name, Age, Phone Number, Email */}
           <div className="form-row">
             <div className="form-group">
+              <label htmlFor="client_id">Client ID</label>
+              <input
+                type="text"
+                id="client_id"
+                name="client_id"
+                value={client_id}
+                className="client-input"
+                readOnly
+              />
+            </div>
+            <div className="form-group">
               <label htmlFor="name">Name</label>
               <input
                 type="text"
@@ -351,17 +362,6 @@ const ClientDetailsPage = () => {
                 value={client.email}
                 className="client-input"
                 onChange={handleChange}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="client_id">Client ID</label>
-              <input
-                type="text"
-                id="client_id"
-                name="client_id"
-                value={client_id}
-                className="client-input"
-                readOnly
               />
             </div>
           </div>
