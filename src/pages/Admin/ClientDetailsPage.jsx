@@ -169,13 +169,41 @@ const ClientDetailsPage = () => {
         tension: 0.4,
       },
     ],
+  };
+  
+  const calculateNextPaymentDate = (lastPaymentDate, packageDuration) => {
+    if (!lastPaymentDate || !packageDuration) return '';
+  
+    const durationMap = {
+      "1 month": 1,
+      "2 months": 2,
+      "3 months": 3,
+      "6 months": 6,
+    };
+  
+    const monthsToAdd = durationMap[packageDuration] || 0;
+    const lastDate = new Date(lastPaymentDate);
+  
+    const year = lastDate.getUTCFullYear();
+    const month = lastDate.getUTCMonth() + monthsToAdd;
+    const day = lastDate.getUTCDate();
+  
+    const newDate = new Date(Date.UTC(year, month, day));
+  
+    return newDate.toISOString().split('T')[0];
   };  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setClient({
-      ...client,
-      [name]: value,
+
+    setClient((prevClient) => {
+      let updatedClient = { ...prevClient, [name]: value };
+
+      if (name === "package" && prevClient.last_payment_date) {
+        updatedClient.next_payment_date = calculateNextPaymentDate(prevClient.last_payment_date, value);
+      }
+
+      return updatedClient;
     });
   };
   
@@ -289,7 +317,7 @@ const ClientDetailsPage = () => {
                 name="name"
                 value={client.name}
                 className="client-input"
-                readOnly
+                onChange={handleChange}
               />
             </div>
             <div className="form-group">
@@ -323,6 +351,17 @@ const ClientDetailsPage = () => {
                 value={client.email}
                 className="client-input"
                 onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="client_id">Client ID</label>
+              <input
+                type="text"
+                id="client_id"
+                name="client_id"
+                value={client_id}
+                className="client-input"
+                readOnly
               />
             </div>
           </div>
@@ -450,6 +489,7 @@ const ClientDetailsPage = () => {
               >
                 <option value="">Select</option>
                 <option value="1 Month">1 Month</option>
+                <option value="2 Months">2 Months</option>
                 <option value="3 Months">3 Months</option>
                 <option value="6 Months">6 Months</option>
               </select>

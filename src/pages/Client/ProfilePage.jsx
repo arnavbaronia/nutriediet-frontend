@@ -143,7 +143,7 @@ const ProfilePage = () => {
               name="name"
               value={profile.name}
               className="profile-input"
-              readOnly
+              onChange={handleChange}
             />
           </div>
           <div className="form-group inline-input-wide">
