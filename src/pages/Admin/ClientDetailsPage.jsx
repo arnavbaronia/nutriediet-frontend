@@ -459,6 +459,7 @@ const ClientDetailsPage = () => {
                     border: '2px solid black', 
                     borderRadius: '10px', 
                     padding: '8px',
+                    width: '97%',
                   }}
                 >
                   <option value="">Select</option>
@@ -480,6 +481,9 @@ const ClientDetailsPage = () => {
                 value={client.medical_history}
                 className="client-input"
                 onChange={handleChange}
+                style={{
+                  width: '93%',
+                }}
               />
             </div>
             <div className="form-group">
@@ -491,6 +495,9 @@ const ClientDetailsPage = () => {
                 value={client.allergies}
                 className="client-input"
                 onChange={handleChange}
+                style={{
+                  width: '93%',
+                }}
               />
             </div>
             <div className="form-group">
@@ -501,6 +508,9 @@ const ClientDetailsPage = () => {
                 name="exercise"
                 value={client.exercise}
                 className="client-input"
+                style={{
+                  width: '93%',
+                }}
                 onChange={handleChange}
               />
             </div>
@@ -520,6 +530,7 @@ const ClientDetailsPage = () => {
                   border: '2px solid black', 
                   borderRadius: '10px', 
                   padding: '8px',
+                  width: '97%',
                 }}
               >
                 <option value="">Select</option>
@@ -584,6 +595,9 @@ const ClientDetailsPage = () => {
               name="diet_recall"
               value={client.diet_recall}
               onChange={handleChange}
+              style={{
+                  width: '98%',
+              }}
               className="client-textarea client-textarea-large"
             />
           </div>
@@ -594,6 +608,9 @@ const ClientDetailsPage = () => {
               name="remarks"
               value={client.remarks}
               onChange={handleChange}
+              style={{
+                  width: '98%',
+              }}
               className="client-textarea client-textarea-large"
             />
           </div>
