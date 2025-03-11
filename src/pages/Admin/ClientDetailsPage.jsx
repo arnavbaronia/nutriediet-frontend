@@ -172,37 +172,68 @@ const ClientDetailsPage = () => {
   };
   
   const calculateNextPaymentDate = (lastPaymentDate, packageDuration) => {
-    if (!lastPaymentDate || !packageDuration) return '';
+    console.log(`Calculating Next Payment Date: Last Payment Date = ${lastPaymentDate}, Package = ${packageDuration}`);
   
+    if (!lastPaymentDate || !packageDuration) return '';
+    
+    const normalizedPackage = packageDuration.toLowerCase().replace(/\s+/g, ' ');
+    
     const durationMap = {
       "1 month": 1,
       "2 months": 2,
       "3 months": 3,
       "6 months": 6,
+      "1 month": 1,
+      "2 month": 2,
+      "3 month": 3,
+      "6 month": 6,
     };
   
-    const monthsToAdd = durationMap[packageDuration] || 0;
+    const monthsToAdd = durationMap[normalizedPackage] || 0;
+    if (monthsToAdd === 0) {
+      console.warn(`Unknown package duration: ${packageDuration}`);
+      return '';
+    }
+    
     const lastDate = new Date(lastPaymentDate);
+    if (isNaN(lastDate.getTime())) {
+      console.error(`Invalid date format: ${lastPaymentDate}`);
+      return '';
+    }
+    
+    const dayOfMonth = lastDate.getDate();
+    
+    lastDate.setDate(1);
+    lastDate.setMonth(lastDate.getMonth() + monthsToAdd);
+    
+    const maxDaysInMonth = new Date(lastDate.getFullYear(), lastDate.getMonth() + 1, 0).getDate();
+    lastDate.setDate(Math.min(dayOfMonth, maxDaysInMonth));
   
-    const year = lastDate.getUTCFullYear();
-    const month = lastDate.getUTCMonth() + monthsToAdd;
-    const day = lastDate.getUTCDate();
+    const formattedDate = lastDate.toISOString().split('T')[0];
+    console.log(`Final Next Payment Date: ${formattedDate}`);
   
-    const newDate = new Date(Date.UTC(year, month, day));
+    return formattedDate;
+  };
   
-    return newDate.toISOString().split('T')[0];
-  };  
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-
+  
+    console.log(`Updated Field: ${name}, Value: ${value}`);
+  
     setClient((prevClient) => {
-      let updatedClient = { ...prevClient, [name]: value };
-
-      if (name === "package" && prevClient.last_payment_date) {
-        updatedClient.next_payment_date = calculateNextPaymentDate(prevClient.last_payment_date, value);
+      const updatedClient = { ...prevClient, [name]: value };
+      
+      if (name === "package" || name === "last_payment_date") {
+        if (updatedClient.package && updatedClient.last_payment_date) {
+          const nextPaymentDate = calculateNextPaymentDate(
+            updatedClient.last_payment_date, 
+            updatedClient.package
+          );
+          console.log(`Calculated Next Payment Date: ${nextPaymentDate}`);
+          updatedClient.next_payment_date = nextPaymentDate;
+        }
       }
-
+      
       return updatedClient;
     });
   };
@@ -282,6 +313,10 @@ const ClientDetailsPage = () => {
           ...prevState,
           ...updatedClient,
           name: prevState.name,
+          next_payment_date: formatDateForInput(updatedClient.next_payment_date),
+          last_payment_date: formatDateForInput(updatedClient.last_payment_date),
+          date_of_joining: formatDateForInput(updatedClient.date_of_joining),
+          created_at: formatDateForInput(updatedClient.created_at),
         }));
         setError(null);
         setSuccessMessage('Details updated successfully!'); 
@@ -512,9 +547,9 @@ const ClientDetailsPage = () => {
                 type="date"
                 id="next_payment_date"
                 name="next_payment_date"
-                value={(client.next_payment_date)}
+                value={client.next_payment_date}
                 className="client-input"
-                onChange={handleChange}
+                readOnly
               />
             </div>
             <div className="form-group">
@@ -523,7 +558,7 @@ const ClientDetailsPage = () => {
                 type="date"
                 id="last_payment_date"
                 name="last_payment_date"
-                value={(client.last_payment_date)}
+                value={client.last_payment_date}
                 className="client-input"
                 onChange={handleChange}
               />
@@ -534,7 +569,7 @@ const ClientDetailsPage = () => {
                 type="date"
                 id="date_of_joining"
                 name="date_of_joining"
-                value={(client.date_of_joining)}
+                value={client.date_of_joining}
                 className="client-input"
                 onChange={handleChange}
               />
@@ -605,7 +640,7 @@ const ClientDetailsPage = () => {
               className="client-input"
               onChange={(e) => setUpdatedWeight(e.target.value)}
             />
-            <button className="update-weight-btn" onClick={handleWeightUpdate}>
+            <button type="button" className="update-weight-btn" onClick={handleWeightUpdate}>
               Update Weight
             </button>
 
