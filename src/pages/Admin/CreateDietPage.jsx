@@ -18,7 +18,6 @@ const CreateDietPage = () => {
   const [editMode, setEditMode] = useState(false);
   const [selectedPastTemplate, setSelectedPastTemplate] = useState("");
   const [pastDiet, setPastDiet] = useState("");
-  const [latestEditableDiets, setLatestEditableDiets] = useState({ regular: null, detox: null });
   const [latestDietIds, setLatestDietIds] = useState({ regular: null, detox: null });
 
   useEffect(() => {
@@ -66,32 +65,36 @@ const CreateDietPage = () => {
       setDietHistoryRegular(diet_history_regular || []);
       setDietHistoryDetox(diet_history_detox || []);
   
-      const latestRegular = diet_history_regular.length
-        ? diet_history_regular.reduce((latest, diet) =>
-            diet.week_number > latest.week_number ? diet : latest,
-          diet_history_regular[0])
-        : null;
-  
-      const latestDetox = diet_history_detox.length
-        ? diet_history_detox.reduce((latest, diet) =>
-            diet.week_number > latest.week_number ? diet : latest,
-          diet_history_detox[0])
-        : null;
-  
-      setLatestEditableDiets({
-        regular: latestRegular ? latestRegular.diet_id : null,
-        detox: latestDetox ? latestDetox.diet_id : null,
+      let latestRegularDiet = null;
+      if (diet_history_regular && diet_history_regular.length > 0) {
+        latestRegularDiet = diet_history_regular.reduce((latest, current) => 
+          current.week_number > latest.week_number ? current : latest, 
+          diet_history_regular[0]
+        );
+      }
+      
+      let latestDetoxDiet = null;
+      if (diet_history_detox && diet_history_detox.length > 0) {
+        latestDetoxDiet = diet_history_detox.reduce((latest, current) => 
+          current.week_number > latest.week_number ? current : latest, 
+          diet_history_detox[0]
+        );
+      }
+      
+      setLatestDietIds({
+        regular: latestRegularDiet ? latestRegularDiet.diet_id : null,
+        detox: latestDetoxDiet ? latestDetoxDiet.diet_id : null
       });
-  
+      
+      console.log("Latest Diet IDs:", {
+        regular: latestRegularDiet ? latestRegularDiet.diet_id : null,
+        detox: latestDetoxDiet ? latestDetoxDiet.diet_id : null
+      });
     } catch (error) {
       console.error("Error fetching diet history:", error);
       setError("Failed to load diet history.");
     }
   };  
-
-  useEffect(() => {
-    console.log("Updated latestEditableDiets:", latestEditableDiets);
-  }, [latestEditableDiets]);
   
   const handleHistorySelect = (dietId, type) => {
     if (!dietId) {
@@ -101,35 +104,41 @@ const CreateDietPage = () => {
       return;
     }
   
+    const parsedDietId = parseInt(dietId);
     const selectedDiet =
       type === 0
-        ? dietHistoryRegular.find(d => d.diet_id === parseInt(dietId))
-        : dietHistoryDetox.find(d => d.diet_id === parseInt(dietId));
+        ? dietHistoryRegular.find(d => d.diet_id === parsedDietId)
+        : dietHistoryDetox.find(d => d.diet_id === parsedDietId);
   
     if (selectedDiet) {
-      setSelectedHistory(selectedDiet);
+      const dietTypeValue = type; 
+      
+      setSelectedHistory({
+        ...selectedDiet,
+        diet_type: dietTypeValue
+      });
+      
       setPastDiet(selectedDiet.diet);
-      setDietType(type);
-  
-      setEditMode(
-        (type === 0 && selectedDiet.diet_id === latestDietIds.regular) ||
-        (type === 1 && selectedDiet.diet_id === latestDietIds.detox)
-      );
+      setDietType(dietTypeValue);
+      
+      setEditMode(false);
     }
   };  
   
   const handleEdit = () => {
     if (!selectedHistory) return;
-  
-    if (
-      (selectedHistory.diet_type === 0 && selectedHistory.diet_id !== latestEditableDiets.regular) ||
-      (selectedHistory.diet_type === 1 && selectedHistory.diet_id !== latestEditableDiets.detox)
-    ) {
-      return; 
+    
+    const isLatest =
+      (selectedHistory.diet_type === 0 && selectedHistory.diet_id === latestDietIds.regular) ||
+      (selectedHistory.diet_type === 1 && selectedHistory.diet_id === latestDietIds.detox);
+    
+    if (!isLatest) {
+      alert("Only the latest diet can be edited.");
+      return;
     }
   
     setDiet(selectedHistory.diet);
-    setDietType(selectedHistory.diet_type ?? (dietHistoryDetox.includes(selectedHistory) ? 1 : 0));
+    setDietType(selectedHistory.diet_type);
     setWeekNumber(selectedHistory.week_number);
     setEditMode(true);
   };    
@@ -182,8 +191,27 @@ const CreateDietPage = () => {
 
       fetchDietHistory();
       setEditMode(false);
+      setDiet("");
+      setSelectedTemplate("");
     } catch {
       setError("Failed to save diet.");
+    }
+  };
+
+  const isSelectedDietEditable = () => {
+    if (!selectedHistory) return false;
+    
+    console.log("Checking if diet is editable:", {
+      selectedHistoryType: selectedHistory.diet_type,
+      selectedHistoryId: selectedHistory.diet_id,
+      latestRegularId: latestDietIds.regular,
+      latestDetoxId: latestDietIds.detox
+    });
+    
+    if (selectedHistory.diet_type === 0) {
+      return selectedHistory.diet_id === latestDietIds.regular;
+    } else {
+      return selectedHistory.diet_id === latestDietIds.detox;
     }
   };
 
@@ -222,14 +250,18 @@ const CreateDietPage = () => {
             <Form.Control as="select" onChange={(e) => handleHistorySelect(e.target.value, 0)} className="styled-dropdown small-dropdown">
               <option value="">Regular Diet History</option>
               {dietHistoryRegular.map((entry) => (
-                <option key={entry.diet_id} value={entry.diet_id}>Week {entry.week_number}</option>
+                <option key={entry.diet_id} value={entry.diet_id}>
+                  Week {entry.week_number}{entry.diet_id === latestDietIds.regular ? " (Latest)" : ""}
+                </option>
               ))}
             </Form.Control>
 
             <Form.Control as="select" onChange={(e) => handleHistorySelect(e.target.value, 1)} className="styled-dropdown small-dropdown">
               <option value="">Detox Diet History</option>
               {dietHistoryDetox.map((entry) => (
-                <option key={entry.diet_id} value={entry.diet_id}>Week {entry.week_number}</option>
+                <option key={entry.diet_id} value={entry.diet_id}>
+                  Week {entry.week_number}{entry.diet_id === latestDietIds.detox ? " (Latest)" : ""}
+                </option>
               ))}
             </Form.Control>
 
@@ -246,11 +278,7 @@ const CreateDietPage = () => {
           <Button 
             className="edit-butn" 
             onClick={handleEdit} 
-            disabled={
-              !selectedHistory || 
-              (selectedHistory.diet_type === 0 && selectedHistory.diet_id !== latestDietIds.regular) || 
-              (selectedHistory.diet_type === 1 && selectedHistory.diet_id !== latestDietIds.detox)
-            }
+            disabled={!isSelectedDietEditable()}
           >
             Edit
           </Button>
