@@ -41,6 +41,8 @@ const ClientDetailsPage = () => {
   const [weightHistory, setWeightHistory] = useState([]);
   const [updatedWeight, setUpdatedWeight] = useState("");
   const [weightUpdateSuccess, setWeightUpdateSuccess] = useState(null);
+  const [dietType, setDietType] = useState("regular"); 
+  const [dietHistory, setDietHistory] = useState([]); 
   
   const navigate=useNavigate();
   console.log('Client ID:', client_id);
@@ -98,6 +100,51 @@ const ClientDetailsPage = () => {
   
         setWeightHistory(response.data.response || []);
         setLoading(false);
+
+        // Mock diet history data for UI demo
+        const mockDietHistory = [
+          { 
+            id: 1, 
+            week: 1, 
+            date: '2025-03-01', 
+            weight: 75.5, 
+            type: 'regular',
+            feedback: 'Client followed diet perfectly'
+          },
+          { 
+            id: 2, 
+            week: 2, 
+            date: '2025-03-08', 
+            weight: 74.2, 
+            type: 'regular',
+            feedback: 'Client had difficulty with breakfast options'
+          },
+          { 
+            id: 3, 
+            week: 3, 
+            date: '2025-03-15', 
+            weight: 73.1, 
+            type: 'regular',
+            feedback: 'Client showing good progress'
+          },
+          { 
+            id: 4, 
+            week: 1, 
+            date: '2025-02-15', 
+            weight: 76.8, 
+            type: 'detox',
+            feedback: 'Client completed full detox program'
+          },
+          { 
+            id: 5, 
+            week: 2, 
+            date: '2025-02-22', 
+            weight: 75.3, 
+            type: 'detox',
+            feedback: 'Client reported increased energy levels'
+          }
+        ];
+        setDietHistory(mockDietHistory);
       })
       .catch((error) => {
         console.error("Error fetching client details:", error);
@@ -268,6 +315,17 @@ const ClientDetailsPage = () => {
   const handleCreateDietClick = (client) => {
     localStorage.setItem("selectedClient", JSON.stringify(client));
     navigate(`/admin/${client.id}/creatediet`);
+  };
+
+  // Handler for changing diet type
+  const handleDietTypeChange = (type) => {
+    setDietType(type);
+  };
+
+  // Handle diet actions
+  const handleDietAction = (action, dietId) => {
+    console.log(`${action} diet with ID ${dietId}`);
+    // Implementation would go here for each action
   };
 
   const handleSubmit = (e) => {
@@ -662,6 +720,178 @@ const ClientDetailsPage = () => {
             </button>
 
             {weightUpdateSuccess && (<div className="success-message">{weightUpdateSuccess}</div>)}
+          </div>
+
+          {/* Diet History Table */}    
+          <div 
+            className="diet-toggle-container" 
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: '20px'
+            }}
+          >
+            <h2 style={{ 
+              marginBottom: '24px', 
+              fontSize: '36px', 
+              fontWeight: 'bold', 
+              color: '#333' 
+            }}>
+              Select Diet Type
+            </h2>
+            <div 
+              className="diet-toggle-switch" 
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px'
+              }}
+            >
+              <span style={{ 
+                fontSize: '28px', 
+                fontWeight: 'bold', 
+                color: dietType === 'regular' ? '#1B5E20' : '#777' 
+              }}>
+                Regular Diet
+              </span>
+              <label className="switch">
+                <input 
+                  type="checkbox" 
+                  checked={dietType === 'detox'}
+                  onChange={() => handleDietTypeChange(dietType === 'regular' ? 'detox' : 'regular')}
+                />
+                <span className="slider"></span>
+              </label>
+              <span style={{ 
+                fontSize: '28px', 
+                fontWeight: 'bold', 
+                color: dietType === 'detox' ? '#FFA500' : '#777' 
+              }}>
+                Detox Diet
+              </span>
+            </div>
+          </div>
+
+          {/* Diet History Table */}
+          <div className="diet-history-container">
+            <h3 
+              style={{
+                textAlign: 'center', 
+                fontSize: '20px', 
+                fontWeight: 'bold', 
+                marginBottom: '16px', 
+                color: '#333'
+              }}
+            >
+              {dietType === 'regular' ? 'Regular Diet' : 'Detox Diet'} History
+            </h3>
+            <table className="weight-history-table">
+              <thead>
+                <tr>
+                  <th>Week</th>
+                  <th>Date</th>
+                  <th>Weight (kg)</th>
+                  <th>Actions</th>
+                  <th>Feedback</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dietHistory.filter(diet => diet.type === dietType).length > 0 ? (
+                  dietHistory
+                    .filter(diet => diet.type === dietType)
+                    .map((diet) => (
+                      <tr key={diet.id}>
+                        <td>Week {diet.week}</td>
+                        <td>{new Date(diet.date).toLocaleDateString()}</td>
+                        <td>{diet.weight} kg</td>
+                        <td>
+                          <div className="action-buttons" style={{ display: 'flex', gap: '4px', marginTop: '4px', justifyContent: 'space-between' }}>
+                            <button 
+                              type="button" 
+                              style={{
+                                padding: '6px 12px',
+                                margin: '0 2px',
+                                borderRadius: '5px',
+                                border: 'none',
+                                backgroundColor: '#4CAF50',
+                                color: 'white',
+                                fontWeight: 'bold',
+                                cursor: 'pointer',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                                transition: 'all 0.2s ease'
+                              }}
+                              onClick={() => handleDietAction('use', diet.id)}
+                            >
+                              Use
+                            </button>
+                            <button 
+                              type="button" 
+                              style={{
+                                padding: '6px 12px',
+                                margin: '0 2px',
+                                borderRadius: '5px',
+                                border: 'none',
+                                backgroundColor: '#2196F3',
+                                color: 'white',
+                                fontWeight: 'bold',
+                                cursor: 'pointer',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                                transition: 'all 0.2s ease'
+                              }}
+                              onClick={() => handleDietAction('view', diet.id)}
+                            >
+                              View
+                            </button>
+                            <button 
+                              type="button" 
+                              style={{
+                                padding: '6px 12px',
+                                margin: '0 2px',
+                                borderRadius: '5px',
+                                border: 'none',
+                                backgroundColor: '#FF9800',
+                                color: 'white',
+                                fontWeight: 'bold',
+                                cursor: 'pointer',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                                transition: 'all 0.2s ease'
+                              }}
+                              onClick={() => handleDietAction('edit', diet.id)}
+                            >
+                              Edit
+                            </button>
+                            <button 
+                              type="button" 
+                              style={{
+                                padding: '6px 12px',
+                                margin: '0 2px',
+                                borderRadius: '5px',
+                                border: 'none',
+                                backgroundColor: '#F44336',
+                                color: 'white',
+                                fontWeight: 'bold',
+                                cursor: 'pointer',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                                transition: 'all 0.2s ease'
+                              }}
+                              onClick={() => handleDietAction('delete', diet.id)}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                        <td>{diet.feedback}</td>
+                      </tr>
+                    ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="no-data">No {dietType} diet history available.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
 
           <button type="button" onClick={handleActivateDeactivate} className="toggle-button">
