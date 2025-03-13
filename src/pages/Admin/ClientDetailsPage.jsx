@@ -101,7 +101,6 @@ const ClientDetailsPage = () => {
         setWeightHistory(response.data.response || []);
         setLoading(false);
 
-        // Mock diet history data for UI demo
         const mockDietHistory = [
           { 
             id: 1, 
@@ -317,15 +316,12 @@ const ClientDetailsPage = () => {
     navigate(`/admin/${client.id}/creatediet`);
   };
 
-  // Handler for changing diet type
   const handleDietTypeChange = (type) => {
     setDietType(type);
   };
 
-  // Handle diet actions
   const handleDietAction = (action, dietId) => {
     console.log(`${action} diet with ID ${dietId}`);
-    // Implementation would go here for each action
   };
 
   const handleSubmit = (e) => {
@@ -511,14 +507,8 @@ const ClientDetailsPage = () => {
                   id="dietary_preference"
                   name="dietary_preference"
                   value={client.dietary_preference}
-                  className="client-input"
+                  className="client-input select-input"
                   onChange={handleChange}
-                  style={{
-                    border: '2px solid black', 
-                    borderRadius: '10px', 
-                    padding: '8px',
-                    width: '97%',
-                  }}
                 >
                   <option value="">Select</option>
                   <option value="Veg">Veg</option>
@@ -537,11 +527,8 @@ const ClientDetailsPage = () => {
                 id="medical_history"
                 name="medical_history"
                 value={client.medical_history}
-                className="client-input"
+                className="client-input wide-input"
                 onChange={handleChange}
-                style={{
-                  width: '93%',
-                }}
               />
             </div>
             <div className="form-group">
@@ -551,11 +538,8 @@ const ClientDetailsPage = () => {
                 id="allergies"
                 name="allergies"
                 value={client.allergies}
-                className="client-input"
+                className="client-input wide-input"
                 onChange={handleChange}
-                style={{
-                  width: '93%',
-                }}
               />
             </div>
             <div className="form-group">
@@ -565,10 +549,7 @@ const ClientDetailsPage = () => {
                 id="exercise"
                 name="exercise"
                 value={client.exercise}
-                className="client-input"
-                style={{
-                  width: '93%',
-                }}
+                className="client-input wide-input"
                 onChange={handleChange}
               />
             </div>
@@ -582,14 +563,8 @@ const ClientDetailsPage = () => {
                 id="package"
                 name="package"
                 value={client.package}
-                className="client-input"
+                className="client-input select-input"
                 onChange={handleChange}
-                style={{
-                  border: '2px solid black', 
-                  borderRadius: '10px', 
-                  padding: '8px',
-                  width: '97%',
-                }}
               >
                 <option value="">Select</option>
                 <option value="1 Month">1 Month</option>
@@ -653,9 +628,6 @@ const ClientDetailsPage = () => {
               name="diet_recall"
               value={client.diet_recall}
               onChange={handleChange}
-              style={{
-                  width: '98%',
-              }}
               className="client-textarea client-textarea-large"
             />
           </div>
@@ -666,9 +638,6 @@ const ClientDetailsPage = () => {
               name="remarks"
               value={client.remarks}
               onChange={handleChange}
-              style={{
-                  width: '98%',
-              }}
               className="client-textarea client-textarea-large"
             />
           </div>
@@ -713,6 +682,7 @@ const ClientDetailsPage = () => {
               name="updated_weight"
               value={updatedWeight}
               className="client-input"
+              style={{ marginTop: '-10px' }}
               onChange={(e) => setUpdatedWeight(e.target.value)}
             />
             <button type="button" className="update-weight-btn" onClick={handleWeightUpdate}>
@@ -723,37 +693,10 @@ const ClientDetailsPage = () => {
           </div>
 
           {/* Diet History Table */}    
-          <div 
-            className="diet-toggle-container" 
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: '20px'
-            }}
-          >
-            <h2 style={{ 
-              marginBottom: '24px', 
-              fontSize: '36px', 
-              fontWeight: 'bold', 
-              color: '#333' 
-            }}>
-              Select Diet Type
-            </h2>
-            <div 
-              className="diet-toggle-switch" 
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px'
-              }}
-            >
-              <span style={{ 
-                fontSize: '28px', 
-                fontWeight: 'bold', 
-                color: dietType === 'regular' ? '#1B5E20' : '#777' 
-              }}>
+          <div className="diet-toggle-container">
+            <h2 className="diet-type-heading">Select Diet Type</h2>
+            <div className="diet-toggle-switch">
+              <span className={`diet-type-label ${dietType === 'regular' ? 'diet-type-active-regular' : 'diet-type-inactive'}`}>
                 Regular Diet
               </span>
               <label className="switch">
@@ -764,11 +707,7 @@ const ClientDetailsPage = () => {
                 />
                 <span className="slider"></span>
               </label>
-              <span style={{ 
-                fontSize: '28px', 
-                fontWeight: 'bold', 
-                color: dietType === 'detox' ? '#FFA500' : '#777' 
-              }}>
+              <span className={`diet-type-label ${dietType === 'detox' ? 'diet-type-active-detox' : 'diet-type-inactive'}`}>
                 Detox Diet
               </span>
             </div>
@@ -776,15 +715,7 @@ const ClientDetailsPage = () => {
 
           {/* Diet History Table */}
           <div className="diet-history-container">
-            <h3 
-              style={{
-                textAlign: 'center', 
-                fontSize: '20px', 
-                fontWeight: 'bold', 
-                marginBottom: '16px', 
-                color: '#333'
-              }}
-            >
+            <h3 className="diet-history-heading">
               {dietType === 'regular' ? 'Regular Diet' : 'Detox Diet'} History
             </h3>
             <table className="weight-history-table">
@@ -807,75 +738,31 @@ const ClientDetailsPage = () => {
                         <td>{new Date(diet.date).toLocaleDateString()}</td>
                         <td>{diet.weight} kg</td>
                         <td>
-                          <div className="action-buttons" style={{ display: 'flex', gap: '4px', marginTop: '4px', justifyContent: 'space-between' }}>
+                          <div className="action-buttons">
                             <button 
                               type="button" 
-                              style={{
-                                padding: '6px 12px',
-                                margin: '0 2px',
-                                borderRadius: '5px',
-                                border: 'none',
-                                backgroundColor: '#4CAF50',
-                                color: 'white',
-                                fontWeight: 'bold',
-                                cursor: 'pointer',
-                                boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
-                                transition: 'all 0.2s ease'
-                              }}
+                              className="action-button action-use"
                               onClick={() => handleDietAction('use', diet.id)}
                             >
                               Use
                             </button>
                             <button 
                               type="button" 
-                              style={{
-                                padding: '6px 12px',
-                                margin: '0 2px',
-                                borderRadius: '5px',
-                                border: 'none',
-                                backgroundColor: '#2196F3',
-                                color: 'white',
-                                fontWeight: 'bold',
-                                cursor: 'pointer',
-                                boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
-                                transition: 'all 0.2s ease'
-                              }}
+                              className="action-button action-view"
                               onClick={() => handleDietAction('view', diet.id)}
                             >
                               View
                             </button>
                             <button 
                               type="button" 
-                              style={{
-                                padding: '6px 12px',
-                                margin: '0 2px',
-                                borderRadius: '5px',
-                                border: 'none',
-                                backgroundColor: '#FF9800',
-                                color: 'white',
-                                fontWeight: 'bold',
-                                cursor: 'pointer',
-                                boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
-                                transition: 'all 0.2s ease'
-                              }}
+                              className="action-button action-edit"
                               onClick={() => handleDietAction('edit', diet.id)}
                             >
                               Edit
                             </button>
                             <button 
                               type="button" 
-                              style={{
-                                padding: '6px 12px',
-                                margin: '0 2px',
-                                borderRadius: '5px',
-                                border: 'none',
-                                backgroundColor: '#F44336',
-                                color: 'white',
-                                fontWeight: 'bold',
-                                cursor: 'pointer',
-                                boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
-                                transition: 'all 0.2s ease'
-                              }}
+                              className="action-button action-delete"
                               onClick={() => handleDietAction('delete', diet.id)}
                             >
                               Delete

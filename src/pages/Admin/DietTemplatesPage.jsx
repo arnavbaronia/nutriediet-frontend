@@ -114,7 +114,7 @@ const DietTemplatesPage = () => {
             <div className="diet-details-box" dangerouslySetInnerHTML={{ __html: dietDetails }} />
           </div>
         ) : (
-          <p className="info-text">Select a template to view details</p>
+          <p className="info-text">Select a template to view details.</p>
         )}
       </div>
     </div>
