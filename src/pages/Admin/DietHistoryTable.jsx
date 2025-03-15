@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../styles/ClientDetailsPage.css';
 
-const DietHistoryTable = ({ clientId, handleDietAction }) => {
+const DietHistoryTable = ({ clientId, handleDietAction, handleDelete }) => {
     const [dietType, setDietType] = useState('regular');
     const [dietHistory, setDietHistory] = useState({ regular: [], detox: [] });
     const [loading, setLoading] = useState(false);
@@ -123,20 +123,38 @@ const DietHistoryTable = ({ clientId, handleDietAction }) => {
                                         <td>{diet.weight}</td>
                                         <td>
                                             <div className="action-buttons">
-                                                {['use', 'view', 'edit', 'delete'].map(action => (
-                                                    <button
-                                                        key={action}
-                                                        type="button"
-                                                        className={`action-button action-${action}`}
-                                                        onClick={() => {
-                                                            console.log(`Action: ${action}, Diet ID: ${diet.id}`);
-                                                            handleDietAction(action, diet.id);
-                                                        }}
-                                                        aria-label={`${action} diet for week ${diet.week}`}
-                                                    >
-                                                        {action.charAt(0).toUpperCase() + action.slice(1)}
-                                                    </button>
-                                                ))}
+                                                <button
+                                                    type="button"
+                                                    className="action-button action-use"
+                                                    onClick={() => handleDietAction('use', diet.id, dietType === 'regular' ? 0 : 1)}
+                                                    aria-label={`use diet for week ${diet.week}`}
+                                                >
+                                                    Use
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className="action-button action-view"
+                                                    onClick={() => handleDietAction('view', diet.id, dietType === 'regular' ? 0 : 1)}
+                                                    aria-label={`view diet for week ${diet.week}`}
+                                                >
+                                                    View
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className="action-button action-edit"
+                                                    onClick={() => handleDietAction('edit', diet.id, dietType === 'regular' ? 0 : 1)}
+                                                    aria-label={`edit diet for week ${diet.week}`}
+                                                >
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className="action-button action-delete"
+                                                    onClick={() => handleDelete(diet.id)}
+                                                    aria-label={`delete diet for week ${diet.week}`}
+                                                >
+                                                    Delete
+                                                </button>
                                             </div>
                                         </td>
                                         <td>{diet.feedback}</td>

@@ -598,6 +598,7 @@ const ClientDetailsPage = () => {
             />
           </div>
           <button type="submit" className="update-button">Update</button>
+
           <h2>Weight History</h2>
           {weightHistory.length > 0 ? (
           <div className="weight-history-graph">
@@ -607,7 +608,7 @@ const ClientDetailsPage = () => {
             <p>No weight history available.</p>
           )}
 
-          <table className="weight-history-table">
+          <table className="weight-history-table" style={{ margin: '0 auto', textAlign: 'center', width: '900px' }}>
             <thead>
               <tr>
                 <th>Date</th>
