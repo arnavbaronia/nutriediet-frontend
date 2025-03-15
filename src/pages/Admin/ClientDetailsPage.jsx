@@ -695,21 +695,19 @@ const ClientDetailsPage = () => {
           {/* Diet History Table */}    
           <div className="diet-toggle-container">
             <h2 className="diet-type-heading">Select Diet Type</h2>
-            <div className="diet-toggle-switch">
-              <span className={`diet-type-label ${dietType === 'regular' ? 'diet-type-active-regular' : 'diet-type-inactive'}`}>
+            <div className="segmented-control">
+              <button 
+                className={dietType === 'regular' ? 'segment-active' : 'segment'}
+                onClick={() => handleDietTypeChange('regular')}
+              >
                 Regular Diet
-              </span>
-              <label className="switch">
-                <input 
-                  type="checkbox" 
-                  checked={dietType === 'detox'}
-                  onChange={() => handleDietTypeChange(dietType === 'regular' ? 'detox' : 'regular')}
-                />
-                <span className="slider"></span>
-              </label>
-              <span className={`diet-type-label ${dietType === 'detox' ? 'diet-type-active-detox' : 'diet-type-inactive'}`}>
+              </button>
+              <button 
+                className={dietType === 'detox' ? 'segment-active' : 'segment'}
+                onClick={() => handleDietTypeChange('detox')}
+              >
                 Detox Diet
-              </span>
+              </button>
             </div>
           </div>
 
