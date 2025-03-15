@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import DietHistoryTable from "./DietHistoryTable";
 import "../../styles/CreateDietPage.css";
 
 const CreateDietPage = () => {
@@ -218,7 +219,10 @@ const CreateDietPage = () => {
   return (
     <div className="create-diet-container">
       {error && <Alert variant="danger">{error}</Alert>}
-
+      <DietHistoryTable
+        clientId={client_id}
+        handleDietAction={handleHistorySelect}
+      />
       <div className="diet-section">
         {/* Left Side - Create/Edit Diet */}
         <div className="diet-left">

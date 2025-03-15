@@ -41,7 +41,6 @@ const ClientDetailsPage = () => {
   const [weightHistory, setWeightHistory] = useState([]);
   const [updatedWeight, setUpdatedWeight] = useState("");
   const [weightUpdateSuccess, setWeightUpdateSuccess] = useState(null);
-  const [dietType, setDietType] = useState("regular"); 
   const [dietHistory, setDietHistory] = useState([]); 
   
   const navigate=useNavigate();
@@ -100,50 +99,6 @@ const ClientDetailsPage = () => {
   
         setWeightHistory(response.data.response || []);
         setLoading(false);
-
-        const mockDietHistory = [
-          { 
-            id: 1, 
-            week: 1, 
-            date: '2025-03-01', 
-            weight: 75.5, 
-            type: 'regular',
-            feedback: 'Client followed diet perfectly'
-          },
-          { 
-            id: 2, 
-            week: 2, 
-            date: '2025-03-08', 
-            weight: 74.2, 
-            type: 'regular',
-            feedback: 'Client had difficulty with breakfast options'
-          },
-          { 
-            id: 3, 
-            week: 3, 
-            date: '2025-03-15', 
-            weight: 73.1, 
-            type: 'regular',
-            feedback: 'Client showing good progress'
-          },
-          { 
-            id: 4, 
-            week: 1, 
-            date: '2025-02-15', 
-            weight: 76.8, 
-            type: 'detox',
-            feedback: 'Client completed full detox program'
-          },
-          { 
-            id: 5, 
-            week: 2, 
-            date: '2025-02-22', 
-            weight: 75.3, 
-            type: 'detox',
-            feedback: 'Client reported increased energy levels'
-          }
-        ];
-        setDietHistory(mockDietHistory);
       })
       .catch((error) => {
         console.error("Error fetching client details:", error);
@@ -314,10 +269,6 @@ const ClientDetailsPage = () => {
   const handleCreateDietClick = (client) => {
     localStorage.setItem("selectedClient", JSON.stringify(client));
     navigate(`/admin/${client.id}/creatediet`);
-  };
-
-  const handleDietTypeChange = (type) => {
-    setDietType(type);
   };
 
   const handleDietAction = (action, dietId) => {
@@ -695,93 +646,6 @@ const ClientDetailsPage = () => {
             </button>
 
             {weightUpdateSuccess && (<div className="success-message">{weightUpdateSuccess}</div>)}
-          </div>
-
-          {/* Diet History Table */}    
-          <div className="diet-toggle-container">
-            <h2 className="diet-type-heading">Select Diet Type</h2>
-            <div className="segmented-control">
-              <button 
-                className={dietType === 'regular' ? 'segment-active' : 'segment'}
-                onClick={() => handleDietTypeChange('regular')}
-              >
-                Regular Diet
-              </button>
-              <button 
-                className={dietType === 'detox' ? 'segment-active' : 'segment'}
-                onClick={() => handleDietTypeChange('detox')}
-              >
-                Detox Diet
-              </button>
-            </div>
-          </div>
-
-          {/* Diet History Table */}
-          <div className="diet-history-container">
-            <h3 className="diet-history-heading">
-              {dietType === 'regular' ? 'Regular Diet' : 'Detox Diet'} History
-            </h3>
-            <table className="weight-history-table">
-              <thead>
-                <tr>
-                  <th>Week</th>
-                  <th>Date</th>
-                  <th>Weight (kg)</th>
-                  <th>Actions</th>
-                  <th>Feedback</th>
-                </tr>
-              </thead>
-              <tbody>
-                {dietHistory.filter(diet => diet.type === dietType).length > 0 ? (
-                  dietHistory
-                    .filter(diet => diet.type === dietType)
-                    .map((diet) => (
-                      <tr key={diet.id}>
-                        <td>Week {diet.week}</td>
-                        <td>{new Date(diet.date).toLocaleDateString()}</td>
-                        <td>{diet.weight} kg</td>
-                        <td>
-                          <div className="action-buttons">
-                            <button 
-                              type="button" 
-                              className="action-button action-use"
-                              onClick={() => handleDietAction('use', diet.id)}
-                            >
-                              Use
-                            </button>
-                            <button 
-                              type="button" 
-                              className="action-button action-view"
-                              onClick={() => handleDietAction('view', diet.id)}
-                            >
-                              View
-                            </button>
-                            <button 
-                              type="button" 
-                              className="action-button action-edit"
-                              onClick={() => handleDietAction('edit', diet.id)}
-                            >
-                              Edit
-                            </button>
-                            <button 
-                              type="button" 
-                              className="action-button action-delete"
-                              onClick={() => handleDietAction('delete', diet.id)}
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        </td>
-                        <td>{diet.feedback}</td>
-                      </tr>
-                    ))
-                ) : (
-                  <tr>
-                    <td colSpan="5" className="no-data">No {dietType} diet history available.</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
           </div>
 
           <button type="button" onClick={handleActivateDeactivate} className="toggle-button">
