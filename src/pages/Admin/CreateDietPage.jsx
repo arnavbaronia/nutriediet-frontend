@@ -117,12 +117,16 @@ const CreateDietPage = () => {
     }
   
     const token = localStorage.getItem("token");
+  
     try {
       await axios.post(
-        `http://localhost:8081/admin/${client_id}/delete_diet`,
-        dietId,
+        `http://localhost:8081/admin/${client_id}/delete_diet`, 
+        dietId, 
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { 
+            Authorization: `Bearer ${token}`, 
+            "Content-Type": "application/json" 
+          },
         }
       );
       alert("Diet deleted successfully!");
@@ -131,8 +135,8 @@ const CreateDietPage = () => {
       console.error("Error deleting diet:", error);
       setError("Failed to delete diet.");
     }
-  };
-
+  };  
+  
   const handleTemplateSelect = (e) => {
     const templateId = e.target.value;
     setSelectedTemplate(templateId);

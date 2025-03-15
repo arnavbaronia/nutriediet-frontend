@@ -44,7 +44,6 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete }) => {
                 id: diet.id,
                 week: diet.week_number,
                 date: new Intl.DateTimeFormat('en-GB').format(new Date(diet.date)),
-                weight: diet.weight || '-',
                 dietString: diet.diet_string,
                 feedback: diet.feedback || '-'
             }));
@@ -88,6 +87,9 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete }) => {
         ? dietHistory.regular
         : dietHistory.detox;
 
+    const latestRegularDietId = dietHistory.regular.length > 0 ? dietHistory.regular[dietHistory.regular.length - 1].id : null;
+    const latestDetoxDietId = dietHistory.detox.length > 0 ? dietHistory.detox[dietHistory.detox.length - 1].id : null;
+
     return (
         <div className="diet-history-wrapper">
             {/* Diet Type Selection */}
@@ -122,7 +124,7 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete }) => {
                             <tr>
                                 <th scope="col">Week</th>
                                 <th scope="col">Date</th>
-                                <th scope="col">Weight (kg)</th>
+                                {dietType === 'regular' && <th scope="col">Weight (kg)</th>}
                                 <th scope="col">Actions</th>
                                 <th scope="col">Feedback</th>
                             </tr>
@@ -133,7 +135,7 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete }) => {
                                     <tr key={diet.id}>
                                         <td>Week {diet.week}</td>
                                         <td>{diet.date}</td>
-                                        <td>{diet.weight}</td>
+                                        {dietType === 'regular' && <td>{diet.weight}</td>}
                                         <td>
                                             <div className="action-buttons">
                                                 <button
@@ -152,22 +154,27 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete }) => {
                                                 >
                                                     View
                                                 </button>
-                                                <button
-                                                    type="button"
-                                                    className="action-button action-edit"
-                                                    onClick={() => handleDietAction('edit', diet.id, dietType === 'regular' ? 0 : 1)}
-                                                    aria-label={`edit diet for week ${diet.week}`}
-                                                >
-                                                    Edit
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    className="action-button action-delete"
-                                                    onClick={() => handleDeleteDiet(diet.id)}
-                                                    aria-label={`delete diet for week ${diet.week}`}
-                                                >
-                                                    Delete
-                                                </button>
+                                                {(dietType === 'regular' && diet.id === latestRegularDietId) || 
+                                                 (dietType === 'detox' && diet.id === latestDetoxDietId) ? (
+                                                    <>
+                                                        <button
+                                                            type="button"
+                                                            className="action-button action-edit"
+                                                            onClick={() => handleDietAction('edit', diet.id, dietType === 'regular' ? 0 : 1)}
+                                                            aria-label={`edit diet for week ${diet.week}`}
+                                                        >
+                                                            Edit
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="action-button action-delete"
+                                                            onClick={() => handleDeleteDiet(diet.id)}
+                                                            aria-label={`delete diet for week ${diet.week}`}
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </>
+                                                ) : null}
                                             </div>
                                         </td>
                                         <td>{diet.feedback}</td>
@@ -175,7 +182,7 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete }) => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="5" className="no-data">
+                                    <td colSpan={dietType === 'regular' ? 5 : 4} className="no-data">
                                         No {dietType} diet history available.
                                     </td>
                                 </tr>
