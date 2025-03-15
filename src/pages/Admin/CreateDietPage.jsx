@@ -157,7 +157,7 @@ const CreateDietPage = () => {
 
     const dietData = {
       id: selectedHistory ? selectedHistory.id : null,
-      DietType: validDietType,
+      diet_type: validDietType,
       diet: diet,
     };
 
