@@ -3,7 +3,8 @@ import axios from "axios";
 import { getToken } from "../../auth/token";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";  
+import "react-toastify/dist/ReactToastify.css"; 
+import "../../styles/ProfilePage.css";
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState({

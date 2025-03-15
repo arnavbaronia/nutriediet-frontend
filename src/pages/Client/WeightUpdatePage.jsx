@@ -6,6 +6,7 @@ import "../../styles/WeightUpdatePage.css";
 const WeightUpdatePage = () => {
   const { client_id } = useParams();
   const [weight, setWeight] = useState("");
+  const [feedback, setFeedback] = useState("");
   const [isAllowed, setIsAllowed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
@@ -17,18 +18,21 @@ const WeightUpdatePage = () => {
 
   const checkWeightUpdateStatus = async () => {
     try {
-      const token = localStorage.getItem("token"); 
+      const token = localStorage.getItem("token");
       if (!token) {
         setErrorMessage("❌ Authentication failed. Please log in again.");
         return;
       }
-  
-      const response = await axios.get(`http://localhost:8081/clients/${client_id}/weight_update`, {
-        headers: {
-          Authorization: `Bearer ${token}`, 
-        },
-      });
-  
+
+      const response = await axios.get(
+        `http://localhost:8081/clients/${client_id}/weight_update`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       if (response.status === 200 && response.data.isActive) {
         setIsAllowed(response.data.status === "allowed");
       } else {
@@ -36,39 +40,54 @@ const WeightUpdatePage = () => {
       }
     } catch (error) {
       console.error("Error fetching weight update status:", error);
-      setErrorMessage("⚠️ Unable to fetch weight update status. Please try again later.");
+      setErrorMessage(
+        "⚠️ Unable to fetch weight update status. Please try again later."
+      );
     }
-  };  
+  };
 
   const handleWeightUpdate = async () => {
     if (!weight || isNaN(weight) || parseFloat(weight) <= 0) {
       setErrorMessage("⚠️ Please enter a valid weight.");
       return;
     }
-  
+
+    if (!feedback.trim()) {
+      setErrorMessage("⚠️ Please provide feedback.");
+      return;
+    }
+
     setLoading(true);
     setErrorMessage("");
-  
+
     try {
       const token = localStorage.getItem("token");
       if (!token) {
         setErrorMessage("❌ Authentication failed. Please log in again.");
         return;
       }
-  
+
+      const requestData = {
+        weight: parseFloat(weight),
+        feedback: feedback.trim(),
+      };
+
+      console.log("Sending request data:", requestData);
+
       await axios.post(
         `http://localhost:8081/clients/${client_id}/weight_update`,
-        JSON.stringify(parseFloat(weight)),
+        requestData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         }
-      );      
-  
+      );
+
       setShowPopup(true);
       setWeight("");
+      setFeedback("");
       checkWeightUpdateStatus();
     } catch (error) {
       console.error("Error updating weight:", error);
@@ -76,7 +95,7 @@ const WeightUpdatePage = () => {
     } finally {
       setLoading(false);
     }
-  };  
+  };
 
   return (
     <div className="weight-update-page">
@@ -87,6 +106,7 @@ const WeightUpdatePage = () => {
 
         {isAllowed ? (
           <>
+            {/* Weight Input */}
             <input
               type="number"
               placeholder="Enter your weight (kg)"
@@ -94,6 +114,16 @@ const WeightUpdatePage = () => {
               onChange={(e) => setWeight(e.target.value)}
               className="weight-input"
             />
+
+            {/* Feedback Input */}
+            <textarea
+              placeholder="Enter feedback"
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
+              className="feedback-input"
+              rows="4"
+            />
+
             <button
               onClick={handleWeightUpdate}
               disabled={loading}
@@ -103,7 +133,9 @@ const WeightUpdatePage = () => {
             </button>
           </>
         ) : (
-          <p className="error-text">⏳ Weight update is allowed only after 4 days.</p>
+          <p className="error-text">
+            ⏳ Weight update is allowed only after 4 days.
+          </p>
         )}
       </div>
 
@@ -111,8 +143,14 @@ const WeightUpdatePage = () => {
         <div className="popup">
           <div className="popup-content">
             <h3>Success! 🎉</h3>
-            <p>Your weight has been successfully updated. Keep going strong! 💪</p>
-            <button onClick={() => setShowPopup(false)} className="close-button">
+            <p>
+              Your weight and feedback have been successfully updated. Keep
+              going strong! 💪
+            </p>
+            <button
+              onClick={() => setShowPopup(false)}
+              className="close-button"
+            >
               Got it!
             </button>
           </div>
