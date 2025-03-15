@@ -71,6 +71,19 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete }) => {
         setDietType(type);
     };
 
+    const handleDeleteDiet = async (dietId) => {
+        try {
+            await handleDelete(dietId);
+            setDietHistory(prevHistory => ({
+                regular: prevHistory.regular.filter(diet => diet.id !== dietId),
+                detox: prevHistory.detox.filter(diet => diet.id !== dietId)
+            }));
+        } catch (error) {
+            console.error("Error deleting diet:", error);
+            setError("Failed to delete diet.");
+        }
+    };
+
     const filteredDietHistory = dietType === 'regular'
         ? dietHistory.regular
         : dietHistory.detox;
@@ -150,7 +163,7 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete }) => {
                                                 <button
                                                     type="button"
                                                     className="action-button action-delete"
-                                                    onClick={() => handleDelete(diet.id)}
+                                                    onClick={() => handleDeleteDiet(diet.id)}
                                                     aria-label={`delete diet for week ${diet.week}`}
                                                 >
                                                     Delete
