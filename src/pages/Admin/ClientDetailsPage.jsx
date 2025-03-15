@@ -509,6 +509,7 @@ const ClientDetailsPage = () => {
                   value={client.dietary_preference}
                   className="client-input select-input"
                   onChange={handleChange}
+                  style={{ width: '100%', marginRight: '-10px' }}
                 >
                   <option value="">Select</option>
                   <option value="Veg">Veg</option>
@@ -529,6 +530,7 @@ const ClientDetailsPage = () => {
                 value={client.medical_history}
                 className="client-input wide-input"
                 onChange={handleChange}
+                style={{ width: '96%' }}
               />
             </div>
             <div className="form-group">
@@ -540,6 +542,7 @@ const ClientDetailsPage = () => {
                 value={client.allergies}
                 className="client-input wide-input"
                 onChange={handleChange}
+                style={{ width: '96%' }}
               />
             </div>
             <div className="form-group">
@@ -551,6 +554,7 @@ const ClientDetailsPage = () => {
                 value={client.exercise}
                 className="client-input wide-input"
                 onChange={handleChange}
+                style={{ width: '96%' }}
               />
             </div>
           </div>
@@ -565,6 +569,7 @@ const ClientDetailsPage = () => {
                 value={client.package}
                 className="client-input select-input"
                 onChange={handleChange}
+                style={{ width: '100%' }}
               >
                 <option value="">Select</option>
                 <option value="1 Month">1 Month</option>
