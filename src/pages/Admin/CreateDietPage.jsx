@@ -92,6 +92,8 @@ const CreateDietPage = () => {
         diet_type: dietTypeValue,
       });
 
+      setDietType(dietTypeValue);
+
       if (action === 'use') {
         setDiet(selectedDiet.diet_string);
         setPastDiet(""); 
@@ -154,37 +156,52 @@ const CreateDietPage = () => {
   const handleSubmit = async () => {
     const token = localStorage.getItem("token");
     const validDietType = isNaN(dietType) ? 0 : Number(dietType);
-
+  
     const dietData = {
-      id: selectedHistory ? selectedHistory.id : null,
+      diet_id: selectedHistory ? selectedHistory.id : null,
       diet_type: validDietType,
       diet: diet,
     };
-
+  
     console.log("Diet data to be saved/updated:", dietData);
-
+  
     try {
       if (editMode) {
         await axios.post(`http://localhost:8081/admin/${client_id}/edit_diet`, dietData, {
           headers: { Authorization: `Bearer ${token}` },
         });
         alert("Diet updated successfully!");
+  
+        if (validDietType === 0) {
+          setDietHistoryRegular((prev) =>
+            prev.map((item) =>
+              item.id === dietData.diet_id ? { ...item, diet_string: dietData.diet } : item
+            )
+          );
+        } else if (validDietType === 1) {
+          setDietHistoryDetox((prev) =>
+            prev.map((item) =>
+              item.id === dietData.diet_id ? { ...item, diet_string: dietData.diet } : item
+            )
+          );
+        }
       } else {
         await axios.post(`http://localhost:8081/admin/${client_id}/diet`, dietData, {
           headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
         });
         alert("Diet saved successfully!");
         setWeekNumber(weekNumber + 1);
+        fetchDietHistory(); 
       }
-
-      fetchDietHistory();
+  
       setEditMode(false);
       setDiet("");
       setSelectedTemplate("");
-    } catch {
+    } catch (error) {
+      console.error("Error saving diet:", error);
       setError("Failed to save diet.");
     }
-  };
+  };  
 
   return (
     <div className="create-diet-container">
