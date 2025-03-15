@@ -171,7 +171,6 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        {/* Inline group for Age, City, and Locality */}
         <div className="form-group-inline">
           <div className="form-group inline-input-wide">
             <label htmlFor="age">Age</label>
@@ -208,7 +207,6 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        {/* Inline group for Height, Starting Weight, and Dietary Preference */}
         <div className="form-group-inline">
           <div className="form-group inline-input-wide">
             <label htmlFor="height">Height</label>

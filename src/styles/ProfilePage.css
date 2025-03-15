@@ -55,6 +55,11 @@ body {
 
 .inline-input-wide {
   width: 31%;
+  margin-right: 20px; 
+}
+
+.inline-input-wide:last-child {
+  margin-right: 0; 
 }
 
 .profile-input,
@@ -135,6 +140,7 @@ body {
   .inline-input,
   .inline-input-wide {
     width: 100%;
+    margin-right: 0; 
   }
 
   .update-button {
