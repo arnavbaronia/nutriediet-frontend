@@ -103,3 +103,22 @@ select.input-field {
 .submit-button:active {
   transform: scale(0.98);
 }
+
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #004D40;
+  font-size: 18px;
+}
+
+.password-toggle:hover {
+  color: #357ab8;
+}

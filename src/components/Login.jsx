@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../styles/Login.css";
 import { useNavigate } from "react-router-dom";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -10,6 +12,7 @@ const Login = () => {
     user_type: "CLIENT",
   });
   const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,7 +48,7 @@ const Login = () => {
       localStorage.setItem("clientId", id);
       localStorage.setItem("email", email);
       localStorage.setItem("client_id", client_id);
-      localStorage.setItem('user', JSON.stringify(response.data));
+      localStorage.setItem("user", JSON.stringify(response.data));
 
       if (is_active) {
         console.log("Client is active. Navigating to client dashboard...");
@@ -74,15 +77,28 @@ const Login = () => {
           className="input-field"
           required
         />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={credentials.password}
-          onChange={handleChange}
-          className="input-field"
-          required
-        />
+        <div className="password-wrapper">
+          <input
+            type={showPassword ? "text" : "password"} 
+            name="password"
+            placeholder="Password"
+            value={credentials.password}
+            onChange={handleChange}
+            className="input-field"
+            required
+          />
+          {showPassword ? (
+            <VisibilityOffOutlinedIcon
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)} 
+            />
+          ) : (
+            <VisibilityOutlinedIcon
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)} 
+            />
+          )}
+        </div>
         <button type="submit" className="submit-button">
           Login
         </button>

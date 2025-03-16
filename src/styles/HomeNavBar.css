@@ -11,7 +11,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background: rgba(255, 255, 255, 0);
+  background: white;
   backdrop-filter: blur(0px);
   position: fixed;
   top: 0;
@@ -20,11 +20,11 @@ body {
   height: 70px;
   box-sizing: border-box;
   z-index: 1000;
-  transition: background 0.3s ease, backdrop-filter 0.3s ease;
+  transition: background 0.3s ease;
 }
 
 .navigation-bar.scrolled {
-  background: rgba(255, 255, 255, 0.1);
+  background: white;
   backdrop-filter: blur(10px);
 }
 
@@ -116,18 +116,18 @@ body {
     max-height: 0;
     overflow: hidden;
     width: 100%;
-    background: rgba(255, 255, 255, 0);
+    background: white;
     backdrop-filter: blur(0px);
     position: absolute;
     top: 70px;
     left: 0;
     padding: 10px 0;
-    transition: background 0.3s ease, backdrop-filter 0.3s ease;
+    transition: background 0.3s ease;
   }
 
   .nav-buttons.show-menu {
     max-height: 600px;
-    background: rgba(255, 255, 255, 0.1);
+    background: white;
     backdrop-filter: blur(10px);
   }
 
