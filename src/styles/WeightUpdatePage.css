@@ -122,9 +122,9 @@ body {
   background-color: #218838;
 }
 
-.feedback-input {
-  width: 75%;
-  height: 50px;
+.feedback1-input {
+  width: 83% !important;
+  height: 100px;
   padding: 12px;
   margin: 12px 0;
   border: 2px solid #007bff;
@@ -133,4 +133,5 @@ body {
   text-align: center;
   background-color: white;
   box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 }

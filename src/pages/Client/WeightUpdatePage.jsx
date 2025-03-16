@@ -120,7 +120,7 @@ const WeightUpdatePage = () => {
               placeholder="Enter feedback"
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
-              className="feedback-input"
+              className="feedback1-input"
               rows="4"
             />
 
