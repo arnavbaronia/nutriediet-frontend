@@ -143,7 +143,7 @@ const CommonDietPage = () => {
           </div>
 
           <div className="group-checkboxes">
-            {[1, 2, 3, 4, 5].map((groupId) => (
+            {[1, 2, 3, 4, 5, 6].map((groupId) => (
               <Form.Check
                 key={groupId}
                 type="checkbox"
