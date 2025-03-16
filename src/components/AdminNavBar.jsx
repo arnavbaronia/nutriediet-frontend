@@ -8,6 +8,7 @@ import RecentActorsIcon from "@mui/icons-material/RecentActors";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import BentoIcon from "@mui/icons-material/Bento";
+import RestaurantIcon from '@mui/icons-material/Restaurant';
 
 const AdminNavBar = () => {
   const location = useLocation();
@@ -37,6 +38,10 @@ const AdminNavBar = () => {
           <Link to="/admin/clients" className={`nav-link ${isActive("/admin/clients")}`}>
             <RecentActorsIcon className="nav-icon" />
             <span>Clients</span>
+          </Link>
+          <Link to="/admin/common_diet" className={`nav-link ${isActive("/admin/common_diet")}`}>
+            <RestaurantIcon className="nav-icon" />
+            <span>Common Diets</span>
           </Link>
           <Link to="/admin/diet_templates" className={`nav-link ${isActive("/admin/diet_templates")}`}>
             <BentoIcon className="nav-icon" />

@@ -1,0 +1,135 @@
+.common-diet-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .diet-section {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1300px;
+    gap: 120px;
+  }
+  
+  .diet-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .diet-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .dropdown-group {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .styled-dropdown {
+    flex: 1;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    background-color: white;
+  }
+  
+  .group-checkboxes {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .group-checkboxes .form-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .group-checkboxes .form-check-label {
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .diet-input {
+    width: 100%;
+    height: 350px;
+    background-color: #a5d6a7;
+    border-radius: 12px;
+    padding: 15px;
+    font-size: 16px;
+    margin-top: 20px;
+    resize: none;
+    border: 1px solid black;
+  }
+  
+  .save-btn {
+    margin-top: 30px;
+    width: 26%;
+    height: 45px;
+    background-color: #4caf50;
+    color: white;
+    padding: 12px 20px;
+    font-size: 18px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .save-btn:hover {
+    background-color: #45a049;
+  }
+  
+  .history-dropdown-group {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-start !important;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .history-dropdown-group .styled-dropdown {
+    width: 92%;
+    max-width: 307px;
+  }
+  
+  .history-dropdown-group .template-dropdown {
+    width: 60%;
+    max-width: 280px;
+  }
+  
+  .diet-input-scrollable {
+    width: 100%;
+    height: 350px;
+    background-color: #a5d6a7;
+    border-radius: 12px;
+    padding: 15px;
+    font-size: 16px;
+    margin-top: 20px;
+    resize: none;
+    border: 1px solid black;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .diet-input-scrollable::-webkit-scrollbar {
+    width: 0px;
+  }
+  
+  h2 {
+    margin-bottom: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+  }
