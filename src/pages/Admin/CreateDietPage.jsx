@@ -60,10 +60,14 @@ const CreateDietPage = () => {
       const response = await axios.get(`http://localhost:8081/admin/client/${client_id}/diet_history`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
+  
       const { diet_history_regular, diet_history_detox } = response.data;
-      setDietHistoryRegular(diet_history_regular || []);
-      setDietHistoryDetox(diet_history_detox || []);
+  
+      const sortedRegular = (diet_history_regular || []).sort((a, b) => b.week_number - a.week_number);
+      const sortedDetox = (diet_history_detox || []).sort((a, b) => b.week_number - a.week_number);
+  
+      setDietHistoryRegular(sortedRegular);
+      setDietHistoryDetox(sortedDetox);
     } catch (error) {
       console.error("Error fetching diet history:", error);
       setError("Failed to load diet history.");
@@ -210,7 +214,7 @@ const CreateDietPage = () => {
   return (
     <div className="create-diet-container">
       {error && <Alert variant="danger">{error}</Alert>}
-      <DietHistoryTable clientId={client_id} handleDietAction={handleHistorySelect} handleDelete={handleDelete} />
+      <DietHistoryTable clientId={client_id} dietHistoryRegular={dietHistoryRegular} dietHistoryDetox={dietHistoryDetox} handleDietAction={handleHistorySelect} handleDelete={handleDelete}/>      
       <div className="diet-section">
         {/* Left Side - Create/Edit Diet */}
         <div className="diet-left">

@@ -344,6 +344,71 @@ const ClientDetailsPage = () => {
   return (
     <div className="client-container">{successMessage && <p className="success-message">{successMessage}</p>}
       <h2 className="client-heading">{client.name}'s Details</h2>
+      <div className="form-row">
+        <div className="form-group">
+            <label htmlFor="client_id">Client ID</label>
+              <input
+                type="text"
+                id="client_id"
+                name="client_id"
+                value={client_id}
+                className="client-input"
+                readOnly
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="name">Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={client.name}
+                className="client-input"
+                onChange={handleChange}
+                style={{ width: '390px' }}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="phone_number">Phone Number</label>
+              <input
+                type="text"
+                id="phone_number"
+                name="phone_number"
+                value={client.phone_number}
+                className="client-input"
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <CreateDietPage />
+
+          <h2>Weight History</h2>
+          {weightHistory.length > 0 ? (
+          <div className="weight-history-graph">
+            <Line data={weightData} />
+          </div>
+          ) : (
+            <p>No weight history available.</p>
+          )}
+
+          <div className="form-group weight-update-container">
+            <label htmlFor="updated_weight">Update Weight (kg)</label>
+            <input
+              type="number"
+              id="updated_weight"
+              name="updated_weight"
+              value={updatedWeight}
+              className="client-input"
+              style={{ marginTop: '-10px' }}
+              onChange={(e) => setUpdatedWeight(e.target.value)}
+            />
+            <button type="button" className="update-weight-btn" onClick={handleWeightUpdate}>
+              Update Weight
+            </button>
+
+            {weightUpdateSuccess && (<div className="success-message">{weightUpdateSuccess}</div>)}
+          </div>
+          
         <div className="form-background">
           <form onSubmit={handleSubmit} className="client-form">
 
@@ -401,7 +466,7 @@ const ClientDetailsPage = () => {
                 name="email"
                 value={client.email}
                 className="client-input"
-                onChange={handleChange}
+                readOnly
               />
             </div>
           </div>
@@ -599,62 +664,11 @@ const ClientDetailsPage = () => {
           </div>
           <button type="submit" className="update-button">Update</button>
 
-          <h2>Weight History</h2>
-          {weightHistory.length > 0 ? (
-          <div className="weight-history-graph">
-            <Line data={weightData} />
-          </div>
-          ) : (
-            <p>No weight history available.</p>
-          )}
-
-          <table className="weight-history-table" style={{ margin: '0 auto', textAlign: 'center', width: '900px' }}>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Weight (kg)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {weightHistory.length > 0 ? (
-                weightHistory.map((entry, index) => (
-                  <tr key={index}>
-                    <td>{new Date(entry.date).toLocaleDateString()}</td>
-                    <td>{entry.weight} kg</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="2" className="no-data">No weight history available.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-
-          <div className="form-group weight-update-container">
-            <label htmlFor="updated_weight">Update Weight (kg)</label>
-            <input
-              type="number"
-              id="updated_weight"
-              name="updated_weight"
-              value={updatedWeight}
-              className="client-input"
-              style={{ marginTop: '-10px' }}
-              onChange={(e) => setUpdatedWeight(e.target.value)}
-            />
-            <button type="button" className="update-weight-btn" onClick={handleWeightUpdate}>
-              Update Weight
-            </button>
-
-            {weightUpdateSuccess && (<div className="success-message">{weightUpdateSuccess}</div>)}
-          </div>
-
           <button type="button" onClick={handleActivateDeactivate} className="toggle-button">
             {isActive ? 'Deactivate' : 'Activate'} Account
           </button>
         </form>
       </div>
-      <CreateDietPage />
     </div>
   );
 };

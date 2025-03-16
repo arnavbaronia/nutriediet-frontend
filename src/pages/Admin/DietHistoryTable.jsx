@@ -31,22 +31,26 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete }) => {
 
             const { diet_history_regular, diet_history_detox } = response.data;
 
-            const formattedRegular = diet_history_regular.map(diet => ({
-                id: diet.id,
-                week: diet.week_number,
-                date: new Intl.DateTimeFormat('en-GB').format(new Date(diet.date)),
-                weight: diet.weight || '-',
-                dietString: diet.diet_string,
-                feedback: diet.feedback || '-'
-            }));
+            const formattedRegular = diet_history_regular
+                .map(diet => ({
+                    id: diet.id,
+                    week: diet.week_number,
+                    date: new Intl.DateTimeFormat('en-GB').format(new Date(diet.date)),
+                    weight: diet.weight || '-',
+                    dietString: diet.diet_string,
+                    feedback: diet.feedback || '-'
+                }))
+                .sort((a, b) => b.week - a.week); 
 
-            const formattedDetox = diet_history_detox.map(diet => ({
-                id: diet.id,
-                week: diet.week_number,
-                date: new Intl.DateTimeFormat('en-GB').format(new Date(diet.date)),
-                dietString: diet.diet_string,
-                feedback: diet.feedback || '-'
-            }));
+            const formattedDetox = diet_history_detox
+                .map(diet => ({
+                    id: diet.id,
+                    week: diet.week_number,
+                    date: new Intl.DateTimeFormat('en-GB').format(new Date(diet.date)),
+                    dietString: diet.diet_string,
+                    feedback: diet.feedback || '-'
+                }))
+                .sort((a, b) => b.week - a.week);
 
             setDietHistory({
                 regular: formattedRegular,
@@ -87,8 +91,8 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete }) => {
         ? dietHistory.regular
         : dietHistory.detox;
 
-    const latestRegularDietId = dietHistory.regular.length > 0 ? dietHistory.regular[dietHistory.regular.length - 1].id : null;
-    const latestDetoxDietId = dietHistory.detox.length > 0 ? dietHistory.detox[dietHistory.detox.length - 1].id : null;
+    const latestRegularDietId = dietHistory.regular.length > 0 ? dietHistory.regular[0].id : null;
+    const latestDetoxDietId = dietHistory.detox.length > 0 ? dietHistory.detox[0].id : null;
 
     return (
         <div className="diet-history-wrapper">
@@ -177,7 +181,7 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete }) => {
                                                 ) : null}
                                             </div>
                                         </td>
-                                        <td>{diet.feedback}</td>
+                                        <td className="feedback-column">{diet.feedback}</td> 
                                     </tr>
                                 ))
                             ) : (
