@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion"; 
+import { motion } from "framer-motion";
 import { FaWhatsapp } from "react-icons/fa";
-import "../styles/TestimonialsPage.css";
-import client1 from "../assets/client1.png";
-import client2 from "../assets/client2.png";
+import "../styles/TestimonialsPageUpdated.css"; 
+import client1 from "../assets/client1.png"; 
+import client2 from "../assets/client2.png"; 
 
-const testimonials = [
+const testimonialsData = [
   {
     text: "Nutriediet completely changed my perspective on food. I used to struggle with meal planning, but their customized approach made it easy and sustainable. Within three months, I felt more energetic, my digestion improved, and I even lost a few pounds effortlessly!",
     name: "John Doe",
@@ -44,55 +44,52 @@ const testimonials = [
   },
 ];
 
-const TestimonialsPage = () => {
-  const [index, setIndex] = useState(0);
+const TestimonialsPageUpdated = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIndex((prevIndex) => (prevIndex + 1) % (testimonials.length - 2));
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % (testimonialsData.length - 2));
     }, 3000);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="testimonials-page"> 
-      <div className="testimonials-container">
-        <h2 className="title">What Our Clients Say</h2>
-        <p className="description">
-          Our clients have experienced incredible transformations with Nutriediet!  
-          From weight loss and muscle gain to improved energy and healthier eating habits,  
-          their stories highlight the power of a well-structured diet plan.  
-          Read their experiences and see how Nutriediet can help you too!
+    <div className="testimonials-page-updated">
+      <div className="testimonials-content-wrapper">
+        <h2 className="testimonials-heading">What Our Clients Say</h2>
+        <p className="testimonials-description">
+          Our clients have experienced incredible transformations with Nutriediet! From weight loss and muscle gain to improved energy and healthier eating habits, their stories highlight the power of a well-structured diet plan. Read their experiences and see how Nutriediet can help you too!
         </p>
-        <div className="slider">
+        <div className="testimonials-slider">
           <motion.div
-            className="testimonial-boxes"
-            animate={{ x: `-${index * 33.33}%` }}
+            className="testimonials-boxes-container"
+            animate={{ x: `-${currentIndex * 33.33}%` }}
             transition={{ ease: "easeInOut", duration: 0.8 }}
           >
-            {testimonials.map((testimonial, i) => (
-              <motion.div key={i} className="testimonial-box">
-                <p className="review-text">"{testimonial.text}"</p>
-                <img src={testimonial.image} alt={testimonial.name} className="profile-image" />
+            {testimonialsData.map((testimonial, i) => (
+              <motion.div key={i} className="testimonial-card">
+                <p className="testimonial-text">"{testimonial.text}"</p>
+                <img src={testimonial.image} alt={testimonial.name} className="client-avatar" />
                 <h3 className="client-name">{testimonial.name}</h3>
-                <p className="plan-type">{testimonial.plan}</p>
+                <p className="client-plan">{testimonial.plan}</p>
               </motion.div>
             ))}
           </motion.div>
         </div>
       </div>
-        <a
-          href="https://wa.me/+919391450725 "
-          target="_blank"
-          rel="noopener noreferrer"
-          className="whatsapp-button"
-        >
+      <a
+        href="https://wa.me/+919391450725"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="whatsapp-float-button"
+      >
         <FaWhatsapp className="whatsapp-icon" />
-          Chat on WhatsApp
-        </a>
+        Chat on WhatsApp
+      </a>
     </div>
   );
-}  
+};
 
-export default TestimonialsPage;
+export default TestimonialsPageUpdated;

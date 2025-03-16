@@ -1,27 +1,28 @@
-.testimonials-page {
+.testimonials-page-updated {
   background: white;
-  min-height: 100vh; 
+  min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; 
+  padding: 20px;
 }
 
-.testimonials-container {
-  width: 80%;
-  margin: auto;
+.testimonials-content-wrapper {
+  width: 90%;
+  max-width: 1200px;
   text-align: center;
-  padding: 50px 0;
-  overflow: hidden;
+  padding: 20px 0;
 }
 
-.title {
+.testimonials-heading {
   font-size: 2.5rem;
   margin-bottom: 10px;
   color: #333;
   font-weight: bold;
 }
 
-.description {
+.testimonials-description {
   font-size: 1.2rem;
   color: #555;
   margin-bottom: 30px;
@@ -31,23 +32,25 @@
   margin-right: auto;
 }
 
-.slider {
+.testimonials-slider {
   width: 100%;
   overflow: hidden;
   position: relative;
   display: flex;
   justify-content: center;
+  margin-top: 20px;
 }
 
-.testimonial-boxes {
+.testimonials-boxes-container {
   display: flex;
-  width: 200%;
+  width: 100%;
+  transition: transform 0.5s ease-in-out;
 }
 
-.testimonial-box {
-  width: 25%;
-  min-width: 25%;
-  padding: 30px;
+.testimonial-card {
+  width: 300px;
+  min-width: 300px;
+  padding: 20px;
   margin: 0 10px;
   background: #A5D6A7;
   border-radius: 15px;
@@ -56,45 +59,39 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 420px; 
-  transition: transform 0.3s ease-in-out;
+  min-height: 300px; 
 }
 
-.testimonial-box:hover {
-  transform: scale(1.05);
-  box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.3);
-}
-
-.review-text {
-  font-size: 1.1rem;
-  color: #444;
-  margin-bottom: 15px;
-  flex-grow: 1;
-}
-
-.profile-image {
+.client-avatar {
   width: 80px;
   height: 80px;
   border-radius: 50%;
   margin-bottom: 10px;
-  border: 3px solid white; 
+  border: 3px solid white;
 }
 
 .client-name {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: bold;
   color: #222;
   margin-bottom: 5px;
 }
 
-.plan-type {
-  font-size: 1rem;
+.client-plan {
+  font-size: 0.9rem;
   color: #666;
   font-style: italic;
   margin-bottom: 10px;
 }
 
-.whatsapp-button {
+.testimonial-text {
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 15px;
+  flex-grow: 1;
+}
+
+.whatsapp-float-button {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -111,7 +108,7 @@
   z-index: 1000;
 }
 
-.whatsapp-button:hover {
+.whatsapp-float-button:hover {
   background-color: #1ebe5d;
 }
 
@@ -121,12 +118,13 @@
 }
 
 @media (max-width: 768px) {
-  .testimonial-box {
-    width: 90%;
-    min-width: 90%;
+  .testimonial-card {
+    width: 250px;
+    min-width: 250px;
+    min-height: 280px;
   }
 
-  .whatsapp-button {
+  .whatsapp-float-button {
     bottom: 15px;
     right: 15px;
     padding: 10px 16px;

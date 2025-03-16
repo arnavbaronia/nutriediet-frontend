@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate, useParams, useLocatio
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import ServicesPage from './pages/ServicesPage';
-import TestimonialsPage from './pages/TestimonialsPage';
+import TestimonialsPageUpdated from './pages/TestimonialsPageUpdated';
 import ClientPage from './pages/Client/ClientPage';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import DietPage from './pages/Client/DietPage';
@@ -66,7 +66,7 @@ function AppContent() {
           <Route path="/login" element={<Login />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/services" element={<ServicesPage />} />
-          <Route path="/testimonials" element={<TestimonialsPage />} />
+          <Route path="/testimonials" element={<TestimonialsPageUpdated />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/create_profile/:email" element={<CreateProfilePage />} />
           <Route path="/account-activation" element={<AccountActivationPage />} />
