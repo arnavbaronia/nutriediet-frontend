@@ -40,10 +40,11 @@ const ClientDetailsPage = () => {
   const [diets, setDiets] = useState([]);
   const [weightHistory, setWeightHistory] = useState([]);
   const [updatedWeight, setUpdatedWeight] = useState("");
+  const [feedback, setFeedback] = useState("");
   const [weightUpdateSuccess, setWeightUpdateSuccess] = useState(null);
-  const [dietHistory, setDietHistory] = useState([]); 
-  
-  const navigate=useNavigate();
+  // const [dietHistory, setDietHistory] = useState([]);
+
+  const navigate = useNavigate();
   console.log('Client ID:', client_id);
 
   const formatDateForInput = (date) => {
@@ -58,7 +59,7 @@ const ClientDetailsPage = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-  
+
     axios
       .get(`http://localhost:8081/admin/client/${client_id}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -66,14 +67,14 @@ const ClientDetailsPage = () => {
       .then((response) => {
         const clientData = response.data.client;
         console.log("Client details response:", response);
-  
+
         const name =
           clientData.name?.trim() ||
           `${clientData.first_name?.trim() || ""} ${
             clientData.last_name?.trim() || ""
           }`.trim() ||
           "N/A";
-  
+
         setClient({
           ...clientData,
           name,
@@ -83,10 +84,10 @@ const ClientDetailsPage = () => {
           date_of_joining: formatDateForInput(clientData.date_of_joining),
           created_at: formatDateForInput(clientData.created_at),
         });
-  
+
         setDiets(response.data.diets);
         setIsActive(clientData.is_active);
-  
+
         return axios.get(
           `http://localhost:8081/admin/client/${client_id}/weight_history`,
           {
@@ -96,7 +97,7 @@ const ClientDetailsPage = () => {
       })
       .then((response) => {
         console.log("Weight history response:", response);
-  
+
         setWeightHistory(response.data.response || []);
         setLoading(false);
       })
@@ -109,16 +110,19 @@ const ClientDetailsPage = () => {
 
   const handleWeightUpdate = async () => {
     const token = localStorage.getItem("token");
-  
+
     if (!updatedWeight) {
       setError("Please enter a valid weight.");
       return;
     }
-  
+
     try {
       const response = await axios.post(
         `http://localhost:8081/admin/${client_id}/weight_update`,
-        parseFloat(updatedWeight),
+        {
+          weight: parseFloat(updatedWeight),
+          feedback: feedback,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -126,26 +130,27 @@ const ClientDetailsPage = () => {
           },
         }
       );
-  
+
       if (response.status === 200) {
-        setWeightUpdateSuccess("Weight updated successfully!");
+        setWeightUpdateSuccess("Weight and feedback updated successfully!");
         setUpdatedWeight("");
-  
-        setTimeout(() => setWeightUpdateSuccess(null), 3000); 
-  
+        setFeedback("");
+
+        setTimeout(() => setWeightUpdateSuccess(null), 3000);
+
         const weightResponse = await axios.get(
           `http://localhost:8081/admin/client/${client_id}/weight_history`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
-  
+
         setWeightHistory(weightResponse.data.response || []);
       }
     } catch (error) {
-      console.error("Error updating weight:", error);
-      setError("Failed to update weight. Please try again.");
+      console.error("Error updating weight and feedback:", error);
+      setError("Failed to update weight and feedback. Please try again.");
     }
-  };  
-  
+  };
+
   const weightData = {
     labels: weightHistory.map((entry) =>
       new Date(entry.date).toLocaleDateString("en-GB", {
@@ -171,14 +176,14 @@ const ClientDetailsPage = () => {
       },
     ],
   };
-  
+
   const calculateNextPaymentDate = (lastPaymentDate, packageDuration) => {
     console.log(`Calculating Next Payment Date: Last Payment Date = ${lastPaymentDate}, Package = ${packageDuration}`);
-  
+
     if (!lastPaymentDate || !packageDuration) return '';
-    
+
     const normalizedPackage = packageDuration.toLowerCase().replace(/\s+/g, ' ');
-    
+
     const durationMap = {
       "1 month": 1,
       "2 months": 2,
@@ -189,70 +194,70 @@ const ClientDetailsPage = () => {
       "3 month": 3,
       "6 month": 6,
     };
-  
+
     const monthsToAdd = durationMap[normalizedPackage] || 0;
     if (monthsToAdd === 0) {
       console.warn(`Unknown package duration: ${packageDuration}`);
       return '';
     }
-    
+
     const lastDate = new Date(lastPaymentDate);
     if (isNaN(lastDate.getTime())) {
       console.error(`Invalid date format: ${lastPaymentDate}`);
       return '';
     }
-    
+
     const dayOfMonth = lastDate.getDate();
-    
+
     lastDate.setDate(1);
     lastDate.setMonth(lastDate.getMonth() + monthsToAdd);
-    
+
     const maxDaysInMonth = new Date(lastDate.getFullYear(), lastDate.getMonth() + 1, 0).getDate();
     lastDate.setDate(Math.min(dayOfMonth, maxDaysInMonth));
-  
+
     const formattedDate = lastDate.toISOString().split('T')[0];
     console.log(`Final Next Payment Date: ${formattedDate}`);
-  
+
     return formattedDate;
   };
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
+
     console.log(`Updated Field: ${name}, Value: ${value}`);
-  
+
     setClient((prevClient) => {
       const updatedClient = { ...prevClient, [name]: value };
-      
+
       if (name === "package" || name === "last_payment_date") {
         if (updatedClient.package && updatedClient.last_payment_date) {
           const nextPaymentDate = calculateNextPaymentDate(
-            updatedClient.last_payment_date, 
+            updatedClient.last_payment_date,
             updatedClient.package
           );
           console.log(`Calculated Next Payment Date: ${nextPaymentDate}`);
           updatedClient.next_payment_date = nextPaymentDate;
         }
       }
-      
+
       return updatedClient;
     });
   };
-  
+
   const handleActivateDeactivate = async () => {
     const token = localStorage.getItem('token');
     try {
       console.log(`Sending POST request to: /admin/client/${client_id}/activation`);
       console.log('Authorization Token:', token);
-  
+
       const response = await axios.post(
         `http://localhost:8081/admin/client/${client_id}/activation`,
-        {}, 
+        {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-  
+
       console.log('Response from server:', response);
-  
+
       if (response.data.success) {
         setIsActive((prevState) => !prevState);
         setError(null);
@@ -264,16 +269,16 @@ const ClientDetailsPage = () => {
       console.error('Error activating/deactivating client:', error);
       setError('Error activating/deactivating client. Please try again later.');
     }
-  };  
-
-  const handleCreateDietClick = (client) => {
-    localStorage.setItem("selectedClient", JSON.stringify(client));
-    navigate(`/admin/${client.id}/creatediet`);
   };
 
-  const handleDietAction = (action, dietId) => {
-    console.log(`${action} diet with ID ${dietId}`);
-  };
+  // const handleCreateDietClick = (client) => {
+  //   localStorage.setItem("selectedClient", JSON.stringify(client));
+  //   navigate(`/admin/${client.id}/creatediet`);
+  // };
+
+  // const handleDietAction = (action, dietId) => {
+  //   console.log(`${action} diet with ID ${dietId}`);
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -324,7 +329,7 @@ const ClientDetailsPage = () => {
           created_at: formatDateForInput(updatedClient.created_at),
         }));
         setError(null);
-        setSuccessMessage('Details updated successfully!'); 
+        setSuccessMessage('Details updated successfully!');
         setTimeout(() => setSuccessMessage(null), 3000);
       })
       .catch((error) => {
@@ -342,73 +347,88 @@ const ClientDetailsPage = () => {
   }
 
   return (
-    <div className="client-container">{successMessage && <p className="success-message">{successMessage}</p>}
+    <div className="client-container">
+      {successMessage && <p className="success-message">{successMessage}</p>}
       <h2 className="client-heading">{client.name}'s Details</h2>
       <div className="form-row">
         <div className="form-group">
-            <label htmlFor="client_id">Client ID</label>
-              <input
-                type="text"
-                id="client_id"
-                name="client_id"
-                value={client_id}
-                className="client-input"
-                readOnly
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={client.name}
-                className="client-input"
-                onChange={handleChange}
-                style={{ width: '390px' }}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="phone_number">Phone Number</label>
-              <input
-                type="text"
-                id="phone_number"
-                name="phone_number"
-                value={client.phone_number}
-                className="client-input"
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-          <CreateDietPage />
+          <label htmlFor="client_id">Client ID</label>
+          <input
+            type="text"
+            id="client_id"
+            name="client_id"
+            value={client_id}
+            className="client-input"
+            readOnly
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={client.name}
+            className="client-input"
+            onChange={handleChange}
+            style={{ width: '390px' }}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="phone_number">Phone Number</label>
+          <input
+            type="text"
+            id="phone_number"
+            name="phone_number"
+            value={client.phone_number}
+            className="client-input"
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+      <CreateDietPage />
 
-          <h2>Weight History</h2>
-          {weightHistory.length > 0 ? (
-          <div className="weight-history-graph">
-            <Line data={weightData} />
-          </div>
-          ) : (
-            <p>No weight history available.</p>
-          )}
+      <h2>Weight History</h2>
+      {weightHistory.length > 0 ? (
+        <div className="weight-history-graph">
+          <Line data={weightData} />
+        </div>
+      ) : (
+        <p>No weight history available.</p>
+      )}
 
-          <div className="form-group weight-update-container">
-            <label htmlFor="updated_weight">Update Weight (kg)</label>
-            <input
-              type="number"
-              id="updated_weight"
-              name="updated_weight"
-              value={updatedWeight}
-              className="client-input"
-              style={{ marginTop: '-10px' }}
-              onChange={(e) => setUpdatedWeight(e.target.value)}
-            />
-            <button type="button" className="update-weight-btn" onClick={handleWeightUpdate}>
-              Update Weight
-            </button>
+      <div className="form-group weight-update-container">
+        <label htmlFor="updated_weight">Update Weight (kg)</label>
+        <input
+          type="number"
+          id="updated_weight"
+          name="updated_weight"
+          value={updatedWeight}
+          className="client-input"
+          style={{ marginTop: '-10px' }}
+          onChange={(e) => setUpdatedWeight(e.target.value)}
+          placeholder="Enter weight"
+        />
 
-            {weightUpdateSuccess && (<div className="success-message">{weightUpdateSuccess}</div>)}
-          </div>
-          
+        {/* Add feedback input field */}
+        <label htmlFor="feedback" style={{ marginTop: '10px' }}>Feedback</label>
+        <textarea
+          id="feedback"
+          name="feedback"
+          value={feedback}
+          className="feedback-input"
+          style={{ marginTop: '-10px', width: '100%', height: '80px' }}
+          onChange={(e) => setFeedback(e.target.value)}
+          placeholder="Enter feedback"
+        />
+
+        <button type="button" className="update-weight-btn" onClick={handleWeightUpdate}>
+          Update Weight and Feedback
+        </button>
+
+        {weightUpdateSuccess && <div className="success-message">{weightUpdateSuccess}</div>}
+      </div>
+
         <div className="form-background">
           <form onSubmit={handleSubmit} className="client-form">
 
