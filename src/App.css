@@ -1,9 +1,7 @@
-@import url('./styles/Colors.css');
-
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--main-background-color);
+  background-color: #F0F8E7;
 }
 
 .App {

@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
-@import './Colors.css';
 
 body {
   background-color: white;
@@ -65,7 +64,7 @@ body {
 
 .nav-link:hover,
 .nav-link.active {
-  background-color: var(--highlight-color);
+  background-color: #A5D6A7;
 }
 
 .auth-buttons {

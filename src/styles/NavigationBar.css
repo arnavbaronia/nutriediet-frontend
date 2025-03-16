@@ -2,7 +2,7 @@
 @import './Colors.css';
 
 body {
-  background-color: var(--main-background-color);
+  background-color: #F0F8E7;
   margin: 0;
   font-family: 'Rubik', sans-serif;
 }
@@ -12,7 +12,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: var(--navbar-background-color);
+  background-color: #FFFFFF;
   position: fixed;
   top: 0;
   left: 0;
@@ -91,7 +91,7 @@ body {
     max-height: 0;
     overflow: hidden;
     width: 100%;
-    background-color: var(--navbar-background-color);
+    background-color: #FFFFFF;
     position: absolute;
     top: 70px;
     left: 0;
