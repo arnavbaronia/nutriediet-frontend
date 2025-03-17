@@ -10,10 +10,16 @@ const HomeNavBar = () => {
 
   const isActive = (path) => (location.pathname === path ? "active" : "");
 
+  const handleLinkClick = () => {
+    if (window.innerWidth <= 768) {
+      setMenuOpen(false);
+    }
+  };
+
   return (
     <nav className="navigation-bar">
       <div className="nav-logo">
-        <Link to="/">
+        <Link to="/" onClick={handleLinkClick}>
           <img src={logo} alt="Nutriediet Logo" className="nav-logo-img" />
         </Link>
       </div>
@@ -21,13 +27,25 @@ const HomeNavBar = () => {
         <FiMenu />
       </div>
       <div className={`nav-buttons ${menuOpen ? "show-menu" : ""}`}>
-        <Link to="/" className={`nav-link ${isActive("/")}`}>Home</Link>
-        <Link to="/about" className={`nav-link ${isActive("/about")}`}>About</Link>
-        <Link to="/services" className={`nav-link ${isActive("/services")}`}>Services</Link>
-        <Link to="/testimonials" className={`nav-link ${isActive("/testimonials")}`}>Testimonials</Link>
+        <Link to="/" className={`nav-link ${isActive("/")}`} onClick={handleLinkClick}>
+          Home
+        </Link>
+        <Link to="/about" className={`nav-link ${isActive("/about")}`} onClick={handleLinkClick}>
+          About
+        </Link>
+        <Link to="/services" className={`nav-link ${isActive("/services")}`} onClick={handleLinkClick}>
+          Services
+        </Link>
+        <Link to="/testimonials" className={`nav-link ${isActive("/testimonials")}`} onClick={handleLinkClick}>
+          Testimonials
+        </Link>
         <div className="auth-buttons">
-          <Link to="/login" className={`nav-button login-btn ${isActive("/login")}`}>Login</Link>
-          <Link to="/signup" className={`nav-button signup-btn ${isActive("/signup")}`}>Signup</Link>
+          <Link to="/login" className={`nav-button login-btn ${isActive("/login")}`} onClick={handleLinkClick}>
+            Login
+          </Link>
+          <Link to="/signup" className={`nav-button signup-btn ${isActive("/signup")}`} onClick={handleLinkClick}>
+            Signup
+          </Link>
         </div>
       </div>
     </nav>
