@@ -24,10 +24,16 @@ const NavigationBar = () => {
 
   const isActive = (path) => (location.pathname === path ? "active" : "");
 
+  const handleLinkClick = () => {
+    if (window.innerWidth <= 768) {
+      setIsMobileMenuOpen(false);
+    }
+  };
+
   return (
     <>
       <div className="navigation-bar">
-        <Link to="/" className="nav-logo">
+        <Link to="/" className="nav-logo" onClick={handleLinkClick}>
           <img src={logo} alt="Logo" className="nav-logo-img" />
         </Link>
         <div className="menu-icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
@@ -37,6 +43,7 @@ const NavigationBar = () => {
           <Link
             to={`/clients/${client_id}/weight_update`}
             className={`nav-link ${isActive(`/clients/${client_id}/weight_update`)}`}
+            onClick={handleLinkClick}
           >
             <MonitorWeightOutlinedIcon className="nav-icon" />
             <span>Weight Update</span>
@@ -44,6 +51,7 @@ const NavigationBar = () => {
           <Link
             to={`/clients/${client_id}/diet`}
             className={`nav-link ${isActive(`/clients/${client_id}/diet`)}`}
+            onClick={handleLinkClick}
           >
             <ArticleOutlinedIcon className="nav-icon" />
             <span>Diet Plan</span>
@@ -51,6 +59,7 @@ const NavigationBar = () => {
           <Link
             to={`/clients/${client_id}/recipe`}
             className={`nav-link ${isActive(`/clients/${client_id}/recipe`)}`}
+            onClick={handleLinkClick}
           >
             <MenuBookIcon className="nav-icon" />
             <span>Recipes</span>
@@ -58,6 +67,7 @@ const NavigationBar = () => {
           <Link
             to={`/clients/${client_id}/exercise`}
             className={`nav-link ${isActive(`/clients/${client_id}/exercise`)}`}
+            onClick={handleLinkClick}
           >
             <FitnessCenterIcon className="nav-icon" />
             <span>Exercise</span>
@@ -65,6 +75,7 @@ const NavigationBar = () => {
           <Link
             to={`/clients/${client_id}/my_profile`}
             className={`nav-link ${isActive(`/clients/${client_id}/my_profile`)}`}
+            onClick={handleLinkClick}
           >
             <PersonRoundedIcon className="nav-icon" />
             <span>My Profile</span>
