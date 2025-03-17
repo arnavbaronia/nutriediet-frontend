@@ -61,7 +61,7 @@ const ClientDetailsPage = () => {
     const token = localStorage.getItem("token");
 
     axios
-      .get(`https://nutriediet-go-production.up.railway.app/admin/client/${client_id}`, {
+      .get(`https://nutriediet-go.onrender.com/admin/client/${client_id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -89,7 +89,7 @@ const ClientDetailsPage = () => {
         setIsActive(clientData.is_active);
 
         return axios.get(
-          `https://nutriediet-go-production.up.railway.app/admin/client/${client_id}/weight_history`,
+          `https://nutriediet-go.onrender.com/admin/client/${client_id}/weight_history`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -118,7 +118,7 @@ const ClientDetailsPage = () => {
 
     try {
       const response = await axios.post(
-        `https://nutriediet-go-production.up.railway.app/admin/${client_id}/weight_update`,
+        `https://nutriediet-go.onrender.com/admin/${client_id}/weight_update`,
         {
           weight: parseFloat(updatedWeight),
           feedback: feedback,
@@ -139,7 +139,7 @@ const ClientDetailsPage = () => {
         setTimeout(() => setWeightUpdateSuccess(null), 3000);
 
         const weightResponse = await axios.get(
-          `https://nutriediet-go-production.up.railway.app/admin/client/${client_id}/weight_history`,
+          `https://nutriediet-go.onrender.com/admin/client/${client_id}/weight_history`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
@@ -251,7 +251,7 @@ const ClientDetailsPage = () => {
       console.log('Authorization Token:', token);
 
       const response = await axios.post(
-        `https://nutriediet-go-production.up.railway.app/admin/client/${client_id}/activation`,
+        `https://nutriediet-go.onrender.com/admin/client/${client_id}/activation`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -313,7 +313,7 @@ const ClientDetailsPage = () => {
     };
 
     axios
-      .post(`https://nutriediet-go-production.up.railway.app/admin/client/${client_id}`, payload, {
+      .post(`https://nutriediet-go.onrender.com/admin/client/${client_id}`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {

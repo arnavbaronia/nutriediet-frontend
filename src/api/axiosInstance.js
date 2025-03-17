@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://nutriediet-go-production.up.railway.app',
+  baseURL: 'https://nutriediet-go.onrender.com',
 });
 
 api.interceptors.request.use(

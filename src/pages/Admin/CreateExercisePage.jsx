@@ -11,7 +11,7 @@ const CreateExercisePage = () => {
 
   const token = localStorage.getItem('token');
   const api = axios.create({
-    baseURL: 'https://nutriediet-go-production.up.railway.app',
+    baseURL: 'https://nutriediet-go.onrender.com',
     headers: {
       Authorization: `Bearer ${token}`,
     },

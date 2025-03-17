@@ -64,7 +64,7 @@ const CreateProfilePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = `https://nutriediet-go-production.up.railway.app/create_profile/${email}`;
+      const url = `https://nutriediet-go.onrender.com/create_profile/${email}`;
 
       const processedFormData = {
         ...formData,

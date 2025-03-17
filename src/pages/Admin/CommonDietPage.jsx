@@ -21,7 +21,7 @@ const CommonDietPage = () => {
   const fetchDietTemplates = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("https://nutriediet-go-production.up.railway.app/admin/diet_templates", {
+      const response = await axios.get("https://nutriediet-go.onrender.com/admin/diet_templates", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDietTemplates(response.data.list || []);
@@ -35,7 +35,7 @@ const CommonDietPage = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`https://nutriediet-go-production.up.railway.app/admin/diet_templates/${dietTemplateId}`, {
+      const response = await axios.get(`https://nutriediet-go.onrender.com/admin/diet_templates/${dietTemplateId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -89,7 +89,7 @@ const CommonDietPage = () => {
     };
 
     try {
-      const response = await axios.post("https://nutriediet-go-production.up.railway.app/admin/common_diet", requestData, {
+      const response = await axios.post("https://nutriediet-go.onrender.com/admin/common_diet", requestData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

@@ -29,7 +29,7 @@ const CreateRecipePage = () => {
         preparation: formData.preparation.split('\n'),
       };
 
-      const response = await axios.post('https://nutriediet-go-production.up.railway.app/admin/recipe/new', payload, {
+      const response = await axios.post('https://nutriediet-go.onrender.com/admin/recipe/new', payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

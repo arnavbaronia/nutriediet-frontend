@@ -29,7 +29,7 @@ const ClientRecipeListPage = () => {
 
         console.log("Requesting recipes for client ID:", clientID);
 
-        const response = await axios.get(`https://nutriediet-go-production.up.railway.app/clients/${clientID}/recipe`, { headers });
+        const response = await axios.get(`https://nutriediet-go.onrender.com/clients/${clientID}/recipe`, { headers });
 
         if (!response.data.isActive) {
           setError("Your account is inactive. Please contact support.");

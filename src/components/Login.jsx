@@ -34,7 +34,7 @@ const Login = () => {
     setError(null);
 
     try {
-      const response = await axios.post("https://nutriediet-go-production.up.railway.app/login", credentials);
+      const response = await axios.post("https://nutriediet-go.onrender.com/login", credentials);
       const { token, refreshToken, user_type, id, email, is_active, client_id } = response.data || {};
 
       if (user_type === "ADMIN") {

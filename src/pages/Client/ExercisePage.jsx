@@ -23,7 +23,7 @@ const ExercisePage = () => {
 
     try {
       const response = await axios.get(
-        `https://nutriediet-go-production.up.railway.app/clients/${clientId}/exercise`,
+        `https://nutriediet-go.onrender.com/clients/${clientId}/exercise`,
         {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,

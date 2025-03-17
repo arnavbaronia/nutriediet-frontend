@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getToken } from './token';
 
-const BASE_URL = 'https://nutriediet-go-production.up.railway.app';
+const BASE_URL = 'https://nutriediet-go.onrender.com';
 
 export const fetchDiet = async (clientId) => {
   try {

@@ -25,7 +25,7 @@ const WeightUpdatePage = () => {
       }
 
       const response = await axios.get(
-        `https://nutriediet-go-production.up.railway.app/clients/${client_id}/weight_update`,
+        `https://nutriediet-go.onrender.com/clients/${client_id}/weight_update`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -75,7 +75,7 @@ const WeightUpdatePage = () => {
       console.log("Sending request data:", requestData);
 
       await axios.post(
-        `https://nutriediet-go-production.up.railway.app/clients/${client_id}/weight_update`,
+        `https://nutriediet-go.onrender.com/clients/${client_id}/weight_update`,
         requestData,
         {
           headers: {
