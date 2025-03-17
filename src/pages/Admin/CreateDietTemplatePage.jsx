@@ -12,7 +12,7 @@ const CreateDietTemplatePage = () => {
   const token = localStorage.getItem("token");
 
   const api = axios.create({
-    baseURL: "http://localhost:8081",
+    baseURL: "https://nutriediet-go-production.up.railway.app",
     headers: { Authorization: `Bearer ${token}` },
   });
 

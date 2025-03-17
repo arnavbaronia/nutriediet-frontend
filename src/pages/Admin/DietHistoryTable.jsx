@@ -21,7 +21,7 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete }) => {
             }
 
             const response = await axios.get(
-                `http://localhost:8081/admin/client/${clientId}/diet_history`,
+                `https://nutriediet-go-production.up.railway.app/admin/client/${clientId}/diet_history`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`

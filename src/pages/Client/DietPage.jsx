@@ -28,8 +28,8 @@ const DietPage = () => {
     }
 
     const endpoint = type === '1' 
-      ? `http://localhost:8081/clients/${client_id}/detox_diet`
-      : `http://localhost:8081/clients/${client_id}/diet`;
+      ? `https://nutriediet-go-production.up.railway.app/clients/${client_id}/detox_diet`
+      : `https://nutriediet-go-production.up.railway.app/clients/${client_id}/diet`;
 
     try {
       const response = await axios.get(endpoint, {
@@ -61,7 +61,7 @@ const DietPage = () => {
   //     return;
   //   }
   
-  //   const endpoint = `http://localhost:8081/clients/${client_id}/diet?dietType=${type}`;
+  //   const endpoint = `https://nutriediet-go-production.up.railway.app/clients/${client_id}/diet?dietType=${type}`;
   
   //   try {
   //     const response = await axios.get(endpoint, {

@@ -17,7 +17,7 @@ const AdminRecipeListPage = () => {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("Unauthorized: No token found");
 
-        const response = await axios.get("http://localhost:8081/admin/recipes", {
+        const response = await axios.get("https://nutriediet-go-production.up.railway.app/admin/recipes", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -35,7 +35,7 @@ const AdminRecipeListPage = () => {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Unauthorized: No token found");
 
-      const response = await axios.get(`http://localhost:8081/admin/recipe/${meal_id}`, {
+      const response = await axios.get(`https://nutriediet-go-production.up.railway.app/admin/recipe/${meal_id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -51,7 +51,7 @@ const AdminRecipeListPage = () => {
       if (!token) throw new Error("Unauthorized: No token found");
 
       await axios.post(
-        `http://localhost:8081/admin/recipe/${meal_id}/delete`,
+        `https://nutriediet-go-production.up.railway.app/admin/recipe/${meal_id}/delete`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );

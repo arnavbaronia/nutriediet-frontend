@@ -30,7 +30,7 @@ const Signup = () => {
     };
 
     try {
-      const response = await axios.post("http://localhost:8081/signup", payload);
+      const response = await axios.post("https://nutriediet-go-production.up.railway.app/signup", payload);
 
       const { token } = response.data || {};
 

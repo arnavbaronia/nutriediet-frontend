@@ -28,7 +28,7 @@ const CreateDietPage = () => {
   const fetchDietTemplates = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:8081/admin/diet_templates", {
+      const response = await axios.get("https://nutriediet-go-production.up.railway.app/admin/diet_templates", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDietTemplates(response.data.list || []);
@@ -42,7 +42,7 @@ const CreateDietPage = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`http://localhost:8081/admin/diet_templates/${dietTemplateId}`, {
+      const response = await axios.get(`https://nutriediet-go-production.up.railway.app/admin/diet_templates/${dietTemplateId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -57,7 +57,7 @@ const CreateDietPage = () => {
   const fetchDietHistory = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`http://localhost:8081/admin/client/${client_id}/diet_history`, {
+      const response = await axios.get(`https://nutriediet-go-production.up.railway.app/admin/client/${client_id}/diet_history`, {
         headers: { Authorization: `Bearer ${token}` },
       });
   
@@ -124,7 +124,7 @@ const CreateDietPage = () => {
   
     try {
       await axios.post(
-        `http://localhost:8081/admin/${client_id}/delete_diet`, 
+        `https://nutriediet-go-production.up.railway.app/admin/${client_id}/delete_diet`, 
         dietId, 
         {
           headers: { 
@@ -175,7 +175,7 @@ const CreateDietPage = () => {
   
     try {
       if (editMode) {
-        await axios.post(`http://localhost:8081/admin/${client_id}/edit_diet`, dietData, {
+        await axios.post(`https://nutriediet-go-production.up.railway.app/admin/${client_id}/edit_diet`, dietData, {
           headers: { Authorization: `Bearer ${token}` },
         });
         alert("Diet updated successfully!");
@@ -194,7 +194,7 @@ const CreateDietPage = () => {
           );
         }
       } else {
-        await axios.post(`http://localhost:8081/admin/${client_id}/diet`, dietData, {
+        await axios.post(`https://nutriediet-go-production.up.railway.app/admin/${client_id}/diet`, dietData, {
           headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
         });
         alert("Diet saved successfully!");

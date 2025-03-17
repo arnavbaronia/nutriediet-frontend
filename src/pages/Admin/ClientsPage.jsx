@@ -19,7 +19,7 @@ const ClientsPage = () => {
 
     const fetchClients = async () => {
       try {
-        const response = await axios.get("http://localhost:8081/admin/clients", {
+        const response = await axios.get("https://nutriediet-go-production.up.railway.app/admin/clients", {
           headers: { Authorization: `Bearer ${token}` },
         });
 

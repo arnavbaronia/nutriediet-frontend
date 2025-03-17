@@ -42,7 +42,7 @@ const ProfilePage = () => {
     }
 
     axios
-      .get(`http://localhost:8081/clients/${clientId}/my_profile`, {
+      .get(`https://nutriediet-go-production.up.railway.app/clients/${clientId}/my_profile`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       })
@@ -105,7 +105,7 @@ const ProfilePage = () => {
 
     try {
       await axios.post(
-        `http://localhost:8081/clients/${clientId}/my_profile`,
+        `https://nutriediet-go-production.up.railway.app/clients/${clientId}/my_profile`,
         updatedProfile,
         {
           headers: { Authorization: `Bearer ${token}` },

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { setToken, setUserId, setuser_type } from './token'; 
 
-const BASE_URL = 'http://localhost:8081';
+const BASE_URL = 'https://nutriediet-go-production.up.railway.app';
 
 /**
  * Handles user signup

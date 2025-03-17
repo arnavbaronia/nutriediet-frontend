@@ -17,7 +17,7 @@ const authMiddleware = new ApolloLink((operation, forward) => {
 });
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:8081',
+  uri: 'https://nutriediet-go-production.up.railway.app',
 });
 
 const client = new ApolloClient({
