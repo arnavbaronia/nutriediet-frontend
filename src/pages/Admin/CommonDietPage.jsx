@@ -174,7 +174,7 @@ const CommonDietPage = () => {
               as="select"
               value={selectedPastTemplate}
               onChange={handlePastTemplateSelect}
-              style={{ width: "800px" }}
+              style={{ width: "800px", marginBottom: "40px" }}
               className="styled-dropdown small-dropdown"
             >
               <option value="">Select Template</option>
