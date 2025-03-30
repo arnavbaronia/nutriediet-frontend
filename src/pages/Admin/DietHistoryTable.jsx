@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../styles/ClientDetailsPage.css';
 
-const DietHistoryTable = ({ clientId, handleDietAction, handleDelete }) => {
+const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistoryRegular, dietHistoryDetox  }) => {
     const [dietType, setDietType] = useState('regular');
     const [dietHistory, setDietHistory] = useState({ regular: [], detox: [] });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [dietToDelete, setDietToDelete] = useState(null);
+    const [deleting, setDeleting] = useState(false);
 
     const fetchDietHistory = async () => {
         setLoading(true);
@@ -74,16 +77,32 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete }) => {
         setDietType(type);
     };
 
-    const handleDeleteDiet = async (dietId) => {
+    const confirmDelete = (dietId) => {
+        setDietToDelete(dietId);
+        setShowDeleteModal(true);
+    };
+
+    const cancelDelete = () => {
+        setShowDeleteModal(false);
+        setDietToDelete(null);
+    };
+
+    const executeDelete = async () => {
+        setShowDeleteModal(false);
+        setDeleting(true);
+        
         try {
-            await handleDelete(dietId);
+            await handleDelete(dietToDelete);
             setDietHistory(prevHistory => ({
-                regular: prevHistory.regular.filter(diet => diet.id !== dietId),
-                detox: prevHistory.detox.filter(diet => diet.id !== dietId)
+                regular: prevHistory.regular.filter(diet => diet.id !== dietToDelete),
+                detox: prevHistory.detox.filter(diet => diet.id !== dietToDelete)
             }));
         } catch (error) {
             console.error("Error deleting diet:", error);
             setError("Failed to delete diet.");
+        } finally {
+            setDeleting(false);
+            setDietToDelete(null);
         }
     };
 
@@ -96,6 +115,32 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete }) => {
 
     return (
         <div className="diet-history-wrapper">
+            {/* Delete Confirmation Modal */}
+            {showDeleteModal && (
+                <div className="modal-overlay">
+                    <div className="delete-modal">
+                        <h3>Confirm Deletion</h3>
+                        <p>Are you sure you want to delete this diet record? This action cannot be undone.</p>
+                        <div className="modal-buttons">
+                            <button 
+                                className="modal-button modal-cancel"
+                                onClick={cancelDelete}
+                                disabled={deleting}
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                className="modal-button modal-confirm"
+                                onClick={executeDelete}
+                                disabled={deleting}
+                            >
+                                {deleting ? 'Deleting...' : 'Delete'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Diet Type Selection */}
             <div className="diet-toggle-container">
                 <h2 className="diet-type-heading">Select Diet Type</h2>
@@ -148,7 +193,7 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete }) => {
                                                     onClick={() => handleDietAction('use', diet.id, dietType === 'regular' ? 0 : 1)}
                                                     aria-label={`use diet for week ${diet.week}`}
                                                 >
-                                                    Use
+                                                    View
                                                 </button>
                                                 <button
                                                     type="button"
@@ -156,7 +201,7 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete }) => {
                                                     onClick={() => handleDietAction('view', diet.id, dietType === 'regular' ? 0 : 1)}
                                                     aria-label={`view diet for week ${diet.week}`}
                                                 >
-                                                    View
+                                                    Refer
                                                 </button>
                                                 {(dietType === 'regular' && diet.id === latestRegularDietId) || 
                                                  (dietType === 'detox' && diet.id === latestDetoxDietId) ? (
@@ -172,7 +217,7 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete }) => {
                                                         <button
                                                             type="button"
                                                             className="action-button action-delete"
-                                                            onClick={() => handleDeleteDiet(diet.id)}
+                                                            onClick={() => confirmDelete(diet.id)}
                                                             aria-label={`delete diet for week ${diet.week}`}
                                                         >
                                                             Delete
