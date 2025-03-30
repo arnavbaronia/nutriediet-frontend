@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
-import { FaTrashAlt, FaPlusCircle, FaSave } from "react-icons/fa";
+import { FaTrashAlt, FaPlusCircle, FaSave, FaEdit } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../styles/DietTemplatesPage.css";
@@ -79,9 +79,7 @@ const DietTemplatesPage = () => {
       <div className="template-container">
         <div className="template-menu">
           <div className="menu-header">
-            <Button onClick={() => navigate("/admin/diet_templates/new")} className="btn-create">
-              <FaPlusCircle /> Create New
-            </Button>
+            <h3>Diet Templates</h3>
           </div>
           <div className="scrollable-menu">
             {dietTemplates.map((template) => (
@@ -98,6 +96,9 @@ const DietTemplatesPage = () => {
 
         <div className="template-content">
           <div className="action-buttons">
+            <Button onClick={() => navigate("/admin/diet_templates/new")} className="btn-create">
+              <FaPlusCircle /> Create New
+            </Button>
             <Button
               onClick={handleSaveAs}
               disabled={!selectedDietTemplate}
@@ -110,7 +111,7 @@ const DietTemplatesPage = () => {
               disabled={!selectedDietTemplate}
               className="btn-edit"
             >
-              Edit
+              <FaEdit /> Edit
             </Button>
             <Button onClick={handleDelete} disabled={!selectedDietTemplate} className="btn-delete">
               <FaTrashAlt /> Delete
