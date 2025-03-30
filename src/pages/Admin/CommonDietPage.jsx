@@ -112,9 +112,9 @@ const CommonDietPage = () => {
       {success && <Alert variant="success">{success}</Alert>}
 
       <div className="diet-section">
-        {/* Left Side - Save Diet */}
+        {/* Left Side - Send Diet */}
         <div className="diet-left">
-          <h2>Save Diet</h2>
+          <h2>Send Diet</h2>
           <div className="dropdown-group">
             <Form.Control
               as="select"
@@ -162,7 +162,7 @@ const CommonDietPage = () => {
             onChange={(e) => setDiet(e.target.value)}
           />
           <Button className="save-btn" onClick={handleSubmit}>
-            Save
+            Send
           </Button>
         </div>
 

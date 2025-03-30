@@ -218,7 +218,7 @@ const CreateDietPage = () => {
       <div className="diet-section">
         {/* Left Side - Create/Edit Diet */}
         <div className="diet-left">
-          <h2>{editMode ? "Update" : "Save"}</h2>
+          <h2>{editMode ? "Update" : "Send"}</h2>
           <div className="dropdown-group">
             <Form.Control
               as="select"
@@ -252,7 +252,7 @@ const CreateDietPage = () => {
             onChange={(e) => setDiet(e.target.value)}
           />
           <Button className="save-btn" onClick={handleSubmit}>
-            {editMode ? "Update" : "Save"}
+            {editMode ? "Update" : "Send"}
           </Button>
         </div>
 

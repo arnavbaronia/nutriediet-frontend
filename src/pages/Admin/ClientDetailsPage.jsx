@@ -179,45 +179,37 @@ const ClientDetailsPage = () => {
 
   const calculateNextPaymentDate = (lastPaymentDate, packageDuration) => {
     console.log(`Calculating Next Payment Date: Last Payment Date = ${lastPaymentDate}, Package = ${packageDuration}`);
-
+  
     if (!lastPaymentDate || !packageDuration) return '';
-
+  
     const normalizedPackage = packageDuration.toLowerCase().replace(/\s+/g, ' ');
-
+  
     const durationMap = {
-      "1 month": 1,
-      "2 months": 2,
-      "3 months": 3,
-      "6 months": 6,
-      "1 month": 1,
-      "2 month": 2,
-      "3 month": 3,
-      "6 month": 6,
+      "4 weeks": 4,
+      "8 weeks": 8,
+      "12 weeks": 12,
+      "4 week": 4,
+      "8 week": 8,
+      "12 week": 12,
     };
-
-    const monthsToAdd = durationMap[normalizedPackage] || 0;
-    if (monthsToAdd === 0) {
+  
+    const weeksToAdd = durationMap[normalizedPackage] || 0;
+    if (weeksToAdd === 0) {
       console.warn(`Unknown package duration: ${packageDuration}`);
       return '';
     }
-
+  
     const lastDate = new Date(lastPaymentDate);
     if (isNaN(lastDate.getTime())) {
       console.error(`Invalid date format: ${lastPaymentDate}`);
       return '';
     }
-
-    const dayOfMonth = lastDate.getDate();
-
-    lastDate.setDate(1);
-    lastDate.setMonth(lastDate.getMonth() + monthsToAdd);
-
-    const maxDaysInMonth = new Date(lastDate.getFullYear(), lastDate.getMonth() + 1, 0).getDate();
-    lastDate.setDate(Math.min(dayOfMonth, maxDaysInMonth));
-
+  
+    lastDate.setDate(lastDate.getDate() + (weeksToAdd * 7));
+  
     const formattedDate = lastDate.toISOString().split('T')[0];
     console.log(`Final Next Payment Date: ${formattedDate}`);
-
+  
     return formattedDate;
   };
 
@@ -608,10 +600,10 @@ const ClientDetailsPage = () => {
                 style={{ width: '100%' }}
               >
                 <option value="">Select</option>
-                <option value="1 Month">1 Month</option>
-                <option value="2 Months">2 Months</option>
-                <option value="3 Months">3 Months</option>
-                <option value="6 Months">6 Months</option>
+                <option value="4 Weeks">1 Month</option>
+                <option value="8 Weeks">2 Months</option>
+                <option value="12 Weeks">3 Months</option>
+                <option value="24 Weeks">6 Months</option>
               </select>
             </div>
 
@@ -627,17 +619,6 @@ const ClientDetailsPage = () => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="next_payment_date">Next Payment Date</label>
-              <input
-                type="date"
-                id="next_payment_date"
-                name="next_payment_date"
-                value={client.next_payment_date}
-                className="client-input"
-                readOnly
-              />
-            </div>
-            <div className="form-group">
               <label htmlFor="last_payment_date">Last Payment Date</label>
               <input
                 type="date"
@@ -646,6 +627,17 @@ const ClientDetailsPage = () => {
                 value={client.last_payment_date}
                 className="client-input"
                 onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="next_payment_date">Next Payment Date</label>
+              <input
+                type="date"
+                id="next_payment_date"
+                name="next_payment_date"
+                value={client.next_payment_date}
+                className="client-input"
+                readOnly
               />
             </div>
             <div className="form-group">
