@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
-import { FaTrashAlt, FaPlusCircle } from "react-icons/fa";
+import { FaTrashAlt, FaPlusCircle, FaSave } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Select from "react-select";
 import "../../styles/DietTemplatesPage.css";
 
 const DietTemplatesPage = () => {
@@ -24,7 +23,10 @@ const DietTemplatesPage = () => {
     const fetchDietTemplates = async () => {
       try {
         const response = await api.get("/admin/diet_templates");
-        setDietTemplates(response.data.list || []);
+        const sortedTemplates = (response.data.list || []).sort((a, b) =>
+          a.Name.localeCompare(b.Name)
+        );
+        setDietTemplates(sortedTemplates);
         setError(null);
       } catch (err) {
         setError("Failed to fetch diet templates. Please try again.");
@@ -45,14 +47,9 @@ const DietTemplatesPage = () => {
     }
   };
 
-  const handleTemplateSelect = (selectedOption) => {
-    const selectedTemplate = dietTemplates.find((t) => t.ID === selectedOption.value);
-    setSelectedDietTemplate(selectedTemplate || null);
-    if (selectedTemplate) {
-      fetchDietTemplateById(selectedTemplate.ID);
-    } else {
-      setDietDetails("");
-    }
+  const handleTemplateSelect = (template) => {
+    setSelectedDietTemplate(template);
+    fetchDietTemplateById(template.ID);
   };
 
   const handleDelete = async () => {
@@ -72,26 +69,41 @@ const DietTemplatesPage = () => {
     }
   };
 
+  const handleSaveAs = () => {
+    alert("Save As functionality will be implemented soon!");
+  };
+
   return (
     <div className="diet-templates-page">
-      <div className="top-section">
-        <h1 className="page-title">Diet Templates</h1>
-        <div className="header-section">
-          <div className="template-select">
-            <Select
-              options={dietTemplates.map((template) => ({
-                value: template.ID,
-                label: template.Name,
-              }))}
-              placeholder="Select a Diet Template"
-              onChange={handleTemplateSelect}
-              className="custom-dropdown"
-              isSearchable
-            />
-          </div>
-          <div className="action-buttons">
+      <h1 className="page-title">Diet Templates</h1>
+      <div className="template-container">
+        <div className="template-menu">
+          <div className="menu-header">
             <Button onClick={() => navigate("/admin/diet_templates/new")} className="btn-create">
-              <FaPlusCircle /> Create
+              <FaPlusCircle /> Create New
+            </Button>
+          </div>
+          <div className="scrollable-menu">
+            {dietTemplates.map((template) => (
+              <div
+                key={template.ID}
+                className={`menu-item ${selectedDietTemplate?.ID === template.ID ? "active" : ""}`}
+                onClick={() => handleTemplateSelect(template)}
+              >
+                {template.Name}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="template-content">
+          <div className="action-buttons">
+            <Button
+              onClick={handleSaveAs}
+              disabled={!selectedDietTemplate}
+              className="btn-save"
+            >
+              <FaSave /> Save As
             </Button>
             <Button
               onClick={() => navigate(`/admin/diet_templates/${selectedDietTemplate?.ID}`)}
@@ -104,18 +116,18 @@ const DietTemplatesPage = () => {
               <FaTrashAlt /> Delete
             </Button>
           </div>
-        </div>
-      </div>
 
-      <div className="template-details">
-        {selectedDietTemplate ? (
-          <div className="single-container">
-            <h2>{selectedDietTemplate.Name}</h2>
-            <div className="diet-details-box" dangerouslySetInnerHTML={{ __html: dietDetails }} />
+          <div className="template-details">
+            {selectedDietTemplate ? (
+              <div className="single-container">
+                <h2>{selectedDietTemplate.Name}</h2>
+                <div className="diet-details-box" dangerouslySetInnerHTML={{ __html: dietDetails }} />
+              </div>
+            ) : (
+              <p className="info-text">Select a template from the menu to view details.</p>
+            )}
           </div>
-        ) : (
-          <p className="info-text">Select a template to view details.</p>
-        )}
+        </div>
       </div>
     </div>
   );

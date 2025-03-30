@@ -3,44 +3,101 @@
   background-color: #A5D6A7;
   border-radius: 20px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  width: 800px;
-  max-width: 90%;
+  width: 90%;
+  max-width: 1200px;
   margin: 50px auto;
   font-family: 'Rubik', sans-serif;
 }
 
-.custom-dropdown {
-  width: 100%;
-  max-width: 250px;
-}
-
 .page-title {
-  text-align: center;
+  text-align: left;
   font-size: 32px !important;
   font-weight: 700;
   color: #333 !important;
+  margin-bottom: 30px;
+  margin-left: 250px; 
 }
 
-.header-section {
+.template-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   gap: 20px;
 }
 
-.template-select .custom-dropdown {
-  padding: 10px;
+.template-menu {
+  width: 250px;
+  background: white;
   border-radius: 10px;
-  font-size: 16px;
-  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+}
+
+.menu-header {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  height: 60px;
+  box-sizing: border-box;
+}
+
+.scrollable-menu {
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(500px - 60px);
+  scrollbar-width: thin;
+  scrollbar-color: #969292 #f1f1f1;
+}
+
+.scrollable-menu::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollable-menu::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.scrollable-menu::-webkit-scrollbar-thumb {
+  background-color: #388E3C;
+  border-radius: 4px;
+}
+
+.scrollable-menu::-webkit-scrollbar-thumb:hover {
+  background-color: #2E7D32;
+}
+
+.menu-item {
+  padding: 12px 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #eee;
+}
+
+.menu-item:hover {
+  background-color: #f5f5f5;
+}
+
+.menu-item.active {
+  background-color: #388E3C;
+  color: white;
+  font-weight: bold;
+}
+
+.template-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .action-buttons {
   display: flex;
   gap: 10px;
+  justify-content: flex-end;
 }
 
-.btn-create, .btn-edit, .btn-delete {
+.btn-create, .btn-edit, .btn-delete, .btn-save {
   padding: 10px 15px;
   font-size: 16px;
   font-weight: 600;
@@ -53,6 +110,7 @@
   background: #388E3C !important; 
   color: white;
   border: none;
+  width: 100%;
 }
 
 .btn-edit {
@@ -64,6 +122,12 @@
 .btn-delete {
   background: #dc3545 !important;
   color: white;
+}
+
+.btn-save {
+  background: #FF9800 !important; 
+  color: white;
+  border: none;
 }
 
 .btn-create:hover {
@@ -78,8 +142,12 @@
   background: #B71C1C; 
 }
 
+.btn-save:hover {
+  background: #F57C20; 
+}
+
 .template-details {
-  margin-top: 30px;
+  flex: 1;
   padding: 20px;
   background: white;
   border-radius: 10px;
@@ -115,4 +183,12 @@
   text-align: center;
   font-size: 16px;
   color: #777;
+  margin-top: 50px;
+}
+
+.diet-details-box {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 5px;
+  white-space: pre-wrap;
 }
