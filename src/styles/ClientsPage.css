@@ -174,3 +174,25 @@ h1 {
   margin-bottom: 20px;
   text-align: center;
 }
+
+.payment-overdue {
+  background-color: #ffdddd !important;
+  color: #d32f2f;
+}
+
+.payment-overdue:hover {
+  background-color: #ffcccc !important;
+}
+
+.payment-overdue td {
+  color: #d32f2f;
+  font-weight: 500;
+}
+
+.client-table tr.payment-overdue:nth-child(even) {
+  background-color: #ffdddd !important;
+}
+
+.client-table tr.payment-overdue:nth-child(odd) {
+  background-color: #ffdddd !important;
+}
