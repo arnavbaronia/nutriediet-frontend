@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import DietHistoryTable from "./DietHistoryTable";
 import "../../styles/CreateDietPage.css";
 
@@ -19,6 +21,19 @@ const CreateDietPage = () => {
   const [editMode, setEditMode] = useState(false);
   const [selectedPastTemplate, setSelectedPastTemplate] = useState("");
   const [pastDiet, setPastDiet] = useState("");
+  
+  const quillModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      ['clean']
+    ]
+  };
+  
+  const quillFormats = [
+    'bold', 'italic', 'underline', 'strike',
+    'list', 'bullet'
+  ];
 
   useEffect(() => {
     fetchDietTemplates();
@@ -245,12 +260,16 @@ const CreateDietPage = () => {
             </Form.Control>
           </div>
 
-          <Form.Control
-            as="textarea"
-            className="diet-input"
-            value={diet}
-            onChange={(e) => setDiet(e.target.value)}
-          />
+          <div className="diet-input-container">
+            <ReactQuill
+              value={diet}
+              onChange={setDiet}
+              modules={quillModules}
+              formats={quillFormats}
+              className="diet-input rich-editor"
+              theme="snow"
+            />
+          </div>
           <Button className="save-btn" onClick={handleSubmit}>
             {editMode ? "Update" : "Send"}
           </Button>
@@ -276,12 +295,15 @@ const CreateDietPage = () => {
             </Form.Control>
           </div>
 
-          <Form.Control
-            as="textarea"
-            className="diet-input diet-input-scrollable"
-            value={pastDiet}
-            readOnly
-          />
+          <div className="diet-input-container view-only">
+            <ReactQuill
+              value={pastDiet}
+              readOnly={true}
+              theme="snow"
+              modules={{ toolbar: false }}
+              className="diet-input diet-input-scrollable"
+            />
+          </div>
         </div>
       </div>
     </div>

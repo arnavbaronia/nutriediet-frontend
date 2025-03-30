@@ -70,7 +70,7 @@
   }
   
   .save-btn {
-    margin-top: 30px; 
+    margin-top: 80px; 
     width: 26%; 
     height: 45px;
     background-color: #4CAF50;
@@ -115,3 +115,36 @@
   
   .save-btn:hover { background-color: #45a049; }
   .edit-btn:hover { background-color: #e69500; }
+
+  .diet-input-container {
+    height: 350px;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  
+  .rich-editor {
+    height: 100%;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  .rich-editor .ql-container {
+    font-size: 16px;
+    height: calc(100% - 42px); 
+    overflow-y: auto;
+  }
+  
+  .view-only .ql-container {
+    height: 100%;
+    font-size: 16px;
+  }
+  
+  .view-only .ql-toolbar {
+    display: none;
+  }
+  
+  .view-only .ql-container {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
