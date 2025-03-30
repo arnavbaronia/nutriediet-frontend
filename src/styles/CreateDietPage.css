@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap');
+
 .create-diet-container {
     display: flex;
     flex-direction: column;
@@ -67,6 +69,7 @@
     margin-top: 20px;
     resize: none;
     border: 1px solid black;
+    font-family: 'Rubik', sans-serif;
   }
   
   .save-btn {
@@ -127,17 +130,20 @@
     width: 100%;
     font-size: 16px;
     font-weight: 500;
+    font-family: 'Rubik', sans-serif;
   }
   
   .rich-editor .ql-container {
     font-size: 16px;
     height: calc(100% - 42px); 
     overflow-y: auto;
+    font-family: 'Rubik', sans-serif;
   }
   
   .view-only .ql-container {
     height: 100%;
     font-size: 16px;
+    font-family: 'Rubik', sans-serif;
   }
   
   .view-only .ql-toolbar {

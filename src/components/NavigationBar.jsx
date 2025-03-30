@@ -88,15 +88,15 @@ const NavigationBar = () => {
       </div>
 
       {showLogoutModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
+        <div className="modal-overlay1">
+          <div className="modal-content1">
             <h2>Confirm Logout</h2>
             <p>Are you sure you want to log out?</p>
-            <div className="modal-buttons">
-              <button className="confirm-button" onClick={handleLogout}>
+            <div className="modal-buttons1">
+              <button className="confirm-button1" onClick={handleLogout}>
                 Confirm
               </button>
-              <button className="cancel-button" onClick={() => setShowLogoutModal(false)}>
+              <button className="cancel-button1" onClick={() => setShowLogoutModal(false)}>
                 Go Back
               </button>
             </div>
