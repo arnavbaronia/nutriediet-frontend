@@ -47,6 +47,7 @@ const Login = () => {
       localStorage.setItem("user_type", user_type);
       localStorage.setItem("clientId", id);
       localStorage.setItem("email", email);
+      localStorage.setItem("is_active", is_active);
       localStorage.setItem("client_id", client_id);
       localStorage.setItem("user", JSON.stringify(response.data));
 

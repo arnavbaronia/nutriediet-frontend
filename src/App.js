@@ -38,10 +38,19 @@ import './App.css';
 const ProtectedRoute = ({ component: Component, requireduser_type, ...rest }) => {
   const token = localStorage.getItem('token');
   const user_type = localStorage.getItem('user_type');
+  const is_active = localStorage.getItem('is_active') === 'true';
   const params = useParams();
 
-  if (!token || (requireduser_type && user_type !== requireduser_type)) {
+  if (!token) {
     return <Navigate to="/login" />;
+  }
+
+  if (requireduser_type && user_type !== requireduser_type) {
+    return <Navigate to="/login" />;
+  }
+
+  if (user_type === 'CLIENT' && !is_active) {
+    return <Navigate to="/account-activation" />;
   }
 
   return <Component {...rest} />;
@@ -58,6 +67,7 @@ function AppContent() {
         <Route path="/admin/*" element={<AdminNavBar />} />
         <Route path="/*" element={<HomeNavBar />} />
         <Route path="/clients/*" element={<NavigationBar />} />
+        <Route path="/account-activation" element={<NavigationBar />} />
       </Routes>
       <div className="main-content">
         <Routes>
