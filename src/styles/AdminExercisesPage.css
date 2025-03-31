@@ -156,3 +156,19 @@ h2 {
   font-size: 1.2rem;
   color: black;
 }
+
+.watch-video-btn {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #004D40;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: 500;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.watch-video-btn:hover {
+  background-color: #2E7D32;
+}

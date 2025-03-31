@@ -134,11 +134,11 @@ const ExercisesPage = () => {
                 />
               )}
               <h3 className="selected-exercise-title">{selectedExerciseDetails.name}</h3>
-              <a
-                href={selectedExerciseDetails.link}
-                target="_blank"
+              <a 
+                href={selectedExerciseDetails.video_url} 
+                target="_blank" 
                 rel="noopener noreferrer"
-                className="exercise-link"
+                className="watch-video-btn"
               >
                 Watch Video
               </a>

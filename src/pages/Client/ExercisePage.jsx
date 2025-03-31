@@ -109,7 +109,12 @@ const ExercisePage = () => {
                 <img src={exercise.thumbnail} alt={exercise.title} />
               </div>
               <div className="video-title">{exercise.title}</div>
-              <a href={exercise.video_url} target="_blank" rel="noopener noreferrer">
+              <a 
+                href={exercise.video_url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="watch-video-btn"
+              >
                 Watch Video
               </a>
             </div>
