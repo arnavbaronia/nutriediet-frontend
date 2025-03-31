@@ -174,7 +174,7 @@
 }
 
 .weight-history-table {
-  width: 100%;
+  width: 1150px !important;
   border-collapse: collapse;
   margin-top: 20px;
   font-size: 16px;
@@ -195,6 +195,7 @@
 .weight-history-table th, 
 .weight-history-table td {
   padding: 12px 15px;
+  text-align: center;
   border-bottom: 1px solid #ddd;
 }
 
