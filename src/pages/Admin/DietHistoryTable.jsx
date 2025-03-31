@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../styles/ClientDetailsPage.css';
 
-const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistoryRegular, dietHistoryDetox  }) => {
+const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistoryRegular, dietHistoryDetox, onDietHistoryChange  }) => {
     const [dietType, setDietType] = useState('regular');
     const [dietHistory, setDietHistory] = useState({ regular: [], detox: [] });
     const [loading, setLoading] = useState(false);
@@ -67,12 +67,6 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistor
         }
     };
 
-    useEffect(() => {
-        if (clientId) {
-            fetchDietHistory();
-        }
-    }, [clientId]);
-
     const handleDietTypeChange = (type) => {
         setDietType(type);
     };
@@ -93,10 +87,16 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistor
         
         try {
             await handleDelete(dietToDelete);
-            setDietHistory(prevHistory => ({
-                regular: prevHistory.regular.filter(diet => diet.id !== dietToDelete),
-                detox: prevHistory.detox.filter(diet => diet.id !== dietToDelete)
-            }));
+            const updatedHistory = {
+                regular: dietHistory.regular.filter(diet => diet.id !== dietToDelete),
+                detox: dietHistory.detox.filter(diet => diet.id !== dietToDelete)
+            };
+            
+            setDietHistory(updatedHistory);
+            
+            if (onDietHistoryChange && dietType === 'regular') {
+                onDietHistoryChange(updatedHistory.regular);
+            }
         } catch (error) {
             console.error("Error deleting diet:", error);
             setError("Failed to delete diet.");
@@ -105,6 +105,18 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistor
             setDietToDelete(null);
         }
     };
+
+    useEffect(() => {
+        if (clientId) {
+            fetchDietHistory();
+        }
+    }, [clientId]);
+
+    useEffect(() => {
+        if (onDietHistoryChange && dietType === 'regular') {
+            onDietHistoryChange(dietHistory.regular);
+        }
+    }, [dietHistory.regular, onDietHistoryChange, dietType]);
 
     const filteredDietHistory = dietType === 'regular'
         ? dietHistory.regular

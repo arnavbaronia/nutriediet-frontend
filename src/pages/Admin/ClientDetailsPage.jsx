@@ -59,7 +59,7 @@ const ClientDetailsPage = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
+  
     axios
       .get(`https://nutriediet-go.onrender.com/admin/client/${client_id}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -67,14 +67,14 @@ const ClientDetailsPage = () => {
       .then((response) => {
         const clientData = response.data.client;
         console.log("Client details response:", response);
-
+  
         const name =
           clientData.name?.trim() ||
           `${clientData.first_name?.trim() || ""} ${
             clientData.last_name?.trim() || ""
           }`.trim() ||
           "N/A";
-
+  
         setClient({
           ...clientData,
           name,
@@ -84,21 +84,29 @@ const ClientDetailsPage = () => {
           date_of_joining: formatDateForInput(clientData.date_of_joining),
           created_at: formatDateForInput(clientData.created_at),
         });
-
+  
         setDiets(response.data.diets);
         setIsActive(clientData.is_active);
-
+  
         return axios.get(
-          `https://nutriediet-go.onrender.com/admin/client/${client_id}/weight_history`,
+          `https://nutriediet-go.onrender.com/admin/client/${client_id}/diet_history`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
       })
       .then((response) => {
-        console.log("Weight history response:", response);
-
-        setWeightHistory(response.data.response || []);
+        const { diet_history_regular } = response.data;
+        
+        const weightDataFromDiet = diet_history_regular
+          .filter(entry => entry.weight)
+          .map(entry => ({
+            date: new Date(entry.date),
+            weight: parseFloat(entry.weight)
+          }))
+          .sort((a, b) => a.date - b.date);
+        
+        setWeightHistory(weightDataFromDiet);
         setLoading(false);
       })
       .catch((error) => {
@@ -110,12 +118,12 @@ const ClientDetailsPage = () => {
 
   const handleWeightUpdate = async () => {
     const token = localStorage.getItem("token");
-
+  
     if (!updatedWeight) {
       setError("Please enter a valid weight.");
       return;
     }
-
+  
     try {
       const response = await axios.post(
         `https://nutriediet-go.onrender.com/admin/${client_id}/weight_update`,
@@ -130,20 +138,30 @@ const ClientDetailsPage = () => {
           },
         }
       );
-
+  
       if (response.status === 200) {
         setWeightUpdateSuccess("Weight and feedback updated successfully!");
         setUpdatedWeight("");
         setFeedback("");
-
+  
         setTimeout(() => setWeightUpdateSuccess(null), 3000);
-
-        const weightResponse = await axios.get(
-          `https://nutriediet-go.onrender.com/admin/client/${client_id}/weight_history`,
+  
+        const dietHistoryResponse = await axios.get(
+          `https://nutriediet-go.onrender.com/admin/client/${client_id}/diet_history`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
-
-        setWeightHistory(weightResponse.data.response || []);
+        
+        const { diet_history_regular } = dietHistoryResponse.data;
+        
+        const weightDataFromDiet = diet_history_regular
+          .filter(entry => entry.weight) 
+          .map(entry => ({
+            date: new Date(entry.date),
+            weight: parseFloat(entry.weight)
+          }))
+          .sort((a, b) => a.date - b.date); 
+        
+        setWeightHistory(weightDataFromDiet);
       }
     } catch (error) {
       console.error("Error updating weight and feedback:", error);
@@ -153,7 +171,7 @@ const ClientDetailsPage = () => {
 
   const weightData = {
     labels: weightHistory.map((entry) =>
-      new Date(entry.date).toLocaleDateString("en-GB", {
+      entry.date.toLocaleDateString("en-GB", {
         day: "2-digit",
         month: "short",
       })
