@@ -17,8 +17,9 @@ const Login = () => {
 
   useEffect(() => {
     const userType = localStorage.getItem("user_type");
-    if (userType === "CLIENT") {
-      navigate("/clients");
+    const clientId = localStorage.getItem("client_id");
+    if (userType === "CLIENT" && clientId) {
+      navigate(`/clients/${clientId}/diet`);
     } else if (userType === "ADMIN") {
       navigate("/admin/dashboard");
     }
@@ -52,8 +53,8 @@ const Login = () => {
       localStorage.setItem("user", JSON.stringify(response.data));
 
       if (is_active) {
-        console.log("Client is active. Navigating to client dashboard...");
-        setTimeout(() => navigate("/clients"), 10);
+        console.log("Client is active. Navigating to diet page...");
+        setTimeout(() => navigate(`/clients/${client_id}/diet`), 10);
       } else {
         console.log("Client is inactive. Navigating to account activation page...");
         setTimeout(() => navigate("/account-activation", { state: { token } }), 10);

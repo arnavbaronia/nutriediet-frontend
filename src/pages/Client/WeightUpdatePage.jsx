@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { FaWeight } from "react-icons/fa";
 import "../../styles/WeightUpdatePage.css";
 
 const WeightUpdatePage = () => {
@@ -99,7 +100,9 @@ const WeightUpdatePage = () => {
 
   return (
     <div className="weight-update-page">
-      <h1 className="weight-title">Update Your Weight</h1>
+      <h1 className="weight-title">
+        <FaWeight scale={1.2}/> Update Your Weight
+      </h1>
 
       <div className="weight-container">
         {errorMessage && <p className="error-text">{errorMessage}</p>}

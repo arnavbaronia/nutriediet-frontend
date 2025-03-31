@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
-import MonitorWeightOutlinedIcon from "@mui/icons-material/MonitorWeightOutlined";
+// import MonitorWeightOutlinedIcon from "@mui/icons-material/MonitorWeightOutlined";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -40,14 +40,14 @@ const NavigationBar = () => {
           <MenuIcon />
         </div>
         <div className={`nav-buttons ${isMobileMenuOpen ? "show-menu" : ""}`}>
-          <Link
+          {/* <Link
             to={`/clients/${client_id}/weight_update`}
             className={`nav-link ${isActive(`/clients/${client_id}/weight_update`)}`}
             onClick={handleLinkClick}
           >
             <MonitorWeightOutlinedIcon className="nav-icon" />
             <span>Weight Update</span>
-          </Link>
+          </Link> */}
           <Link
             to={`/clients/${client_id}/diet`}
             className={`nav-link ${isActive(`/clients/${client_id}/diet`)}`}
