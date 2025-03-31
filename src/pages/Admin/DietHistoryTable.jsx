@@ -2,14 +2,32 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../styles/ClientDetailsPage.css';
 
-const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistoryRegular, dietHistoryDetox, onDietHistoryChange  }) => {
-    const [dietType, setDietType] = useState('regular');
-    const [dietHistory, setDietHistory] = useState({ regular: [], detox: [] });
+const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistory, onDietHistoryChange }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [dietToDelete, setDietToDelete] = useState(null);
     const [deleting, setDeleting] = useState(false);
+    const [formattedHistory, setFormattedHistory] = useState([]);
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    };
+
+    const formatHistoryData = (history) => {
+        return history.map(diet => ({
+            id: diet.id,
+            week: diet.week_number,
+            date: formatDate(diet.date),
+            dietString: diet.diet_string,
+            feedback: diet.feedback || '-'
+        })).sort((a, b) => b.week - a.week);
+    };
 
     const fetchDietHistory = async () => {
         setLoading(true);
@@ -32,43 +50,20 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistor
                 }
             );
 
-            const { diet_history_regular, diet_history_detox } = response.data;
-
-            const formattedRegular = diet_history_regular
-                .map(diet => ({
-                    id: diet.id,
-                    week: diet.week_number,
-                    date: new Intl.DateTimeFormat('en-GB').format(new Date(diet.date)),
-                    weight: diet.weight || '-',
-                    dietString: diet.diet_string,
-                    feedback: diet.feedback || '-'
-                }))
-                .sort((a, b) => b.week - a.week); 
-
-            const formattedDetox = diet_history_detox
-                .map(diet => ({
-                    id: diet.id,
-                    week: diet.week_number,
-                    date: new Intl.DateTimeFormat('en-GB').format(new Date(diet.date)),
-                    dietString: diet.diet_string,
-                    feedback: diet.feedback || '-'
-                }))
-                .sort((a, b) => b.week - a.week);
-
-            setDietHistory({
-                regular: formattedRegular,
-                detox: formattedDetox
-            });
+            const regularHistory = response.data.diet_history_regular || [];
+            const formattedData = formatHistoryData(regularHistory);
+            
+            setFormattedHistory(formattedData);
+            
+            if (onDietHistoryChange) {
+                onDietHistoryChange(formattedData);
+            }
         } catch (err) {
             setError('Failed to fetch diet history. Please try again.');
             console.error('Error fetching diet history:', err);
         } finally {
             setLoading(false);
         }
-    };
-
-    const handleDietTypeChange = (type) => {
-        setDietType(type);
     };
 
     const confirmDelete = (dietId) => {
@@ -87,15 +82,11 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistor
         
         try {
             await handleDelete(dietToDelete);
-            const updatedHistory = {
-                regular: dietHistory.regular.filter(diet => diet.id !== dietToDelete),
-                detox: dietHistory.detox.filter(diet => diet.id !== dietToDelete)
-            };
+            const updatedHistory = formattedHistory.filter(diet => diet.id !== dietToDelete);
+            setFormattedHistory(updatedHistory);
             
-            setDietHistory(updatedHistory);
-            
-            if (onDietHistoryChange && dietType === 'regular') {
-                onDietHistoryChange(updatedHistory.regular);
+            if (onDietHistoryChange) {
+                onDietHistoryChange(updatedHistory);
             }
         } catch (error) {
             console.error("Error deleting diet:", error);
@@ -112,18 +103,7 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistor
         }
     }, [clientId]);
 
-    useEffect(() => {
-        if (onDietHistoryChange && dietType === 'regular') {
-            onDietHistoryChange(dietHistory.regular);
-        }
-    }, [dietHistory.regular, onDietHistoryChange, dietType]);
-
-    const filteredDietHistory = dietType === 'regular'
-        ? dietHistory.regular
-        : dietHistory.detox;
-
-    const latestRegularDietId = dietHistory.regular.length > 0 ? dietHistory.regular[0].id : null;
-    const latestDetoxDietId = dietHistory.detox.length > 0 ? dietHistory.detox[0].id : null;
+    const latestDietId = formattedHistory.length > 0 ? formattedHistory[0].id : null;
 
     return (
         <div className="diet-history-wrapper">
@@ -153,22 +133,6 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistor
                 </div>
             )}
 
-            {/* Diet Type Selection */}
-            <div className="diet-toggle-container">
-                <h2 className="diet-type-heading">Select Diet Type</h2>
-                <div className="segmented-control">
-                    {['regular', 'detox'].map(type => (
-                        <button
-                            key={type}
-                            className={dietType === type ? 'segment-active' : 'segment'}
-                            onClick={() => handleDietTypeChange(type)}
-                        >
-                            {type === 'regular' ? 'Regular Diet' : 'Detox Diet'}
-                        </button>
-                    ))}
-                </div>
-            </div>
-
             {/* Data Loading and Error States */}
             {loading ? (
                 <p className="loading-text">Loading diet history...</p>
@@ -176,33 +140,29 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistor
                 <p className="error-text">{error}</p>
             ) : (
                 <div className="diet-history-container">
-                    <h3 className="diet-history-heading">
-                        {dietType === 'regular' ? 'Regular Diet' : 'Detox Diet'} History
-                    </h3>
+                    <h3 className="diet-history-heading">Regular Diet History</h3>
 
                     <table className="weight-history-table">
                         <thead>
                             <tr>
                                 <th scope="col">Week</th>
                                 <th scope="col">Date</th>
-                                {dietType === 'regular' && <th scope="col">Weight (kg)</th>}
                                 <th scope="col">Actions</th>
                                 <th scope="col">Feedback</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredDietHistory.length > 0 ? (
-                                filteredDietHistory.map((diet) => (
+                            {formattedHistory.length > 0 ? (
+                                formattedHistory.map((diet) => (
                                     <tr key={diet.id}>
                                         <td>Week {diet.week}</td>
                                         <td>{diet.date}</td>
-                                        {dietType === 'regular' && <td>{diet.weight}</td>}
                                         <td>
                                             <div className="action-buttons">
                                                 <button
                                                     type="button"
                                                     className="action-button action-use"
-                                                    onClick={() => handleDietAction('use', diet.id, dietType === 'regular' ? 0 : 1)}
+                                                    onClick={() => handleDietAction('use', diet.id)}
                                                     aria-label={`use diet for week ${diet.week}`}
                                                 >
                                                     View
@@ -210,18 +170,17 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistor
                                                 <button
                                                     type="button"
                                                     className="action-button action-view"
-                                                    onClick={() => handleDietAction('view', diet.id, dietType === 'regular' ? 0 : 1)}
+                                                    onClick={() => handleDietAction('view', diet.id)}
                                                     aria-label={`view diet for week ${diet.week}`}
                                                 >
                                                     Refer
                                                 </button>
-                                                {(dietType === 'regular' && diet.id === latestRegularDietId) || 
-                                                 (dietType === 'detox' && diet.id === latestDetoxDietId) ? (
+                                                {diet.id === latestDietId && (
                                                     <>
                                                         <button
                                                             type="button"
                                                             className="action-button action-edit"
-                                                            onClick={() => handleDietAction('edit', diet.id, dietType === 'regular' ? 0 : 1)}
+                                                            onClick={() => handleDietAction('edit', diet.id)}
                                                             aria-label={`edit diet for week ${diet.week}`}
                                                         >
                                                             Edit
@@ -235,7 +194,7 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistor
                                                             Delete
                                                         </button>
                                                     </>
-                                                ) : null}
+                                                )}
                                             </div>
                                         </td>
                                         <td className="feedback-column">{diet.feedback}</td> 
@@ -243,8 +202,8 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistor
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={dietType === 'regular' ? 5 : 4} className="no-data">
-                                        No {dietType} diet history available.
+                                    <td colSpan={4} className="no-data">
+                                        No diet history available.
                                     </td>
                                 </tr>
                             )}

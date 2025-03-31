@@ -6,10 +6,16 @@ import { Alert, Spinner } from 'react-bootstrap';
 import WeightUpdatePage from './WeightUpdatePage';
 import '../../styles/DietPage.css';
 
+const DIET_TYPES = {
+  REGULAR: '1',
+  DETOX: '2',
+  DETOX_WATER: '3'
+};
+
 const DietPage = () => {
   const { client_id } = useParams();
   const [diet, setDiet] = useState('');
-  const [dietType, setDietType] = useState('0');
+  const [dietType, setDietType] = useState(DIET_TYPES.REGULAR);
   const [isActive, setIsActive] = useState(true);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -43,9 +49,20 @@ const DietPage = () => {
       return;
     }
 
-    const endpoint = type === '1' 
-      ? `https://nutriediet-go.onrender.com/clients/${client_id}/detox_diet`
-      : `https://nutriediet-go.onrender.com/clients/${client_id}/diet`;
+    let endpoint;
+    switch(type) {
+      case DIET_TYPES.REGULAR:
+        endpoint = `https://nutriediet-go.onrender.com/clients/${client_id}/diet`;
+        break;
+      case DIET_TYPES.DETOX:
+        endpoint = `https://nutriediet-go.onrender.com/clients/${client_id}/detox_diet`;
+        break;
+      case DIET_TYPES.DETOX_WATER:
+        endpoint = `https://nutriediet-go.onrender.com/clients/${client_id}/detox_water`;
+        break;
+      default:
+        endpoint = `https://nutriediet-go.onrender.com/clients/${client_id}/diet`;
+    }
 
     try {
       const response = await axios.get(endpoint, {
@@ -90,16 +107,22 @@ const DietPage = () => {
       <div className="diet-toggle-container">
         <div className="segmented-control">
           <button
-            className={dietType === '0' ? 'segment-active' : 'segment'}
-            onClick={() => handleDietTypeChange('0')}
+            className={dietType === DIET_TYPES.REGULAR ? 'segment-active' : 'segment'}
+            onClick={() => handleDietTypeChange(DIET_TYPES.REGULAR)}
           >
             Regular Diet
           </button>
           <button
-            className={dietType === '1' ? 'segment-active' : 'segment'}
-            onClick={() => handleDietTypeChange('1')}
+            className={dietType === DIET_TYPES.DETOX ? 'segment-active' : 'segment'}
+            onClick={() => handleDietTypeChange(DIET_TYPES.DETOX)}
           >
             Detox Diet
+          </button>
+          <button
+            className={dietType === DIET_TYPES.DETOX_WATER ? 'segment-active' : 'segment'}
+            onClick={() => handleDietTypeChange(DIET_TYPES.DETOX_WATER)}
+          >
+            Detox Water
           </button>
         </div>
       </div>

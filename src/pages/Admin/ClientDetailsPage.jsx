@@ -621,7 +621,6 @@ const ClientDetailsPage = () => {
                 <option value="4 Weeks">1 Month</option>
                 <option value="8 Weeks">2 Months</option>
                 <option value="12 Weeks">3 Months</option>
-                <option value="24 Weeks">6 Months</option>
               </select>
             </div>
 

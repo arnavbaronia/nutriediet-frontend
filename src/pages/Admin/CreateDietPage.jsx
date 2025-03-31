@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -9,18 +9,16 @@ import "../../styles/CreateDietPage.css";
 
 const CreateDietPage = () => {
   const { client_id } = useParams();
-  const [dietType, setDietType] = useState(0);
-  const [weekNumber, setWeekNumber] = useState(1);
   const [diet, setDiet] = useState("");
   const [error, setError] = useState(null);
   const [dietTemplates, setDietTemplates] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState("");
-  const [dietHistoryRegular, setDietHistoryRegular] = useState([]);
-  const [dietHistoryDetox, setDietHistoryDetox] = useState([]);
+  const [dietHistory, setDietHistory] = useState([]);
   const [selectedHistory, setSelectedHistory] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [selectedPastTemplate, setSelectedPastTemplate] = useState("");
   const [pastDiet, setPastDiet] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   
   const quillModules = {
     toolbar: [
@@ -47,8 +45,8 @@ const CreateDietPage = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDietTemplates(response.data.list || []);
-    } catch {
-      setError("Failed to load diet templates.");
+    } catch (err) {
+      setError(formatError(err, "Failed to load diet templates."));
     }
   };
 
@@ -61,11 +59,11 @@ const CreateDietPage = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      if (response.data && response.data.template) {
+      if (response.data?.template) {
         setDietFunction(response.data.template);
       }
-    } catch {
-      setError("Failed to load diet template details.");
+    } catch (err) {
+      setError(formatError(err, "Failed to load diet template details."));
     }
   };
 
@@ -76,20 +74,24 @@ const CreateDietPage = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
   
-      const { diet_history_regular, diet_history_detox } = response.data;
+      const regularHistory = response.data.diet_history_regular || [];
+      const sortedRegular = regularHistory.sort((a, b) => b.week_number - a.week_number);
   
-      const sortedRegular = (diet_history_regular || []).sort((a, b) => b.week_number - a.week_number);
-      const sortedDetox = (diet_history_detox || []).sort((a, b) => b.week_number - a.week_number);
-  
-      setDietHistoryRegular(sortedRegular);
-      setDietHistoryDetox(sortedDetox);
-    } catch (error) {
-      console.error("Error fetching diet history:", error);
-      setError("Failed to load diet history.");
+      setDietHistory(sortedRegular);
+    } catch (err) {
+      console.error("Error fetching diet history:", err);
+      setError(formatError(err, "Failed to load diet history."));
     }
   };
 
-  const handleHistorySelect = (action, dietId, type) => {
+  const formatError = (error, defaultMessage) => {
+    if (typeof error === 'string') return error;
+    if (error?.response?.data?.error) return error.response.data.error;
+    if (error?.message) return error.message;
+    return defaultMessage;
+  };
+
+  const handleHistorySelect = (action, dietId) => {
     if (!dietId) {
       setSelectedHistory(null);
       setPastDiet("");
@@ -98,31 +100,21 @@ const CreateDietPage = () => {
     }
 
     const parsedDietId = parseInt(dietId);
-    const selectedDiet =
-      type === 0
-        ? dietHistoryRegular.find((d) => d.id === parsedDietId)
-        : dietHistoryDetox.find((d) => d.id === parsedDietId);
+    const selectedDiet = dietHistory.find((d) => d.id === parsedDietId);
 
     if (selectedDiet) {
-      const dietTypeValue = type;
-
-      setSelectedHistory({
-        ...selectedDiet,
-        diet_type: dietTypeValue,
-      });
-
-      setDietType(dietTypeValue);
+      setSelectedHistory(selectedDiet);
 
       if (action === 'use') {
-        setDiet(selectedDiet.diet_string);
+        setDiet(selectedDiet.diet_string || "");
         setPastDiet(""); 
         setEditMode(false);
       } else if (action === 'view') {
-        setPastDiet(selectedDiet.diet_string); 
+        setPastDiet(selectedDiet.diet_string || ""); 
         setDiet(""); 
         setEditMode(false);
       } else if (action === 'edit') {
-        setDiet(selectedDiet.diet_string);
+        setDiet(selectedDiet.diet_string || "");
         setPastDiet(""); 
         setEditMode(true); 
       }
@@ -140,7 +132,7 @@ const CreateDietPage = () => {
     try {
       await axios.post(
         `https://nutriediet-go.onrender.com/admin/${client_id}/delete_diet`, 
-        dietId, 
+        { diet_id: dietId }, // Wrap in object
         {
           headers: { 
             Authorization: `Bearer ${token}`, 
@@ -150,9 +142,9 @@ const CreateDietPage = () => {
       );
       alert("Diet deleted successfully!");
       fetchDietHistory();
-    } catch (error) {
-      console.error("Error deleting diet:", error);
-      setError("Failed to delete diet.");
+    } catch (err) {
+      console.error("Error deleting diet:", err);
+      setError(formatError(err, "Failed to delete diet."));
     }
   };  
   
@@ -176,75 +168,91 @@ const CreateDietPage = () => {
     }
   };
 
+  const validateForm = () => {
+    if (!diet || diet.trim() === "") {
+      setError("Diet content cannot be empty");
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async () => {
+    if (submitting) return;
+    if (!validateForm()) return;
+    
+    setSubmitting(true);
+    setError(null);
+    
     const token = localStorage.getItem("token");
-    const validDietType = isNaN(dietType) ? 0 : Number(dietType);
-  
-    const dietData = {
-      diet_id: selectedHistory ? selectedHistory.id : null,
-      diet_type: validDietType,
+    
+    const requestData = {
+      diet_type: 1,
       diet: diet,
+      diet_template_id: selectedTemplate ? parseInt(selectedTemplate) : null,
+      ...(editMode && selectedHistory && { diet_id: selectedHistory.id })
     };
-  
-    console.log("Diet data to be saved/updated:", dietData);
-  
+
+    console.log("Submitting data:", requestData);
+    
     try {
-      if (editMode) {
-        await axios.post(`https://nutriediet-go.onrender.com/admin/${client_id}/edit_diet`, dietData, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        alert("Diet updated successfully!");
+      const endpoint = editMode 
+        ? `https://nutriediet-go.onrender.com/admin/${client_id}/edit_diet`
+        : `https://nutriediet-go.onrender.com/admin/${client_id}/diet`;
   
-        if (validDietType === 0) {
-          setDietHistoryRegular((prev) =>
-            prev.map((item) =>
-              item.id === dietData.diet_id ? { ...item, diet_string: dietData.diet } : item
-            )
-          );
-        } else if (validDietType === 1) {
-          setDietHistoryDetox((prev) =>
-            prev.map((item) =>
-              item.id === dietData.diet_id ? { ...item, diet_string: dietData.diet } : item
-            )
-          );
+      const response = await axios.post(
+        endpoint,
+        requestData,
+        {
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          },
         }
-      } else {
-        await axios.post(`https://nutriediet-go.onrender.com/admin/${client_id}/diet`, dietData, {
-          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-        });
-        alert("Diet saved successfully!");
-        setWeekNumber(weekNumber + 1);
-        fetchDietHistory(); 
-      }
+      );
   
+      console.log("Response:", response.data); 
+  
+      alert(editMode ? "Diet updated successfully!" : "Diet saved successfully!");
+      
       setEditMode(false);
       setDiet("");
       setSelectedTemplate("");
-    } catch (error) {
-      console.error("Error saving diet:", error);
-      setError("Failed to save diet.");
+      setSelectedHistory(null);
+      
+      fetchDietHistory();
+    } catch (err) {
+      console.error("Error saving diet:", err);
+      if (err.response) {
+        console.error("Response data:", err.response.data);
+        setError(formatError(err.response.data, "Failed to save diet."));
+      } else {
+        setError(formatError(err, "Failed to save diet."));
+      }
+    } finally {
+      setSubmitting(false);
     }
-  };  
+  };
 
   return (
     <div className="create-diet-container">
-      {error && <Alert variant="danger">{error}</Alert>}
-      <DietHistoryTable clientId={client_id} dietHistoryRegular={dietHistoryRegular} dietHistoryDetox={dietHistoryDetox} handleDietAction={handleHistorySelect} handleDelete={handleDelete}/>      
+      {error && (
+        <Alert variant="danger" onClose={() => setError(null)} dismissible>
+          {typeof error === 'object' ? JSON.stringify(error) : error}
+        </Alert>
+      )}
+      
+      <DietHistoryTable 
+        clientId={client_id} 
+        dietHistory={dietHistory} 
+        handleDietAction={handleHistorySelect} 
+        handleDelete={handleDelete}
+      />      
+      
       <div className="diet-section">
         {/* Left Side - Create/Edit Diet */}
         <div className="diet-left">
           <h2>{editMode ? "Update" : "Send"}</h2>
           <div className="dropdown-group">
-            <Form.Control
-              as="select"
-              value={dietType}
-              onChange={(e) => setDietType(Number(e.target.value))}
-              className="styled-dropdown"
-            >
-              <option value="0">Regular</option>
-              <option value="1">Detox</option>
-            </Form.Control>
-
             <Form.Control
               as="select"
               value={selectedTemplate}
@@ -262,7 +270,7 @@ const CreateDietPage = () => {
 
           <div className="diet-input-container">
             <ReactQuill
-              value={diet}
+              value={diet || ''}
               onChange={setDiet}
               modules={quillModules}
               formats={quillFormats}
@@ -270,8 +278,12 @@ const CreateDietPage = () => {
               theme="snow"
             />
           </div>
-          <Button className="save-btn" onClick={handleSubmit}>
-            {editMode ? "Update" : "Send"}
+          <Button 
+            className="save-btn" 
+            onClick={handleSubmit}
+            disabled={submitting || !diet.trim()}
+          >
+            {submitting ? "Processing..." : (editMode ? "Update" : "Send")}
           </Button>
         </div>
 
@@ -297,7 +309,7 @@ const CreateDietPage = () => {
 
           <div className="diet-input-container view-only">
             <ReactQuill
-              value={pastDiet}
+              value={pastDiet || ''}
               readOnly={true}
               theme="snow"
               modules={{ toolbar: false }}
