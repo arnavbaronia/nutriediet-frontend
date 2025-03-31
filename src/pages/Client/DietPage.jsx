@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FaClipboardList, FaQuoteLeft, FaQuoteRight } from 'react-icons/fa';
-import { Form, Button, Alert, Spinner } from 'react-bootstrap';
+import { Alert, Spinner } from 'react-bootstrap';
 import WeightUpdatePage from './WeightUpdatePage';
 import '../../styles/DietPage.css';
 
@@ -66,6 +66,10 @@ const DietPage = () => {
     }
   };
 
+  const handleDietTypeChange = (type) => {
+    setDietType(type);
+  };
+
   return (
     <div className="diet-page">
       <div className="greeting-container">
@@ -83,13 +87,22 @@ const DietPage = () => {
       {error && <Alert variant="danger">{error}</Alert>}
       {!isActive && <Alert variant="warning">Your diet plan is not active.</Alert>}
 
-      <Form.Group className="diet-type-selector">
-        <Form.Label>Select Diet Type</Form.Label>
-        <Form.Control as="select" value={dietType} onChange={(e) => setDietType(e.target.value)}>
-          <option value="0">Regular Diet</option>
-          <option value="1">Detox Diet</option>
-        </Form.Control>
-      </Form.Group>
+      <div className="diet-toggle-container">
+        <div className="segmented-control">
+          <button
+            className={dietType === '0' ? 'segment-active' : 'segment'}
+            onClick={() => handleDietTypeChange('0')}
+          >
+            Regular Diet
+          </button>
+          <button
+            className={dietType === '1' ? 'segment-active' : 'segment'}
+            onClick={() => handleDietTypeChange('1')}
+          >
+            Detox Diet
+          </button>
+        </div>
+      </div>
 
       {loading ? (
         <div className="loading-spinner">

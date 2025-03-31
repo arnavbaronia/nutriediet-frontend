@@ -365,7 +365,6 @@ input:checked + .slider:before {
   color: #333;
 }
 
-/* For mobile responsiveness */
 @media (max-width: 520px) {
   .segmented-control {
     max-width: 95%;
