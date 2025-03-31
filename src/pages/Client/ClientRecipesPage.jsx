@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/ClientRecipesPage.css";
 import NavigationBar from "../../components/NavigationBar";
+import { FaMortarPestle } from "react-icons/fa";
 import axios from "axios";
 
 const ClientRecipeListPage = () => {
@@ -67,7 +68,9 @@ const ClientRecipeListPage = () => {
     <div className="recipe-page">
       <NavigationBar />
       <div className="recipe-content">
-        <h1 className="recipe-title">Recipes</h1>
+        <h1 className="recipe-title">
+          <FaMortarPestle /> Recipes
+        </h1>
         {error && <p style={{ color: "red" }}>{error}</p>}
         <input
           type="text"

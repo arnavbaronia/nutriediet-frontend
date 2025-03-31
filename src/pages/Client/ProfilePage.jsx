@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getToken } from "../../auth/token";
 import { useNavigate } from "react-router-dom";
+import { FaUser } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; 
 import "../../styles/ProfilePage.css";
@@ -132,7 +133,9 @@ const ProfilePage = () => {
 
   return (
     <div className="profile-container">
-      <h2 className="profile-heading">My Profile</h2>
+      <h2 className="profile-heading">
+        <FaUser /> My Profile
+      </h2>
       <form onSubmit={handleSubmit} className="profile-form">
         {/* Inline group for Name, Phone Number, and Email */}
         <div className="form-group-inline">

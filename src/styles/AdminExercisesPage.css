@@ -1,16 +1,21 @@
 .video-container {
   background-color: #A5D6A7;
   border-radius: 20px;
-  padding: 20px;
+  padding: 0;
   text-align: center;
+  height: 334px;
   max-width: 300px;
   margin: 20px auto;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 .video-thumbnail {
-  width: 90%;
-  border-radius: 12px;
+  width: 100%;
+  border-radius: 12px 12px 0 0; 
+  display: block; 
+  margin: 0; 
+  padding: 0; 
 }
 
 .selected-exercise-title {
@@ -160,12 +165,12 @@ h2 {
 .watch-video-btn {
   display: inline-block;
   padding: 8px 16px;
-  background-color: #004D40;
+  background-color: #388E3C;
   color: white;
   text-decoration: none;
   border-radius: 5px;
   font-weight: 500;
-  margin-top: 10px;
+  margin-top: 5px;
   transition: background-color 0.3s;
 }
 

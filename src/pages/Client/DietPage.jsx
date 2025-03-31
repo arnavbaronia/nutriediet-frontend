@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { FaClipboardList } from 'react-icons/fa';
 import { Form, Button, Alert, Spinner } from 'react-bootstrap';
 import '../../styles/DietPage.css';
 
@@ -84,7 +85,9 @@ const DietPage = () => {
   
   return (
     <div className="diet-page">
-      <h1 className="diet-title">Your Diet Plan</h1>
+      <h1 className="diet-title">
+        <FaClipboardList /> Your Diet Plan
+      </h1>
 
       {error && <Alert variant="danger">{error}</Alert>}
       {!isActive && <Alert variant="warning">Your diet plan is not active.</Alert>}
