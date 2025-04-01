@@ -25,7 +25,8 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistor
             week: diet.week_number,
             date: formatDate(diet.date),
             dietString: diet.diet_string,
-            templateId: diet.diet_template_id || '-',
+            weight: diet.weight || '-',
+            templateName: diet.name || '-',
             feedback: diet.feedback || '-'
         })).sort((a, b) => b.week - a.week);
     };
@@ -148,7 +149,8 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistor
                             <tr>
                                 <th scope="col">Week</th>
                                 <th scope="col">Date</th>
-                                <th scope="col">Template ID</th>
+                                <th scope="col">Weight</th>
+                                <th scope="col">Diet Template</th>
                                 <th scope="col">Actions</th>
                                 <th scope="col">Feedback</th>
                             </tr>
@@ -159,7 +161,8 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistor
                                     <tr key={diet.id}>
                                         <td>Week {diet.week}</td>
                                         <td>{diet.date}</td>
-                                        <td>{diet.templateId}</td>
+                                        <td>{diet.weight}</td>
+                                        <td>{diet.templateName}</td>
                                         <td>
                                             <div className="action-buttons">
                                                 <button
@@ -205,7 +208,7 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistor
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={5} className="no-data">
+                                    <td colSpan={6} className="no-data">
                                         No diet history available.
                                     </td>
                                 </tr>

@@ -100,7 +100,7 @@
 
 .history-table-container {
   width: 100%;
-  overflow-x: auto;
+  /* overflow-x: auto; */
 }
 
 .weight-history-table {
@@ -144,6 +144,7 @@
 
 .diet-type-heading {
   margin-bottom: 15px;
+  margin-top: -20px;
   font-size: 1.2rem;
   font-weight: 600;
 }

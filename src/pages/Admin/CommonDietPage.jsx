@@ -273,98 +273,101 @@ const CommonDietPage = () => {
           ))}
         </Form.Control>
       </div>
-
-      {/* Diet History Section */}
+      
+      {/* History Section */}
       {selectedGroup && (
         <div className="history-section">
           {/* History Type Toggle */}
           <div className="diet-toggle-container">
             <h2 className="diet-type-heading">Select Diet Type</h2>
             <div className="segmented-control">
-              {['detox', 'detoxWater'].map(type => (
-                <button
-                  key={type}
-                  className={historyType === type ? 'segment-active' : 'segment'}
-                  onClick={() => setHistoryType(type)}
-                >
-                  {type === 'detox' ? 'Detox Diet' : 'Detox Water'}
-                </button>
-              ))}
+              <button
+                className={historyType === 'detox' ? 'segment-active' : 'segment'}
+                onClick={() => setHistoryType('detox')}
+              >
+                Detox Diet
+              </button>
+              <button
+                className={historyType === 'detoxWater' ? 'segment-active' : 'segment'}
+                onClick={() => setHistoryType('detoxWater')}
+              >
+                Detox Water
+              </button>
             </div>
           </div>
+          
+      {/* History Table */}
+      <div className="history-table-container">
+        <h3 className="diet-history-heading">
+          {historyType === 'detox' ? 'Detox Diet' : 'Detox Water'} History for Group {selectedGroup}
+        </h3>
 
-          {/* History Table */}
-          <div className="history-table-container">
-            <h3 className="diet-history-heading">
-              {historyType === 'detox' ? 'Detox' : 'Detox Water'} History
-            </h3>
-
-            <table className="weight-history-table">
-              <thead>
-                <tr>
-                  <th scope="col">Week</th>
-                  <th scope="col">Date</th>
-                  <th scope="col">Template ID</th>
-                  <th scope="col">Actions</th>
+        <table className="weight-history-table">
+          <thead>
+            <tr>
+              <th scope="col">Week</th>
+              <th scope="col">Date</th>
+              <th scope="col">Diet Template</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredHistory.length > 0 ? (
+              filteredHistory.map((diet) => (
+                <tr key={diet.id}>
+                  <td>Week {diet.week}</td>
+                  <td>{diet.date}</td>
+                  <td>{diet.name || '-'}</td>
+                  <td>
+                    <div className="action-buttons">
+                      <button
+                        type="button"
+                        className="action-button action-use"
+                        onClick={() => handleHistoryAction('use', diet.id, historyType)}
+                      >
+                        View
+                      </button>
+                      <button
+                        type="button"
+                        className="action-button action-view"
+                        onClick={() => handleHistoryAction('view', diet.id, historyType)}
+                      >
+                        Refer
+                      </button>
+                      {(historyType === 'detox' && diet.id === latestDetoxId) || 
+                        (historyType === 'detoxWater' && diet.id === latestDetoxWaterId) ? (
+                        <>
+                          <button
+                            type="button"
+                            className="action-button action-edit"
+                            onClick={() => setDiet(diet.dietString)}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            className="action-button action-delete"
+                            onClick={() => confirmDelete(diet.id)}
+                          >
+                            Delete
+                          </button>
+                        </>
+                      ) : null}
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {filteredHistory.length > 0 ? (
-                  filteredHistory.map((diet) => (
-                    <tr key={diet.id}>
-                      <td>Week {diet.week}</td>
-                      <td>{diet.date}</td>
-                      <td>{diet.templateId}</td>
-                      <td>
-                        <div className="action-buttons">
-                          <button
-                            type="button"
-                            className="action-button action-use"
-                            onClick={() => handleHistoryAction('use', diet.id, historyType)}
-                          >
-                            View
-                          </button>
-                          <button
-                            type="button"
-                            className="action-button action-view"
-                            onClick={() => handleHistoryAction('view', diet.id, historyType)}
-                          >
-                            Refer
-                          </button>
-                          {(historyType === 'detox' && diet.id === latestDetoxId) || 
-                           (historyType === 'detoxWater' && diet.id === latestDetoxWaterId) ? (
-                            <>
-                              <button
-                                type="button"
-                                className="action-button action-edit"
-                                onClick={() => setDiet(diet.dietString)}
-                              >
-                                Edit
-                              </button>
-                              <button
-                                type="button"
-                                className="action-button action-delete"
-                                onClick={() => confirmDelete(diet.id)}
-                              >
-                                Delete
-                              </button>
-                            </>
-                          ) : null}
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={4} className="no-data">
-                      No {historyType === 'detox' ? 'detox' : 'detox water'} history found
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={4} className="no-data">
+                  No {historyType === 'detox' ? 'detox diet' : 'detox water'} history found for Group {selectedGroup}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
         </div>
+      </div>
       )}
 
       {/* Send Diet Section */}
