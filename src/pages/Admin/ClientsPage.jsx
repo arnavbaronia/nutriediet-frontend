@@ -12,6 +12,7 @@ const ClientsPage = () => {
   const [selectedGroup, setSelectedGroup] = useState("");
   const [sortConfig, setSortConfig] = useState(null);
   const [error, setError] = useState(null);
+  const [showAllClients, setShowAllClients] = useState(false);
   const navigate = useNavigate();
 
   const groupDayMapping = {
@@ -32,8 +33,13 @@ const ClientsPage = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        setClients(response.data.clients);
-        setFilteredClients(response.data.clients);
+        const allClients = [
+          ...(response.data.active_clients || []),
+          ...(response.data.inactive_clients || [])
+        ];
+        
+        setClients(allClients);
+        setFilteredClients(response.data.active_clients || []);
       } catch (error) {
         console.error("Error fetching clients:", error);
         setError(error.response?.data?.err || "An error occurred. Please try again.");
@@ -45,6 +51,10 @@ const ClientsPage = () => {
 
   useEffect(() => {
     let filtered = clients.filter((client) => {
+      if (!showAllClients && (client.is_active === false || client.is_active === undefined)) {
+        return false;
+      }
+
       const matchesSearch =
         (client.name?.toLowerCase() || "").includes(search.toLowerCase()) ||
         (client.email?.toLowerCase() || "").includes(search.toLowerCase());
@@ -63,9 +73,6 @@ const ClientsPage = () => {
       if (selectedFilters.includes("payment_due")) {
         matchesFilters = matchesFilters && new Date(client.next_payment_date) < new Date();
       }
-      if (selectedFilters.includes("inactive_clients")) {
-        matchesFilters = matchesFilters && (client.is_active === false || client.is_active === undefined);
-      }
 
       const matchesDietitian = selectedDietitian ? client.dietitian_id === Number(selectedDietitian) : true;
       const matchesGroup = selectedGroup ? client.group_id === Number(selectedGroup) : true;
@@ -74,7 +81,11 @@ const ClientsPage = () => {
     });
 
     setFilteredClients(filtered);
-  }, [search, selectedFilters, selectedDietitian, selectedGroup, clients]);
+  }, [search, selectedFilters, selectedDietitian, selectedGroup, clients, showAllClients]);
+
+  const toggleShowAllClients = () => {
+    setShowAllClients(!showAllClients);
+  };
 
   const handleSort = (key) => {
     let direction = "ascending";
@@ -105,17 +116,31 @@ const ClientsPage = () => {
   };
 
   const handleDietitianChange = (e) => {
-    setSelectedDietitian(e.target.value);
+    const value = e.target.value;
+    if (value) {
+      setSelectedDietitian(value);
+    }
     e.target.value = "";
   };
 
   const handleGroupChange = (e) => {
-    setSelectedGroup(e.target.value);
+    const value = e.target.value;
+    if (value) {
+      setSelectedGroup(value);
+    }
     e.target.value = "";
   };
 
   const removeFilter = (filter) => {
     setSelectedFilters(selectedFilters.filter((f) => f !== filter));
+  };
+
+  const removeDietitianFilter = () => {
+    setSelectedDietitian("");
+  };
+
+  const removeGroupFilter = () => {
+    setSelectedGroup("");
   };
 
   const handleMoreDetailsClick = (clientId) => {
@@ -125,6 +150,14 @@ const ClientsPage = () => {
   const isPaymentOverdue = (paymentDate) => {
     if (paymentDate === "0001-01-01T00:00:00Z") return false;
     return new Date(paymentDate) < new Date();
+  };
+
+  const getDietitianName = (id) => {
+    return `Dietitian ${id}`;
+  };
+
+  const getGroupName = (id) => {
+    return `Group ${id}`;
   };
 
   return (
@@ -145,58 +178,82 @@ const ClientsPage = () => {
             {selectedFilters.map((filter) => (
               <div key={filter} className="filter-tag">
                 {filter
-                  .replace(/_/g, ' ') // Replace all underscores with spaces
+                  .replace(/_/g, ' ')
                   .replace(/\b\w/g, (char) => char.toUpperCase())}
                 <span className="remove-filter" onClick={() => removeFilter(filter)}>
                   ✕
                 </span>
               </div>
             ))}
+            {selectedDietitian && (
+              <div className="filter-tag">
+                {getDietitianName(selectedDietitian)}
+                <span className="remove-filter" onClick={removeDietitianFilter}>
+                  ✕
+                </span>
+              </div>
+            )}
+            {selectedGroup && (
+              <div className="filter-tag">
+                {getGroupName(selectedGroup)}
+                <span className="remove-filter" onClick={removeGroupFilter}>
+                  ✕
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
-        <select 
-          onChange={handleFilterChange} 
-          className="filter-dropdown"
-          value=""
-        >
-          <option value="">Add Filter</option>
-          <option value="diets_due_today">Diets Due Today</option>
-          <option value="payment_due">Payment Due</option>
-          <option value="inactive_clients">Inactive Clients</option>
-        </select>
+        <div className="filter-controls">
+          <select 
+            onChange={handleFilterChange} 
+            className="filter-dropdown"
+            value=""
+          >
+            <option value="">Add Filter</option>
+            <option value="diets_due_today">Diets Due Today</option>
+            <option value="payment_due">Payment Due</option>
+          </select>
 
-        <select 
-          onChange={handleDietitianChange} 
-          className="filter-dropdown"
-          value=""
-        >
-          <option value="">Dietitian</option>
-          <option value="1">Dietitian ID: 1</option>
-          <option value="2">Dietitian ID: 2</option>
-          <option value="3">Dietitian ID: 3</option>
-          <option value="4">Dietitian ID: 4</option>
-          <option value="5">Dietitian ID: 5</option>
-          <option value="6">Dietitian ID: 6</option>
-          <option value="7">Dietitian ID: 7</option>
-          <option value="8">Dietitian ID: 8</option>
-          <option value="9">Dietitian ID: 9</option>
-          <option value="10">Dietitian ID: 10</option>
-        </select>
+          <select 
+            onChange={handleDietitianChange} 
+            className="filter-dropdown"
+            value=""
+          >
+            <option value="">Dietitian</option>
+            <option value="1">Dietitian ID: 1</option>
+            <option value="2">Dietitian ID: 2</option>
+            <option value="3">Dietitian ID: 3</option>
+            <option value="4">Dietitian ID: 4</option>
+            <option value="5">Dietitian ID: 5</option>
+            <option value="6">Dietitian ID: 6</option>
+            <option value="7">Dietitian ID: 7</option>
+            <option value="8">Dietitian ID: 8</option>
+            <option value="9">Dietitian ID: 9</option>
+            <option value="10">Dietitian ID: 10</option>
+          </select>
 
-        <select 
-          onChange={handleGroupChange} 
-          className="filter-dropdown"
-          value=""
-        >
-          <option value="">Group</option>
-          <option value="1">Group: 1</option>
-          <option value="2">Group: 2</option>
-          <option value="3">Group: 3</option>
-          <option value="4">Group: 4</option>
-          <option value="5">Group: 5</option>
-          <option value="6">Group: 6</option>
-        </select>
+          <select 
+            onChange={handleGroupChange} 
+            className="filter-dropdown"
+            value=""
+          >
+            <option value="">Group</option>
+            <option value="1">Group: 1</option>
+            <option value="2">Group: 2</option>
+            <option value="3">Group: 3</option>
+            <option value="4">Group: 4</option>
+            <option value="5">Group: 5</option>
+            <option value="6">Group: 6</option>
+          </select>
+
+          <button 
+            onClick={toggleShowAllClients}
+            className={`show-all-button ${showAllClients ? 'active' : ''}`}
+          >
+            {showAllClients ? 'Show Active Only' : 'Show All Clients'}
+          </button>
+        </div>
       </div>
 
       <table className="client-table">

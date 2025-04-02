@@ -184,8 +184,8 @@ const CommonDietPage = () => {
         ...(selectedTemplate && { diet_template_id: parseInt(selectedTemplate) })
       };
   
-      console.log("Sending diet data:", requestData); // Debug log
-  
+      console.log("Sending diet data:", requestData); 
+
       const response = await axios.post(
         editingDietId 
           ? `https://nutriediet-go.onrender.com/admin/common_diet/${selectedGroup}/update`
