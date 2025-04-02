@@ -14,6 +14,15 @@ const ClientsPage = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  const groupDayMapping = {
+    1: 1, 
+    2: 2, 
+    3: 3, 
+    4: 4, 
+    5: 5, 
+    6: 6  
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -42,9 +51,14 @@ const ClientsPage = () => {
 
       let matchesFilters = true;
       if (selectedFilters.includes("diets_due_today")) {
-        matchesFilters =
-          matchesFilters &&
-          new Date(client.last_diet_date).toDateString() === new Date().toDateString();
+        const today = new Date();
+        const todayDay = today.getDay();
+        const lastDietDate = client.last_diet_date ? new Date(client.last_diet_date) : null;
+        
+        matchesFilters = matchesFilters && 
+          client.group_id && 
+          groupDayMapping[client.group_id] === todayDay &&
+          (!lastDietDate || lastDietDate.toDateString() !== today.toDateString());
       }
       if (selectedFilters.includes("payment_due")) {
         matchesFilters = matchesFilters && new Date(client.next_payment_date) < new Date();
@@ -131,7 +145,7 @@ const ClientsPage = () => {
             {selectedFilters.map((filter) => (
               <div key={filter} className="filter-tag">
                 {filter
-                  .replace("_", " ")
+                  .replace(/_/g, ' ') // Replace all underscores with spaces
                   .replace(/\b\w/g, (char) => char.toUpperCase())}
                 <span className="remove-filter" onClick={() => removeFilter(filter)}>
                   ✕
