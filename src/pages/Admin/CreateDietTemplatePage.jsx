@@ -60,7 +60,7 @@ const CreateDietTemplatePage = () => {
           ></textarea>
         </div>
         <button type="submit">Save Template</button>
-        <button type="button" className="cancel-btn" onClick={() => navigate("/admin/diet_templates")}>
+        <button type="button" className="cancel-btn1" onClick={() => navigate("/admin/diet_templates")}>
           Cancel
         </button>
       </form>

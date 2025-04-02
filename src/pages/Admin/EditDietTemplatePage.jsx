@@ -58,7 +58,7 @@ const EditDietTemplatePage = () => {
 
   return (
     <div className="edit-diet-template-page">
-      <h1 className="page-title">Edit Diet Template</h1>
+      <h1 className="page-title1">Edit Diet Template</h1>
 
       {loading ? (
         <p className="loading-text">Loading...</p>

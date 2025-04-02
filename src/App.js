@@ -26,6 +26,7 @@ import ExercisesPage from './pages/Admin/ExercisesPage';
 import CreateExercisePage from './pages/Admin/CreateExercisePage';
 import EditExercisePage from './pages/Admin/EditExercisePage';
 import CreateDietPage from './pages/Admin/CreateDietPage';
+import MotivationPage from './pages/Admin/MotivationPage';
 import NavigationBar from './components/NavigationBar';
 import AdminNavBar from './components/AdminNavBar';
 import HomeNavBar from './components/HomeNavBar';
@@ -100,6 +101,7 @@ function AppContent() {
           <Route path="/admin/exercises" element={<ProtectedRoute requireduser_type="ADMIN" component={ExercisesPage} />} />
           <Route path="/admin/exercise/new" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateExercisePage} />} />
           <Route path="/admin/exercise/:id" element={<ProtectedRoute requireduser_type="ADMIN" component={EditExercisePage} />} />
+          <Route path="/admin/motivations" element={<ProtectedRoute requireduser_type="ADMIN" component={MotivationPage} />} />
           <Route path="/admin/:client_id/creatediet" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateDietPage} />} />
         </Routes>
       </div>
