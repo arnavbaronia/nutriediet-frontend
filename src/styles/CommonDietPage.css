@@ -72,16 +72,31 @@
   padding: 0;
 }
 
-.save-btn {
+.button-group {
+  display: flex;
+  gap: 15px;
   margin-top: 20px;
+  align-items: center;
+}
+
+.save-btn, .cancel-btn {
   padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 45px;
+  min-width: 120px;
+}
+
+.save-btn {
   background-color: #4CAF50;
   color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  align-self: flex-start;
 }
 
 .save-btn:hover {
@@ -91,6 +106,25 @@
 .save-btn:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
+}
+
+.cancel-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #d32f2f;
+}
+
+.diet-left {
+  position: relative;
+}
+
+.diet-left .save-btn,
+.diet-left .cancel-btn {
+  margin: 0;
+  vertical-align: top;
 }
 
 .history-section {

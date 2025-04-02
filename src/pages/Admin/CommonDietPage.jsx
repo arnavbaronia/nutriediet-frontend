@@ -479,25 +479,27 @@ const CommonDietPage = () => {
               theme="snow"
             />
           </div>
-          <Button 
-            className="save-btn" 
-            onClick={handleSubmit}
-            disabled={!selectedGroup || !diet.trim()}
-          >
-            {editingDietId ? 'Update' : 'Send'}
-          </Button>
-          {editingDietId && (
+          <div className="button-group">
             <Button 
-              className="cancel-btn" 
-              onClick={() => {
-                setEditingDietId(null);
-                setDiet("");
-                setSelectedTemplate("");
-              }}
+              className="save-btn" 
+              onClick={handleSubmit}
+              disabled={!selectedGroup || !diet.trim()}
             >
-              Cancel Edit
+              {editingDietId ? 'Update' : 'Send'}
             </Button>
-          )}
+            {editingDietId && (
+              <Button 
+                className="cancel-btn" 
+                onClick={() => {
+                  setEditingDietId(null);
+                  setDiet("");
+                  setSelectedTemplate("");
+                }}
+              >
+                Cancel
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Right Side - View Past Templates */}

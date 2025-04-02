@@ -72,18 +72,6 @@
     font-family: 'Rubik', sans-serif;
   }
   
-  .save-btn {
-    margin-top: 80px; 
-    width: 26%; 
-    height: 45px;
-    background-color: #4CAF50;
-    color: white;
-    padding: 12px 20px;
-    font-size: 18px;
-    border-radius: 12px;
-    transition: background 0.3s ease;
-  }
-  
   .diet-right .button-group {
     margin-top: 30px; 
     display: flex;
@@ -113,10 +101,8 @@
     width: 0px;
   }
 
-  .save-btn { background-color: #4CAF50; color: white; }
   .edit-butn { background-color: #FFA500; color: white; }
   
-  .save-btn:hover { background-color: #45a049; }
   .edit-btn:hover { background-color: #e69500; }
 
   .diet-input-container {
@@ -153,4 +139,61 @@
   .view-only .ql-container {
     border: 1px solid #ccc;
     border-radius: 4px;
+  }
+
+  .button-group {
+    display: flex;
+    flex-direction: row; 
+    align-items: center; 
+    gap: 15px;
+    margin-top: 20px;
+    justify-content: flex-start;
+    width: fit-content; 
+  }
+  
+  .save-btn, .cancel-btn {
+    margin-top: 40px !important;
+    width: 120px;
+    height: 45px;
+    padding: 0;
+    font-size: 16px;
+    border-radius: 12px;
+    transition: background 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    font-family: 'Rubik', sans-serif;
+    display: inline-flex; 
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap; 
+  }
+  
+  .diet-left .save-btn,
+  .diet-left .cancel-btn {
+    margin-top: 0;
+    vertical-align: top; 
+  }
+  
+  .save-btn {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .save-btn:hover {
+    background-color: #45a049;
+  }
+  
+  .cancel-btn {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .cancel-btn:hover {
+    background-color: #d32f2f;
+  }
+  
+  .save-btn:not(.button-group .save-btn),
+  .cancel-btn:not(.button-group .cancel-btn) {
+    all: unset;
   }

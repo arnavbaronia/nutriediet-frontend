@@ -224,6 +224,13 @@ const CreateDietPage = () => {
     }
   };
 
+  const handleCancelEdit = () => {
+    setEditMode(false);
+    setDiet("");
+    setSelectedTemplate("");
+    setSelectedHistory(null);
+  };
+
   return (
     <div className="create-diet-container">
       {error && (
@@ -269,13 +276,24 @@ const CreateDietPage = () => {
               theme="snow"
             />
           </div>
-          <Button 
-            className="save-btn" 
-            onClick={handleSubmit}
-            disabled={submitting || !diet.trim()}
-          >
-            {submitting ? "Processing..." : (editMode ? "Update" : "Send")}
-          </Button>
+          <div className="button-group">
+            <Button 
+              className="save-btn" 
+              onClick={handleSubmit}
+              disabled={submitting || !diet.trim()}
+            >
+              {submitting ? "Processing..." : (editMode ? "Update" : "Send")}
+            </Button>
+            {editMode && (
+              <Button 
+                className="cancel-btn"
+                onClick={handleCancelEdit}
+                disabled={submitting}
+              >
+                Cancel
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Right Side - View Past Diets & Templates */}
