@@ -54,7 +54,7 @@ const ClientsPage = () => {
       }
 
       const matchesDietitian = selectedDietitian ? client.dietitian_id === Number(selectedDietitian) : true;
-      const matchesGroup = selectedGroup ? client.group === Number(selectedGroup) : true;
+      const matchesGroup = selectedGroup ? client.group_id === Number(selectedGroup) : true;
 
       return matchesSearch && matchesFilters && matchesDietitian && matchesGroup;
     });
@@ -191,7 +191,7 @@ const ClientsPage = () => {
             <th onClick={() => handleSort("id")}>ID</th>
             <th onClick={() => handleSort("name")}>Name</th>
             <th onClick={() => handleSort("dietitian_id")}>Dietitian ID</th>
-            <th onClick={() => handleSort("group")}>Group</th>
+            <th onClick={() => handleSort("group_id")}>Group</th>
             <th onClick={() => handleSort("next_payment_date")}>Next Payment Date</th>
             <th onClick={() => handleSort("last_diet_date")}>Last Diet Date</th>
             <th>Actions</th>
@@ -208,7 +208,7 @@ const ClientsPage = () => {
                 <td>{client.id}</td>
                 <td>{client.name}</td>
                 <td>{client.dietitian_id || "N/A"}</td>
-                <td>{client.group || "N/A"}</td>
+                <td>{client.group_id || "N/A"}</td>
                 <td>
                   {client.next_payment_date === "0001-01-01T00:00:00Z"
                     ? "N/A"

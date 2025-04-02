@@ -33,7 +33,7 @@ const ClientDetailsPage = () => {
     created_at: '',
     date_of_joining: '',
     dietitian_id: '',
-    group: '',
+    group_id: '',
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -98,10 +98,10 @@ const ClientDetailsPage = () => {
         );
       })
       .then((response) => {
-        const { diet_history_regular } = response.data;
+        const dietHistory = response.data.diet_history_regular || [];
         
-        const weightDataFromDiet = diet_history_regular
-          .filter(entry => entry.weight)
+        const weightDataFromDiet = dietHistory
+          .filter(entry => entry && entry.weight) 
           .map(entry => ({
             date: new Date(entry.date),
             weight: parseFloat(entry.weight)
@@ -153,9 +153,9 @@ const ClientDetailsPage = () => {
           { headers: { Authorization: `Bearer ${token}` } }
         );
         
-        const { diet_history_regular } = dietHistoryResponse.data;
+        const dietHistory = dietHistoryResponse.data.diet_history_regular || [];
         
-        const weightDataFromDiet = diet_history_regular
+        const weightDataFromDiet = dietHistory
           .filter(entry => entry.weight) 
           .map(entry => ({
             date: new Date(entry.date),
@@ -323,7 +323,7 @@ const ClientDetailsPage = () => {
       date_of_joining: formatDateForPayload(client.date_of_joining),
       created_at: formatDateForPayload(client.created_at),
       dietitian_id: client.dietitian_id ? parseInt(client.dietitian_id, 10) : null,
-      group: client.group ? parseInt(client.group, 10) : null,
+      group_id: client.group_id ? parseInt(client.group_id, 10) : null,
     };
 
     axios
@@ -689,11 +689,11 @@ const ClientDetailsPage = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="group">Group</label>
+              <label htmlFor="group_id">Group</label>
               <select
-                id="group"
-                name="group"
-                value={client.group}
+                id="group_id"
+                name="group_id"
+                value={client.group_id}
                 className="client-input select-input"
                 onChange={handleChange}
               >
