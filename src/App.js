@@ -17,6 +17,7 @@ import ClientsPage from './pages/Admin/ClientsPage';
 import CommonDietPage from './pages/Admin/CommonDietPage';
 import ClientDetailsPage from './pages/Admin/ClientDetailsPage';
 import DietTemplatesPage from './pages/Admin/DietTemplatesPage';
+import SaveAsDietTemplatePage from './pages/Admin/SaveAsDietTemplatePage';
 import CreateDietTemplatePage from './pages/Admin/CreateDietTemplatePage';
 import EditDietTemplatePage from './pages/Admin/EditDietTemplatePage';
 import CreateRecipePage from './pages/Admin/CreateRecipePage';
@@ -93,6 +94,7 @@ function AppContent() {
           <Route path="/admin/client/:client_id" element={<ProtectedRoute requireduser_type="ADMIN" component={ClientDetailsPage} />} />
           <Route path="/admin/common_diet" element={<ProtectedRoute requireduser_type="ADMIN" component={CommonDietPage} />} />
           <Route path="/admin/diet_templates" element={<ProtectedRoute requireduser_type="ADMIN" component={DietTemplatesPage} />} />
+          <Route path="/admin/diet_templates/save_as" element={<ProtectedRoute requireduser_type="ADMIN" component={SaveAsDietTemplatePage} />} />
           <Route path="/admin/diet_templates/new" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateDietTemplatePage} />} />
           <Route path="/admin/diet_templates/:diet_template_id" element={<ProtectedRoute requireduser_type="ADMIN" component={EditDietTemplatePage} />} />
           <Route path="/admin/recipes" element={<AdminRecipeListPage />} />

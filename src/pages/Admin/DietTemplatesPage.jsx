@@ -40,7 +40,7 @@ const DietTemplatesPage = () => {
     try {
       const response = await api.get(`/admin/diet_templates/${dietTemplateId}`);
       if (response.data && response.data.template) {
-        setDietDetails(response.data.template.replace(/\n/g, "<br />"));
+        setDietDetails(response.data.template);
       }
     } catch (err) {
       setDietDetails("Error loading diet details.");
@@ -70,7 +70,13 @@ const DietTemplatesPage = () => {
   };
 
   const handleSaveAs = () => {
-    alert("Save As functionality will be implemented soon!");
+    if (!selectedDietTemplate) return;
+    navigate("/admin/diet_templates/save_as", {
+      state: {
+        originalName: selectedDietTemplate.Name,
+        dietDetails: dietDetails,
+      },
+    });
   };
 
   return (
@@ -122,7 +128,11 @@ const DietTemplatesPage = () => {
             {selectedDietTemplate ? (
               <div className="single-container">
                 <h2>{selectedDietTemplate.Name}</h2>
-                <div className="diet-details-box" dangerouslySetInnerHTML={{ __html: dietDetails }} />
+                <div className="diet-details-box">
+                  {dietDetails.split('\n').map((line, i) => (
+                    <p key={i}>{line}</p>
+                  ))}
+                </div>
               </div>
             ) : (
               <p className="info-text">Select a template from the menu to view details.</p>
