@@ -32,6 +32,8 @@ const ClientDetailsPage = () => {
     last_payment_date: '',
     created_at: '',
     date_of_joining: '',
+    dietitian_id: '',
+    group: '',
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -320,6 +322,8 @@ const ClientDetailsPage = () => {
       last_payment_date: formatDateForPayload(client.last_payment_date),
       date_of_joining: formatDateForPayload(client.date_of_joining),
       created_at: formatDateForPayload(client.created_at),
+      dietitian_id: client.dietitian_id ? parseInt(client.dietitian_id, 10) : null,
+      group: client.group ? parseInt(client.group, 10) : null,
     };
 
     axios
@@ -667,6 +671,37 @@ const ClientDetailsPage = () => {
                 className="client-input"
                 onChange={handleChange}
               />
+            </div>
+            <div className="form-group">
+              <label htmlFor="dietitian_id">Dietitian</label>
+              <select
+                id="dietitian_id"
+                name="dietitian_id"
+                value={client.dietitian_id}
+                className="client-input select-input"
+                onChange={handleChange}
+              >
+                <option value="">Select Dietitian</option>
+                {[...Array(10)].map((_, i) => (
+                  <option key={i+1} value={i+1}>Dietitian {i+1}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="group">Group</label>
+              <select
+                id="group"
+                name="group"
+                value={client.group}
+                className="client-input select-input"
+                onChange={handleChange}
+              >
+                <option value="">Select Group</option>
+                {[...Array(6)].map((_, i) => (
+                  <option key={i+1} value={i+1}>Group {i+1}</option>
+                ))}
+              </select>
             </div>
           </div>
 
