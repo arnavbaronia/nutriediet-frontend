@@ -24,6 +24,7 @@ const CommonDietPage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [dietToDelete, setDietToDelete] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [editingDietId, setEditingDietId] = useState(null); 
   const groups = [1, 2, 3, 4, 5, 6];
 
   const quillModules = {
@@ -64,36 +65,46 @@ const CommonDietPage = () => {
   const fetchDietHistory = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`https://nutriediet-go.onrender.com/admin/common_diet/${selectedGroup}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      
+      const response = await axios.get(
+        `https://nutriediet-go.onrender.com/admin/common_diet/${selectedGroup}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+  
       const detoxHistory = (response.data.diet_history_detox_diet || [])
         .sort((a, b) => b.week_number - a.week_number)
         .map(diet => ({
           ...diet,
+          id: diet.id,
           week: diet.week_number,
           date: formatDate(diet.date),
           dietString: diet.diet_string,
-          templateId: diet.diet_template_id || '-'
+          templateId: diet.diet_template_id, 
+          dietType: 2,
+          name: diet.name || (diet.diet_template_id ? 'Untitled' : 'Custom Diet') 
         }));
-      
+  
       const detoxWaterHistory = (response.data.diet_history_detox_water || [])
         .sort((a, b) => b.week_number - a.week_number)
         .map(diet => ({
           ...diet,
+          id: diet.id,
           week: diet.week_number,
           date: formatDate(diet.date),
           dietString: diet.diet_string,
-          templateId: diet.diet_template_id || '-'
+          templateId: diet.diet_template_id,
+          dietType: 3,
+          name: diet.name || (diet.diet_template_id ? 'Untitled' : 'Custom Diet') 
         }));
-      
+  
       setDietHistory({
         detox: detoxHistory,
         detoxWater: detoxWaterHistory
       });
     } catch (err) {
-      setError("Failed to load diet history.");
+      console.error("Error loading diet history:", err);
+      setError("Failed to load diet history. Please try again.");
     }
   };
 
@@ -144,40 +155,73 @@ const CommonDietPage = () => {
   };
 
   const handleSubmit = async () => {
-    if (!diet || !selectedGroup) {
-      setError("Please fill out all fields and select a group.");
+    if (!diet || !dietType) {
+      setError("Please provide both diet content and select a diet type.");
       return;
     }
-
+  
+    if (!selectedGroup) {
+      setError("Please select a group.");
+      return;
+    }
+  
     const token = localStorage.getItem("token");
-    const requestData = {
-      groups: [parseInt(selectedGroup)],
-      diet_type: dietType,
-      diet: diet,
-      diet_template_id: selectedTemplate ? parseInt(selectedTemplate) : null
-    };
-
+    if (!token) {
+      setError("No authentication token found. Please log in again.");
+      return;
+    }
+  
     try {
-      await axios.post(
-        "https://nutriediet-go.onrender.com/admin/common_diet", 
-        requestData, 
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      };
+  
+      const requestData = {
+        groups: [parseInt(selectedGroup)],
+        diet_type: dietType,
+        diet: diet,
+        ...(selectedTemplate && { diet_template_id: parseInt(selectedTemplate) })
+      };
+  
+      console.log("Sending diet data:", requestData); // Debug log
+  
+      const response = await axios.post(
+        editingDietId 
+          ? `https://nutriediet-go.onrender.com/admin/common_diet/${selectedGroup}/update`
+          : "https://nutriediet-go.onrender.com/admin/common_diet",
+        editingDietId 
+          ? { ...requestData, diet_id: editingDietId }
+          : requestData,
+        { headers }
       );
-
-      setSuccess(`Diet saved successfully for Group ${selectedGroup}!`);
-      setError("");
-      setDiet("");
-      setSelectedTemplate("");
-      fetchDietHistory();
-      
-      setTimeout(() => {
-        setSuccess("");
-      }, 5000);
+  
+      if (response.status >= 200 && response.status < 300) {
+        setSuccess(editingDietId 
+          ? `Diet updated successfully for Group ${selectedGroup}!`
+          : `Diet saved successfully for Group ${selectedGroup}!`);
+        
+        setError("");
+        setDiet("");
+        setSelectedTemplate("");
+        setEditingDietId(null);
+        fetchDietHistory();
+        
+        setTimeout(() => setSuccess(""), 5000);
+      } else {
+        throw new Error(response.data?.error || "Failed to save diet");
+      }
     } catch (err) {
-      console.error("Error saving diet:", err);
-      setError(err.response?.data?.error || "Failed to save diet.");
+      console.error("Error saving diet:", {
+        message: err.message,
+        response: err.response?.data,
+        status: err.response?.status
+      });
+      
+      setError(err.response?.data?.error || 
+              err.response?.data?.message || 
+              err.message || 
+              "Failed to save diet. Please try again.");
     }
   };
 
@@ -195,6 +239,18 @@ const CommonDietPage = () => {
     }
   };
 
+  const handleEditDiet = (dietId, type) => {
+    const selectedHistory = type === 'detox' 
+      ? dietHistory.detox.find(d => d.id === dietId)
+      : dietHistory.detoxWater.find(d => d.id === dietId);
+
+    if (selectedHistory) {
+      setDiet(selectedHistory.dietString);
+      setDietType(selectedHistory.dietType);
+      setEditingDietId(dietId); 
+    }
+  };
+
   const confirmDelete = (dietId) => {
     setDietToDelete(dietId);
     setShowDeleteModal(true);
@@ -206,16 +262,20 @@ const CommonDietPage = () => {
   };
 
   const executeDelete = async () => {
-    if (!dietToDelete) return;
-
+    if (!dietToDelete || !selectedGroup) return;
+  
     setShowDeleteModal(false);
     setDeleting(true);
     
     try {
       const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+  
       await axios.post(
-        `https://nutriediet-go.onrender.com/admin/${selectedGroup}/delete_diet`, 
-        { diet_id: dietToDelete },
+        `https://nutriediet-go.onrender.com/admin/common_diet/${selectedGroup}/delete_diet`,
+        dietToDelete,
         {
           headers: { 
             Authorization: `Bearer ${token}`,
@@ -226,9 +286,10 @@ const CommonDietPage = () => {
       
       fetchDietHistory(); 
       setSuccess("Diet deleted successfully!");
+      setTimeout(() => setSuccess(""), 3000);
     } catch (error) {
       console.error("Error deleting diet:", error);
-      setError("Failed to delete diet.");
+      setError(error.response?.data?.err || "Failed to delete diet. Please try again.");
     } finally {
       setDeleting(false);
       setDietToDelete(null);
@@ -262,7 +323,10 @@ const CommonDietPage = () => {
         <Form.Control
           as="select"
           value={selectedGroup}
-          onChange={(e) => setSelectedGroup(e.target.value)}
+          onChange={(e) => {
+            setSelectedGroup(e.target.value);
+            setEditingDietId(null); 
+          }}
           className="styled-dropdown"
         >
           <option value="">Select Group</option>
@@ -296,109 +360,113 @@ const CommonDietPage = () => {
             </div>
           </div>
           
-      {/* History Table */}
-      <div className="history-table-container">
-        <h3 className="diet-history-heading">
-          {historyType === 'detox' ? 'Detox Diet' : 'Detox Water'} History for Group {selectedGroup}
-        </h3>
+          {/* History Table */}
+          <div className="history-table-container">
+            <h3 className="diet-history-heading">
+              {historyType === 'detox' ? 'Detox Diet' : 'Detox Water'} History for Group {selectedGroup}
+            </h3>
 
-        <table className="weight-history-table">
-          <thead>
-            <tr>
-              <th scope="col">Week</th>
-              <th scope="col">Date</th>
-              <th scope="col">Diet Template</th>
-              <th scope="col">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredHistory.length > 0 ? (
-              filteredHistory.map((diet) => (
-                <tr key={diet.id}>
-                  <td>Week {diet.week}</td>
-                  <td>{diet.date}</td>
-                  <td>{diet.name || '-'}</td>
-                  <td>
-                    <div className="action-buttons">
-                      <button
-                        type="button"
-                        className="action-button action-use"
-                        onClick={() => handleHistoryAction('use', diet.id, historyType)}
-                      >
-                        View
-                      </button>
-                      <button
-                        type="button"
-                        className="action-button action-view"
-                        onClick={() => handleHistoryAction('view', diet.id, historyType)}
-                      >
-                        Refer
-                      </button>
-                      {(historyType === 'detox' && diet.id === latestDetoxId) || 
-                        (historyType === 'detoxWater' && diet.id === latestDetoxWaterId) ? (
-                        <>
-                          <button
-                            type="button"
-                            className="action-button action-edit"
-                            onClick={() => setDiet(diet.dietString)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            type="button"
-                            className="action-button action-delete"
-                            onClick={() => confirmDelete(diet.id)}
-                          >
-                            Delete
-                          </button>
-                        </>
-                      ) : null}
-                    </div>
-                  </td>
+            <table className="weight-history-table">
+              <thead>
+                <tr>
+                  <th scope="col">Week</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Diet Template</th>
+                  <th scope="col">Actions</th>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={4} className="no-data">
-                  No {historyType === 'detox' ? 'detox diet' : 'detox water'} history found for Group {selectedGroup}
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+                {filteredHistory.length > 0 ? (
+                  filteredHistory.map((diet) => (
+                    <tr key={diet.id}>
+                      <td>Week {diet.week}</td>
+                      <td>{diet.date}</td>
+                      <td>{diet.name || '-'}</td>
+                      <td>
+                        <div className="action-buttons">
+                          <button
+                            type="button"
+                            className="action-button action-use"
+                            onClick={() => handleHistoryAction('use', diet.id, historyType)}
+                          >
+                            View
+                          </button>
+                          <button
+                            type="button"
+                            className="action-button action-view"
+                            onClick={() => handleHistoryAction('view', diet.id, historyType)}
+                          >
+                            Refer
+                          </button>
+                          {(historyType === 'detox' && diet.id === latestDetoxId) || 
+                            (historyType === 'detoxWater' && diet.id === latestDetoxWaterId) ? (
+                            <>
+                              <button
+                                type="button"
+                                className="action-button action-edit"
+                                onClick={() => handleEditDiet(diet.id, historyType)}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                type="button"
+                                className="action-button action-delete"
+                                onClick={() => confirmDelete(diet.id)}
+                                disabled={deleting && dietToDelete === diet.id}
+                              >
+                                {deleting && dietToDelete === diet.id ? 'Deleting...' : 'Delete'}
+                              </button>
+                            </>
+                          ) : null}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={4} className="no-data">
+                      No {historyType === 'detox' ? 'detox diet' : 'detox water'} history found for Group {selectedGroup}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
       )}
 
       {/* Send Diet Section */}
       <div className="diet-section">
         {/* Left Side - Send Diet */}
         <div className="diet-left">
-          <h2>Send Diet</h2>
+          <h2>{editingDietId ? 'Edit Diet' : 'Send Diet'}</h2>
           <div className="dropdown-group">
             <Form.Control
               as="select"
               value={dietType}
               onChange={(e) => setDietType(Number(e.target.value))}
               className="styled-dropdown"
+              disabled={!!editingDietId} 
             >
               <option value="2">Detox</option>
               <option value="3">Detox Water</option>
             </Form.Control>
 
-            <Form.Control
-              as="select"
-              value={selectedTemplate}
-              onChange={handleTemplateSelect}
-              className="styled-dropdown"
-            >
-              <option value="">Select Template</option>
-              {dietTemplates.map((template) => (
-                <option key={template.ID} value={template.ID}>
-                  {template.Name}
-                </option>
-              ))}
-            </Form.Control>
+            {!editingDietId && (
+              <Form.Control
+                as="select"
+                value={selectedTemplate}
+                onChange={handleTemplateSelect}
+                className="styled-dropdown"
+              >
+                <option value="">Select Template</option>
+                {dietTemplates.map((template) => (
+                  <option key={template.ID} value={template.ID}>
+                    {template.Name}
+                  </option>
+                ))}
+              </Form.Control>
+            )}
           </div>
 
           <div className="diet-input-container">
@@ -416,8 +484,20 @@ const CommonDietPage = () => {
             onClick={handleSubmit}
             disabled={!selectedGroup || !diet.trim()}
           >
-            Send
+            {editingDietId ? 'Update' : 'Send'}
           </Button>
+          {editingDietId && (
+            <Button 
+              className="cancel-btn" 
+              onClick={() => {
+                setEditingDietId(null);
+                setDiet("");
+                setSelectedTemplate("");
+              }}
+            >
+              Cancel Edit
+            </Button>
+          )}
         </div>
 
         {/* Right Side - View Past Templates */}
@@ -453,29 +533,30 @@ const CommonDietPage = () => {
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
-        <div className="modal-overlay">
-          <div className="delete-modal">
-            <h3>Confirm Deletion</h3>
-            <p>Are you sure you want to delete this diet record? This action cannot be undone.</p>
-            <div className="modal-buttons">
-              <button 
-                className="modal-button modal-cancel"
-                onClick={cancelDelete}
-                disabled={deleting}
-              >
-                Cancel
-              </button>
-              <button 
-                className="modal-button modal-confirm"
-                onClick={executeDelete}
-                disabled={deleting}
-              >
-                {deleting ? 'Deleting...' : 'Delete'}
-              </button>
-            </div>
+      <div className="modal-overlay">
+        <div className="delete-modal">
+          <h3>Confirm Deletion</h3>
+          <p>Are you sure you want to delete this diet record for Group {selectedGroup}?</p>
+          <p>Diet ID: {dietToDelete}</p>
+          <div className="modal-buttons">
+            <button 
+              className="modal-button modal-cancel"
+              onClick={cancelDelete}
+              disabled={deleting}
+            >
+              Cancel
+            </button>
+            <button 
+              className="modal-button modal-confirm"
+              onClick={executeDelete}
+              disabled={deleting}
+            >
+              {deleting ? 'Deleting...' : 'Delete'}
+            </button>
           </div>
         </div>
-      )}
+      </div>
+    )}
     </div>
   );
 };
