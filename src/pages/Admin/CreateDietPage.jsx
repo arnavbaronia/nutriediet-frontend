@@ -132,7 +132,7 @@ const CreateDietPage = () => {
     try {
       await axios.post(
         `https://nutriediet-go.onrender.com/admin/${client_id}/delete_diet`, 
-        { diet_id: dietId }, // Wrap in object
+        { diet_id: dietId },
         {
           headers: { 
             Authorization: `Bearer ${token}`, 
@@ -188,12 +188,10 @@ const CreateDietPage = () => {
     const requestData = {
       diet_type: 1,
       diet: diet,
-      diet_template_id: selectedTemplate ? parseInt(selectedTemplate) : null,
-      ...(editMode && selectedHistory && { diet_id: selectedHistory.id })
+      ...(selectedTemplate && { diet_template_id: parseInt(selectedTemplate) }), // Optional template ID
+      ...(editMode && selectedHistory && { diet_id: selectedHistory.id }) // Only include in edit mode
     };
 
-    console.log("Submitting data:", requestData);
-    
     try {
       const endpoint = editMode 
         ? `https://nutriediet-go.onrender.com/admin/${client_id}/edit_diet`
@@ -210,8 +208,6 @@ const CreateDietPage = () => {
         }
       );
   
-      console.log("Response:", response.data); 
-  
       alert(editMode ? "Diet updated successfully!" : "Diet saved successfully!");
       
       setEditMode(false);
@@ -222,12 +218,7 @@ const CreateDietPage = () => {
       fetchDietHistory();
     } catch (err) {
       console.error("Error saving diet:", err);
-      if (err.response) {
-        console.error("Response data:", err.response.data);
-        setError(formatError(err.response.data, "Failed to save diet."));
-      } else {
-        setError(formatError(err, "Failed to save diet."));
-      }
+      setError(formatError(err, "Failed to save diet."));
     } finally {
       setSubmitting(false);
     }
@@ -259,7 +250,7 @@ const CreateDietPage = () => {
               onChange={handleTemplateSelect}
               className="styled-dropdown"
             >
-              <option value="">Select Template</option>
+              <option value="">Select Template (Optional)</option>
               {dietTemplates.map((template) => (
                 <option key={template.ID} value={template.ID}>
                   {template.Name}
@@ -295,7 +286,6 @@ const CreateDietPage = () => {
               as="select"
               value={selectedPastTemplate}
               onChange={handlePastTemplateSelect}
-              style={{ width: "800px" }}
               className="styled-dropdown small-dropdown"
             >
               <option value="">Select Template</option>
