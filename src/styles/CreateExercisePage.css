@@ -99,6 +99,7 @@
 .admin-create-exercise .cancel-btn {
   background: #dc3545;
   color: white;
+  width: 30% !important;
 }
 
 .admin-create-exercise .cancel-btn:hover {

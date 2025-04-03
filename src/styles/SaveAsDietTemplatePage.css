@@ -91,7 +91,7 @@
     font-family: 'Rubik', sans-serif;
     cursor: pointer;
     font-weight: 600;
-    width: 30%;
+    width: 30% !important;
     margin: 0 auto;
     margin-top: 20px;
     display: block;

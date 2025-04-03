@@ -91,7 +91,7 @@ function AppContent() {
           <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
           <Route path="/admin/dashboard" element={<ProtectedRoute requireduser_type="ADMIN" component={AdminDashboard} />} />
           <Route path="/admin/clients" element={<ProtectedRoute requireduser_type="ADMIN" component={ClientsPage} />} />
-          <Route path="/admin/client/:client_id" element={<ProtectedRoute requireduser_type="ADMIN" component={ClientDetailsPage} />} />
+          <Route path="/admin/clients/:client_id" element={<ProtectedRoute requireduser_type="ADMIN" component={ClientDetailsPage} />} />
           <Route path="/admin/common_diet" element={<ProtectedRoute requireduser_type="ADMIN" component={CommonDietPage} />} />
           <Route path="/admin/diet_templates" element={<ProtectedRoute requireduser_type="ADMIN" component={DietTemplatesPage} />} />
           <Route path="/admin/diet_templates/save_as" element={<ProtectedRoute requireduser_type="ADMIN" component={SaveAsDietTemplatePage} />} />
@@ -99,10 +99,10 @@ function AppContent() {
           <Route path="/admin/diet_templates/:diet_template_id" element={<ProtectedRoute requireduser_type="ADMIN" component={EditDietTemplatePage} />} />
           <Route path="/admin/recipes" element={<AdminRecipeListPage />} />
           <Route path="/admin/recipes/new" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateRecipePage} />} />
-          <Route path="/admin/recipe/:meal_id" element={<ProtectedRoute requireduser_type="ADMIN" component={UpdateRecipePage} />} />
+          <Route path="/admin/recipes/:meal_id" element={<ProtectedRoute requireduser_type="ADMIN" component={UpdateRecipePage} />} />
           <Route path="/admin/exercises" element={<ProtectedRoute requireduser_type="ADMIN" component={ExercisesPage} />} />
-          <Route path="/admin/exercise/new" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateExercisePage} />} />
-          <Route path="/admin/exercise/:id" element={<ProtectedRoute requireduser_type="ADMIN" component={EditExercisePage} />} />
+          <Route path="/admin/exercises/new" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateExercisePage} />} />
+          <Route path="/admin/exercises/:id" element={<ProtectedRoute requireduser_type="ADMIN" component={EditExercisePage} />} />
           <Route path="/admin/motivations" element={<ProtectedRoute requireduser_type="ADMIN" component={MotivationPage} />} />
           <Route path="/admin/:client_id/creatediet" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateDietPage} />} />
         </Routes>

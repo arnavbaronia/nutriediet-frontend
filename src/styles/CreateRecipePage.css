@@ -120,11 +120,13 @@
 .btn-submit {
   background: #004D40;
   color: #fff;
+  width: 30% !important;
 }
 
 .btn-cancel {
   background: #dc3545;
   color: white;
+  width: 30% !important;
 }
 
 .btn-submit:hover {

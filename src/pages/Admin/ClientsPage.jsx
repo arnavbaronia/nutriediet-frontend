@@ -144,7 +144,7 @@ const ClientsPage = () => {
   };
 
   const handleMoreDetailsClick = (clientId) => {
-    navigate(`/admin/client/${clientId}`);
+    navigate(`/admin/clients/${clientId}`);
   };
 
   const isPaymentOverdue = (paymentDate) => {

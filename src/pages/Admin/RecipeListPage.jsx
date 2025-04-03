@@ -145,7 +145,7 @@ const AdminRecipeListPage = () => {
             </div>
 
             <div className="action-buttons">
-              <button onClick={() => navigate(`/admin/recipe/${selectedRecipe.ID}`)}>Edit</button>
+              <button onClick={() => navigate(`/admin/recipes/${selectedRecipe.ID}`)}>Edit</button>
               <button 
                 className="delete" 
                 onClick={() => confirmDelete(selectedRecipe.ID)}

@@ -10,6 +10,7 @@ import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import BentoIcon from "@mui/icons-material/Bento";
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import TipsAndUpdatesSharpIcon from '@mui/icons-material/TipsAndUpdatesSharp';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const AdminNavBar = () => {
   const location = useLocation();
@@ -24,13 +25,29 @@ const AdminNavBar = () => {
     navigate("/login");
   };
 
+  const handleGoBack = () => {
+    const currentPath = location.pathname;
+    
+    const pathParts = currentPath.split('/');
+    pathParts.pop();
+    const parentPath = pathParts.join('/');
+    
+    navigate(parentPath);
+  };
+
   return (
     <>
       <nav className="navigation-bar">
-        <div className="nav-logo">
-          <Link to="/">
-            <img src={logo} alt="Nutriediet Logo" className="nav-logo-img" />
-          </Link>
+        <div className="nav-logo-container">
+          <div className="nav-logo">
+            <Link to="/">
+              <img src={logo} alt="Nutriediet Logo" className="nav-logo-img" />
+            </Link>
+          </div>
+          <button className="back-button" onClick={handleGoBack}>
+            <ArrowBackIcon className="back-icon" />
+            <span>Back</span>
+          </button>
         </div>
         <div className="menu-icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
           <MenuIcon />

@@ -134,7 +134,7 @@ const ExercisesPage = () => {
           />
           <Button
             className="btn-create"
-            onClick={() => navigate('/admin/exercise/new')}
+            onClick={() => navigate('/admin/exercises/new')}
           >
             <FaPlusCircle /> New Exercise
           </Button>
@@ -167,7 +167,7 @@ const ExercisesPage = () => {
             <div className="action-buttons">
               <Button
                 className="btn-edit"
-                onClick={() => navigate(`/admin/exercise/${selectedExerciseId}`)}
+                onClick={() => navigate(`/admin/exercises/${selectedExerciseId}`)}
               >
                 Edit
               </Button>
