@@ -265,16 +265,19 @@ const ClientsPage = () => {
             <th onClick={() => handleSort("group_id")}>Group</th>
             <th onClick={() => handleSort("next_payment_date")}>Next Payment Date</th>
             <th onClick={() => handleSort("last_diet_date")}>Last Diet Date</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {filteredClients.map((client) => {
             const paymentOverdue = isPaymentOverdue(client.next_payment_date);
+            const isInactive = client.is_active === false || client.is_active === undefined;
+            
             return (
               <tr 
                 key={client.id} 
-                className={paymentOverdue ? "payment-overdue" : ""}
+                className={`${paymentOverdue ? "payment-overdue" : ""} ${isInactive ? "inactive-client" : ""}`}
               >
                 <td>{client.id}</td>
                 <td>{client.name}</td>
@@ -286,6 +289,13 @@ const ClientsPage = () => {
                     : new Date(client.next_payment_date).toLocaleDateString()}
                 </td>
                 <td>{client.last_diet_date ? new Date(client.last_diet_date).toLocaleDateString() : "N/A"}</td>
+                <td>
+                  {isInactive ? (
+                    <span className="inactive-tag">Inactive</span>
+                  ) : (
+                    <span className="active-tag">Active</span>
+                  )}
+                </td>
                 <td>
                   <button onClick={() => handleMoreDetailsClick(client.id)} className="details-button">
                     More Details
