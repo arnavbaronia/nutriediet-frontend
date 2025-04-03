@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getToken } from "../../auth/token";
-import { FaCheckCircle, FaTimes, FaArrowLeft } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
-import "../../styles/MotivationForm.css";
+import "../../styles/CreateMotivationPage.css";
 
 const EditMotivationPage = () => {
   const { id } = useParams();
   const [text, setText] = useState("");
   const [postingActive, setPostingActive] = useState(true);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,7 +27,7 @@ const EditMotivationPage = () => {
         }
         setLoading(false);
       } catch (error) {
-        setErrorMessage(error.response?.data?.error || "Error fetching motivation.");
+        alert(error.response?.data?.error || "Error fetching motivation.");
         setLoading(false);
       }
     };
@@ -39,12 +37,13 @@ const EditMotivationPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage("");
-    setSuccessMessage("");
+    setLoading(true);
+    setShowSuccess(false);
 
     const token = getToken();
     if (!token) {
-      setErrorMessage("Authentication required");
+      alert("Authentication required");
+      setLoading(false);
       return;
     }
 
@@ -63,79 +62,65 @@ const EditMotivationPage = () => {
         );
       }
 
-      setSuccessMessage("Motivation updated successfully!");
+      setShowSuccess(true);
       setTimeout(() => navigate("/admin/motivations"), 2000);
     } catch (error) {
-      setErrorMessage(error.response?.data?.error || "Error updating motivation.");
+      alert(error.response?.data?.error || "Error updating motivation.");
       console.error("Error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   if (loading) return <div className="loading">Loading...</div>;
 
   return (
-    <div className="motivation-form-container">
-      <div className="motivation-form-box">
-        <div className="form-header">
-          <button onClick={() => navigate("/admin/motivations")} className="back-button">
-            <FaArrowLeft /> Back to List
-          </button>
+    <div className="motivation-container">
+      {/* Floating success message */}
+      {showSuccess && (
+        <div className="success-message-container">
+          <div className="success-message">
+             Motivation updated successfully!
+          </div>
+        </div>
+      )}
+
+      <div className="motivation-box">
+        <div className="motivation-headerk">
           <h2>Edit Motivation</h2>
         </div>
-        
-        {successMessage && (
-          <div className="success-message">
-            <FaCheckCircle /> {successMessage}
-          </div>
-        )}
-        
-        {errorMessage && (
-          <div className="error-message">
-            <FaTimes /> {errorMessage}
-          </div>
-        )}
 
         <form onSubmit={handleSubmit} className="motivation-form">
           <div className="form-group">
-            <label>Motivation Text</label>
             <textarea 
               value={text} 
               onChange={(e) => setText(e.target.value)} 
               required
               className="form-textarea"
               placeholder="Enter motivational message for clients..."
-              rows="8"
             />
           </div>
           
-          <div className="form-group">
-            <label className="checkbox-container">
+          <div className="form-checkbox-group">
+            <label className="checkbox-label">
               <input 
                 type="checkbox" 
                 checked={postingActive} 
                 onChange={() => setPostingActive(!postingActive)}
                 className="checkbox-input"
               />
-              <span className="checkmark"></span>
+              <span className="checkbox-custom"></span>
               Posting Active
             </label>
           </div>
           
-          <div className="form-actions">
-            <button 
-              type="submit" 
-              className="submit-button"
-            >
-              Update Motivation
-            </button>
-            <button
-              type="button"
-              className="cancel-button"
-              onClick={() => navigate("/admin/motivations")}
-            >
-              Cancel
-            </button>
-          </div>
+          <button 
+            type="submit" 
+            disabled={loading} 
+            className="submit-buttonn"
+          >
+            {loading ? "Updating..." : "Update Motivation"}
+          </button>
         </form>
       </div>
     </div>

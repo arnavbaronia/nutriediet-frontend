@@ -229,3 +229,45 @@
   .motivation-alert {
     margin-bottom: 25px;
   }
+
+  .submit-buttonn {
+    padding: 10px 20px;
+    background-color: #004D40;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 222px;
+    height: 55px;
+    margin: 10px auto 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: 'Rubik', sans-serif;
+  }
+  
+  .submit-buttonn:hover {
+    background-color: #2E7D32;
+    transform: translateY(-1px);
+  }
+  
+  .submit-buttonn:active {
+    transform: translateY(0);
+  }
+  
+  .submit-buttonn:disabled {
+    background-color: #81C784;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .motivation-headerk {
+    text-align: center !important;
+    margin-bottom: 25px;
+    justify-content: center;
+  }
