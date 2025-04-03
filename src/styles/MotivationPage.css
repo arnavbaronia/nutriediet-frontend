@@ -138,11 +138,11 @@
 }
 
 .button-group .submit-button:hover {
-  background: #00796B;
+  background: #2E7D32;
 }
 
 .button-group .submit-button:disabled {
-  background: #81C784;
+  background: #cad3ca;
   cursor: not-allowed;
 }
 
@@ -171,7 +171,7 @@
   background: #c82333;
 }
 
-.success-message-container {
+.success-message-container5 {
   position: fixed;
   top: 70px;
   left: 0;
@@ -182,7 +182,7 @@
   pointer-events: none;
 }
 
-.success-message {
+.success-message5 {
   color: green;
   background-color: #e8f5e9;
   border: 1px solid #4caf50;
@@ -198,7 +198,7 @@
   animation: fadeInOut 3s ease-in-out forwards;
 }
 
-.error-message {
+.error-message5 {
   color: #d32f2f;
   background-color: #fde7e9;
   border: 1px solid #d32f2f;

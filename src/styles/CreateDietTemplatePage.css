@@ -82,11 +82,11 @@
   }
   
   .admin-create-diet button:hover {
-    background: #dc6719;
+    background: #2E7D32;
   }
   
   .admin-create-diet .cancel-btn1 {
-    background: #dc3545;
+    background: #dc3545 !important;
     color: white;
   }
   

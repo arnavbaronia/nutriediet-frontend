@@ -39,6 +39,7 @@ const CreateExercisePage = () => {
       {success && (
         <div className="success-message-container">
           <div className="success-message">
+            {success}
           </div>
         </div>
       )}
