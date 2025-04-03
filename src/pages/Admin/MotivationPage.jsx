@@ -105,7 +105,7 @@ const MotivationPage = () => {
             </button>
             <button
               type="button"
-              className="cancel-btn"
+              className="cancel-btn4"
               onClick={() => navigate(-1)}
             >
               Cancel

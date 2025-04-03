@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate, useParams, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import ServicesPage from './pages/ServicesPage';
@@ -35,36 +35,24 @@ import Footer from './components/Footer';
 import Signup from './components/Signup';
 import Login from './components/Login';
 import AdminLogin from './components/AdminLogin';
+import BackButton from './components/BackButton';
+import ProtectedRoute from './auth/ProtectedRoute';
 import './App.css';
-
-const ProtectedRoute = ({ component: Component, requireduser_type, ...rest }) => {
-  const token = localStorage.getItem('token');
-  const user_type = localStorage.getItem('user_type');
-  const is_active = localStorage.getItem('is_active') === 'true';
-  const params = useParams();
-
-  if (!token) {
-    return <Navigate to="/login" />;
-  }
-
-  if (requireduser_type && user_type !== requireduser_type) {
-    return <Navigate to="/login" />;
-  }
-
-  if (user_type === 'CLIENT' && !is_active) {
-    return <Navigate to="/account-activation" />;
-  }
-
-  return <Component {...rest} />;
-};
 
 function AppContent() {
   const location = useLocation();
   const showFooterPages = ["/", "/about", "/services", "/testimonials", "/login", "/signup", "/admin/login"];
   const showFooter = showFooterPages.includes(location.pathname);
 
+  const AdminRouteWrapper = ({ children }) => (
+    <BackButton>
+      {children}
+    </BackButton>
+  );
+
   return (
     <div className="App">
+      {/* Navigation bars */}
       <Routes>
         <Route path="/admin/*" element={<AdminNavBar />} />
         <Route path="/*" element={<HomeNavBar />} />
@@ -72,8 +60,10 @@ function AppContent() {
         <Route path="/admin/login" element={<HomeNavBar />} />
         <Route path="/account-activation" element={<NavigationBar />} />
       </Routes>
+
       <div className="main-content">
         <Routes>
+          {/* Public routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
@@ -83,31 +73,156 @@ function AppContent() {
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/create_profile/:email" element={<CreateProfilePage />} />
           <Route path="/account-activation" element={<AccountActivationPage />} />
-          <Route path="/clients" element={<ProtectedRoute component={ClientPage} />} />
-          <Route path="/clients/:client_id/diet" element={<ProtectedRoute component={DietPage} />} />
-          <Route path="/clients/:client_id/exercise" element={<ProtectedRoute component={ExercisePage} />} />
-          <Route path="/clients/:client_id/my_profile" element={<ProtectedRoute component={ProfilePage} />} />
-          <Route path="/clients/:client_id/weight_update" element={<ProtectedRoute component={WeightUpdatePage} />} />
-          <Route path="/clients/:client_id/recipe" element={<ProtectedRoute component={ClientRecipesPage} />} />
+
+          {/* Client routes */}
+          <Route path="/clients" element={
+            <ProtectedRoute>
+              <ClientPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/clients/:client_id/diet" element={
+            <ProtectedRoute>
+              <DietPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/clients/:client_id/exercise" element={
+            <ProtectedRoute>
+              <ExercisePage />
+            </ProtectedRoute>
+          } />
+          <Route path="/clients/:client_id/my_profile" element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          } />
+          <Route path="/clients/:client_id/weight_update" element={
+            <ProtectedRoute>
+              <WeightUpdatePage />
+            </ProtectedRoute>
+          } />
+          <Route path="/clients/:client_id/recipe" element={
+            <ProtectedRoute>
+              <ClientRecipesPage />
+            </ProtectedRoute>
+          } />
+
+          {/* Admin routes */}
           <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
-          <Route path="/admin/dashboard" element={<ProtectedRoute requireduser_type="ADMIN" component={AdminDashboard} />} />
-          <Route path="/admin/clients" element={<ProtectedRoute requireduser_type="ADMIN" component={ClientsPage} />} />
-          <Route path="/admin/clients/:client_id" element={<ProtectedRoute requireduser_type="ADMIN" component={ClientDetailsPage} />} />
-          <Route path="/admin/common_diet" element={<ProtectedRoute requireduser_type="ADMIN" component={CommonDietPage} />} />
-          <Route path="/admin/diet_templates" element={<ProtectedRoute requireduser_type="ADMIN" component={DietTemplatesPage} />} />
-          <Route path="/admin/diet_templates/save_as" element={<ProtectedRoute requireduser_type="ADMIN" component={SaveAsDietTemplatePage} />} />
-          <Route path="/admin/diet_templates/new" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateDietTemplatePage} />} />
-          <Route path="/admin/diet_templates/:diet_template_id" element={<ProtectedRoute requireduser_type="ADMIN" component={EditDietTemplatePage} />} />
-          <Route path="/admin/recipes" element={<AdminRecipeListPage />} />
-          <Route path="/admin/recipes/new" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateRecipePage} />} />
-          <Route path="/admin/recipes/:meal_id" element={<ProtectedRoute requireduser_type="ADMIN" component={UpdateRecipePage} />} />
-          <Route path="/admin/exercises" element={<ProtectedRoute requireduser_type="ADMIN" component={ExercisesPage} />} />
-          <Route path="/admin/exercises/new" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateExercisePage} />} />
-          <Route path="/admin/exercises/:id" element={<ProtectedRoute requireduser_type="ADMIN" component={EditExercisePage} />} />
-          <Route path="/admin/motivations" element={<ProtectedRoute requireduser_type="ADMIN" component={MotivationPage} />} />
-          <Route path="/admin/:client_id/creatediet" element={<ProtectedRoute requireduser_type="ADMIN" component={CreateDietPage} />} />
+          <Route path="/admin/dashboard" element={
+            <ProtectedRoute requireduser_type="ADMIN">
+              <AdminRouteWrapper>
+                <AdminDashboard />
+              </AdminRouteWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/clients" element={
+            <ProtectedRoute requireduser_type="ADMIN">
+              <AdminRouteWrapper>
+                <ClientsPage />
+              </AdminRouteWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/clients/:client_id" element={
+            <ProtectedRoute requireduser_type="ADMIN">
+              <AdminRouteWrapper>
+                <ClientDetailsPage />
+              </AdminRouteWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/common_diet" element={
+            <ProtectedRoute requireduser_type="ADMIN">
+              <AdminRouteWrapper>
+                <CommonDietPage />
+              </AdminRouteWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/diet_templates" element={
+            <ProtectedRoute requireduser_type="ADMIN">
+              <AdminRouteWrapper>
+                <DietTemplatesPage />
+              </AdminRouteWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/diet_templates/save_as" element={
+            <ProtectedRoute requireduser_type="ADMIN">
+              <AdminRouteWrapper>
+                <SaveAsDietTemplatePage />
+              </AdminRouteWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/diet_templates/new" element={
+            <ProtectedRoute requireduser_type="ADMIN">
+              <AdminRouteWrapper>
+                <CreateDietTemplatePage />
+              </AdminRouteWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/diet_templates/:diet_template_id" element={
+            <ProtectedRoute requireduser_type="ADMIN">
+              <AdminRouteWrapper>
+                <EditDietTemplatePage />
+              </AdminRouteWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/recipes" element={
+            <ProtectedRoute requireduser_type="ADMIN">
+              <AdminRouteWrapper>
+                <AdminRecipeListPage />
+              </AdminRouteWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/recipes/new" element={
+            <ProtectedRoute requireduser_type="ADMIN">
+              <AdminRouteWrapper>
+                <CreateRecipePage />
+              </AdminRouteWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/recipes/:meal_id" element={
+            <ProtectedRoute requireduser_type="ADMIN">
+              <AdminRouteWrapper>
+                <UpdateRecipePage />
+              </AdminRouteWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/exercises" element={
+            <ProtectedRoute requireduser_type="ADMIN">
+              <AdminRouteWrapper>
+                <ExercisesPage />
+              </AdminRouteWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/exercises/new" element={
+            <ProtectedRoute requireduser_type="ADMIN">
+              <AdminRouteWrapper>
+                <CreateExercisePage />
+              </AdminRouteWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/exercises/:id" element={
+            <ProtectedRoute requireduser_type="ADMIN">
+              <AdminRouteWrapper>
+                <EditExercisePage />
+              </AdminRouteWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/motivations" element={
+            <ProtectedRoute requireduser_type="ADMIN">
+              <AdminRouteWrapper>
+                <MotivationPage />
+              </AdminRouteWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/:client_id/creatediet" element={
+            <ProtectedRoute requireduser_type="ADMIN">
+              <AdminRouteWrapper>
+                <CreateDietPage />
+              </AdminRouteWrapper>
+            </ProtectedRoute>
+          } />
         </Routes>
       </div>
+
       {showFooter && <Footer />}
     </div>
   );

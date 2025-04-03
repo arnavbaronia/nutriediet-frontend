@@ -31,38 +31,6 @@ body {
   max-height: 100%;
 }
 
-.nav-logo-container {
-  display: flex;
-  flex-direction: row; 
-  align-items: center; 
-  margin-top: 0; 
-  gap: 20px; 
-}
-
-.back-button {
-  display: flex;
-  align-items: center;
-  background: #e8f5e9; 
-  border: none;
-  color: #2e7d32; 
-  cursor: pointer;
-  font-size: 14px;
-  padding: 8px 15px;
-  border-radius: 20px;
-  transition: all 0.3s ease;
-  font-weight: bold;
-}
-
-.back-button:hover {
-  background: #d0eacc; 
-  transform: translateX(-2px); 
-}
-
-.back-icon {
-  margin-right: 5px;
-  font-size: 18px; 
-}
-
 .menu-icon {
   display: none;
   cursor: pointer;

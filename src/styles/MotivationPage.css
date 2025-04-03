@@ -146,7 +146,7 @@
   cursor: not-allowed;
 }
 
-.button-group .cancel-btn {
+.button-group .cancel-btn4 {
   background: #dc3545;
   color: white;
   border: none;
@@ -167,7 +167,7 @@
   margin-top: 20px !important;
 }
 
-.button-group .cancel-btn:hover {
+.button-group .cancel-btn4:hover {
   background: #c82333;
 }
 

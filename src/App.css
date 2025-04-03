@@ -16,3 +16,38 @@ body {
   flex-direction: column;
   padding-top: 70px;
 }
+
+.admin-container {
+  position: relative;
+}
+
+.back-button {
+  position: fixed;
+  top: 80px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  background: #004D40; 
+  border: none;
+  color: white; 
+  cursor: pointer;
+  font-size: 15px;
+  padding: 12px 20px;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  font-family: 'Rubik', sans-serif;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15);
+  z-index: 999;
+}
+
+.back-button:hover {
+  background: #d0eacc; 
+  transform: translateY(-3px); 
+  box-shadow: 5px 5px 12px rgba(0, 0, 0, 0.2);
+}
+
+.back-icon {
+  margin-right: 8px;
+  font-size: 18px; 
+}
