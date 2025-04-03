@@ -1,25 +1,24 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { getToken } from "../../auth/token";
-import { FaCheckCircle, FaTimes, FaArrowLeft } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import "../../styles/MotivationForm.css";
+import { FaCheck } from "react-icons/fa";
+import "../../styles/CreateMotivationPage.css";
 
 const CreateMotivationPage = () => {
   const [text, setText] = useState("");
   const [postingActive, setPostingActive] = useState(true);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage("");
-    setSuccessMessage("");
+    setLoading(true);
+    setShowSuccess(false);
 
     const token = getToken();
     if (!token) {
-      setErrorMessage("Authentication required");
+      alert("Authentication required");
+      setLoading(false);
       return;
     }
 
@@ -30,77 +29,69 @@ const CreateMotivationPage = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      setSuccessMessage("Motivation created successfully!");
-      setTimeout(() => navigate("/admin/motivations"), 2000);
+      setShowSuccess(true);
+      setText("");
+      setPostingActive(true);
+      
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 3000);
     } catch (error) {
-      setErrorMessage(error.response?.data?.error || "Error creating motivation.");
+      alert(error.response?.data?.error || "Error creating motivation.");
       console.error("Error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="motivation-form-container">
-      <div className="motivation-form-box">
-        <div className="form-header">
-          <button onClick={() => navigate("/admin/motivations")} className="back-button">
-            <FaArrowLeft /> Back to List
-          </button>
+    <div className="motivation-container">
+      {/* Floating success message */}
+      {showSuccess && (
+        <div className="success-message-container">
+          <div className="success-message">
+            <FaCheck className="success-icon" />
+            Motivation created successfully!
+          </div>
+        </div>
+      )}
+
+      <div className="motivation-box">
+        <div className="motivation-header">
           <h2>Create New Motivation</h2>
         </div>
-        
-        {successMessage && (
-          <div className="success-message">
-            <FaCheckCircle /> {successMessage}
-          </div>
-        )}
-        
-        {errorMessage && (
-          <div className="error-message">
-            <FaTimes /> {errorMessage}
-          </div>
-        )}
 
         <form onSubmit={handleSubmit} className="motivation-form">
           <div className="form-group">
-            <label>Motivation Text</label>
             <textarea 
               value={text} 
               onChange={(e) => setText(e.target.value)} 
               required
               className="form-textarea"
               placeholder="Enter motivational message for clients..."
-              rows="8"
             />
           </div>
           
-          <div className="form-group">
-            <label className="checkbox-container">
+          <div className="form-checkbox-group">
+            <label className="checkbox-label">
               <input 
                 type="checkbox" 
                 checked={postingActive} 
                 onChange={() => setPostingActive(!postingActive)}
                 className="checkbox-input"
               />
-              <span className="checkmark"></span>
+              <span className="checkbox-custom"></span>
               Posting Active
             </label>
           </div>
           
-          <div className="form-actions">
-            <button 
-              type="submit" 
-              className="submit-button"
-            >
-              Create Motivation
-            </button>
-            <button
-              type="button"
-              className="cancel-button"
-              onClick={() => navigate("/admin/motivations")}
-            >
-              Cancel
-            </button>
-          </div>
+          <button 
+            type="submit" 
+            disabled={loading} 
+            className="submit-button"
+          >
+            {loading ? "Creating..." : "Create Motivation"}
+          </button>
         </form>
       </div>
     </div>

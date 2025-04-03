@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getToken } from "../../auth/token";
-import { FaEdit, FaTrash, FaToggleOn, FaToggleOff, FaPlus } from "react-icons/fa";
+import { FaEdit, FaToggleOn, FaToggleOff, FaPlus, FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "../../styles/MotivationManagementPage.css";
 
@@ -10,6 +10,8 @@ const MotivationManagementPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,29 +58,66 @@ const MotivationManagementPage = () => {
     navigate(`/admin/motivations/edit/${id}`);
   };
 
-  if (loading) return <div className="loading">Loading...</div>;
-  if (error) return <div className="error">Error: {error}</div>;
+  const filteredMotivations = motivations.filter(motivation => {
+    // Search filter
+    const matchesSearch = motivation.text.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    // Status filter
+    const matchesStatus = statusFilter === "all" || 
+      (statusFilter === "active" && motivation.posting_active) ||
+      (statusFilter === "inactive" && !motivation.posting_active);
+    
+    return matchesSearch && matchesStatus;
+  });
+
+  if (loading) return <div className="motivation-loading">Loading...</div>;
+  if (error) return <div className="motivation-error-message">Error: {error}</div>;
 
   return (
-    <div className="motivation-management">
-      <div className="header">
-        <h2>Motivation Management</h2>
-        <button onClick={handleCreateNew} className="create-btn">
+    <div className="motivation-page-container">
+      <div className="motivation-header">
+        <h1 className="motivation-title">Motivation Management</h1>
+        <button onClick={handleCreateNew} className="motivation-create-btn">
           <FaPlus /> Create New
         </button>
       </div>
 
       {success && (
-        <div className="success-message">
-          <div className="alert alert-success">
+        <div className="motivation-success-message">
+          <div className="motivation-alert-success">
             {success}
           </div>
         </div>
       )}
 
-      <div className="motivation-list">
-        {motivations.length === 0 ? (
-          <div className="empty-state">No motivations found</div>
+      <div className="motivation-filters-container">
+        <div className="motivation-search-and-filters">
+          <div className="motivation-search-container">
+            <FaSearch className="motivation-search-icon" />
+            <input
+              type="text"
+              placeholder="Search motivations..."
+              className="motivation-search-bar"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          
+          <select
+            className="motivation-filter-dropdown"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value="all">All Statuses</option>
+            <option value="active">Active Only</option>
+            <option value="inactive">Inactive Only</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="motivation-list-container">
+        {filteredMotivations.length === 0 ? (
+          <div className="motivation-empty-state">No motivations found matching your criteria</div>
         ) : (
           <table className="motivation-table">
             <thead>
@@ -91,27 +130,31 @@ const MotivationManagementPage = () => {
               </tr>
             </thead>
             <tbody>
-              {motivations.map((motivation) => (
-                <tr key={motivation.id}>
+              {filteredMotivations.map((motivation) => (
+                <tr key={motivation.id} className={!motivation.posting_active ? "motivation-inactive-row" : ""}>
                   <td>{motivation.id}</td>
-                  <td className="message-cell">{motivation.text}</td>
+                  <td className="motivation-message-cell">
+                    {motivation.text.length > 100 
+                      ? `${motivation.text.substring(0, 100)}...` 
+                      : motivation.text}
+                  </td>
                   <td>
-                    <span className={`status ${motivation.posting_active ? "active" : "inactive"}`}>
+                    <span className={motivation.posting_active ? "motivation-active-tag" : "motivation-inactive-tag"}>
                       {motivation.posting_active ? "Active" : "Inactive"}
                     </span>
                   </td>
                   <td>{new Date(motivation.created_at).toLocaleDateString()}</td>
-                  <td className="actions">
+                  <td className="motivation-actions">
                     <button
                       onClick={() => handleToggleStatus(motivation.id, motivation.posting_active)}
-                      className="toggle-btn"
+                      className="motivation-toggle-btn"
                       title={motivation.posting_active ? "Deactivate" : "Activate"}
                     >
                       {motivation.posting_active ? <FaToggleOn /> : <FaToggleOff />}
                     </button>
                     <button
                       onClick={() => handleEdit(motivation.id)}
-                      className="edit-btn"
+                      className="motivation-edit-btn"
                       title="Edit"
                     >
                       <FaEdit />
