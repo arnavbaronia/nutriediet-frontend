@@ -11,7 +11,10 @@ const ExercisesPage = () => {
   const [selectedExerciseId, setSelectedExerciseId] = useState('');
   const [selectedExerciseDetails, setSelectedExerciseDetails] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [success, setSuccess] = useState('');
 
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
@@ -31,7 +34,7 @@ const ExercisesPage = () => {
         name: exercise.Name,
       }));
       setExercises(formattedExercises);
-      setError(null);
+      setError('');
     } catch (err) {
       console.error('Error fetching exercises:', err);
       setError('Failed to fetch exercises.');
@@ -45,7 +48,7 @@ const ExercisesPage = () => {
     try {
       const response = await api.get(`/admin/exercise/${exerciseId}`);
       setSelectedExerciseDetails(response.data.exercise);
-      setError(null);
+      setError('');
     } catch (err) {
       console.error('Error fetching exercise by ID:', err);
       setError('Failed to fetch exercise details.');
@@ -64,19 +67,28 @@ const ExercisesPage = () => {
     }
   };
 
-  const deleteExercise = async (exerciseId) => {
-    if (!window.confirm('Are you sure you want to delete this exercise?')) {
-      return;
-    }
+  const confirmDelete = () => {
+    setShowDeleteModal(true);
+  };
 
-    setLoading(true);
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+  };
+
+  const executeDelete = async () => {
+    if (!selectedExerciseId) return;
+
+    setShowDeleteModal(false);
+    setDeleting(true);
+
     try {
-      const response = await api.post(`/admin/exercise/${exerciseId}/delete`);
+      const response = await api.post(`/admin/exercise/${selectedExerciseId}/delete`);
       if (response.data.success) {
         await fetchExercises();
         setSelectedExerciseDetails(null);
         setSelectedExerciseId('');
-        setError(null);
+        setSuccess('Exercise deleted successfully!');
+        setTimeout(() => setSuccess(''), 3000);
       } else {
         setError('Failed to delete exercise.');
       }
@@ -84,7 +96,7 @@ const ExercisesPage = () => {
       console.error('Error deleting exercise:', err);
       setError('Failed to delete exercise.');
     } finally {
-      setLoading(false);
+      setDeleting(false);
     }
   };
 
@@ -99,6 +111,14 @@ const ExercisesPage = () => {
 
   return (
     <div className="admin-exercises-container">
+      {success && (
+        <div className="success-message-container">
+          <div className="success-message">
+            <span>{success}</span>
+          </div>
+        </div>
+      )}
+
       <div className="left-section">
         <h2>Exercises</h2>
         <div className="controls-container">
@@ -135,7 +155,7 @@ const ExercisesPage = () => {
               )}
               <h3 className="selected-exercise-title">{selectedExerciseDetails.name}</h3>
               <a 
-                href={selectedExerciseDetails.video_url} 
+                href={selectedExerciseDetails.link} 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="watch-video-btn"
@@ -153,9 +173,10 @@ const ExercisesPage = () => {
               </Button>
               <Button
                 className="btn-delete"
-                onClick={() => deleteExercise(selectedExerciseId)}
+                onClick={confirmDelete}
+                disabled={deleting}
               >
-                Delete
+                {deleting ? 'Deleting...' : 'Delete'}
               </Button>
             </div>
           </div>
@@ -165,6 +186,33 @@ const ExercisesPage = () => {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="modal-overlay">
+          <div className="delete-modal">
+            <h3>Confirm Deletion</h3>
+            <p>Are you sure you want to delete this exercise?</p>
+            <p>Exercise: {selectedExerciseDetails?.name}</p>
+            <div className="modal-buttons">
+              <button 
+                className="modal-button modal-cancel"
+                onClick={cancelDelete}
+                disabled={deleting}
+              >
+                Cancel
+              </button>
+              <button 
+                className="modal-button modal-confirm"
+                onClick={executeDelete}
+                disabled={deleting}
+              >
+                {deleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

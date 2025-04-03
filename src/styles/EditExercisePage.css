@@ -1,15 +1,15 @@
-.edit-exercise-page {
+.admin-edit-exercise {
   padding: 30px;
-  background-color: #a5d6a7;
+  background-color: #A5D6A7;
   border-radius: 20px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   width: 90%;
-  max-width: 700px;
+  max-width: 800px;
   margin: 50px auto;
   font-family: 'Rubik', sans-serif;
 }
 
-.edit-exercise-page h1 {
+.admin-edit-exercise h1 {
   text-align: center;
   color: #333;
   font-size: 32px;
@@ -17,15 +17,22 @@
   font-weight: 700;
 }
 
-.edit-exercise-page form {
+.admin-edit-exercise form {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.edit-exercise-page textarea,
-.edit-exercise-page input[type="text"] {
+.admin-edit-exercise label {
+  font-weight: 600;
+  color: #333;
+  display: block;
+  font-family: 'Rubik', sans-serif;
+}
+
+.admin-edit-exercise .small-input {
   padding: 12px;
+  height: 50px;
   border: 1px solid #ddd;
   border-radius: 15px;
   font-size: 16px;
@@ -34,99 +41,132 @@
   box-sizing: border-box;
   background-color: #f9f9f9;
   transition: all 0.3s ease;
-  line-height: 1.4;
-  resize: none;
-  overflow-y: auto;
-  display: block;
 }
 
-.edit-exercise-page input[type="text"] {
-  height: 50px;
+.admin-edit-exercise .large-input {
+  padding: 15px;
+  height: 150px;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  font-size: 16px;
+  font-family: 'Rubik', sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
+  resize: vertical;
 }
 
-.edit-exercise-page textarea {
-  height: 100px;
-}
-
-.edit-exercise-page textarea::placeholder,
-.edit-exercise-page input[type="text"]::placeholder {
-  text-align: left;
-}
-
-.edit-exercise-page textarea:focus,
-.edit-exercise-page input[type="text"]:focus {
-  border-color: #a5d6a7;
+.admin-edit-exercise input:focus,
+.admin-edit-exercise textarea:focus {
+  border-color: #A5D6A7;
   outline: none;
   background-color: #ffffff;
   box-shadow: 0px 0px 8px rgba(76, 175, 80, 0.5);
 }
 
-.edit-exercise-page label {
-  font-weight: 600;
-  margin-bottom: -10px;
-  color: #333;
-  display: block;
-  font-family: 'Rubik', sans-serif;
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 0px;
+  margin-top: 20px;
 }
 
-.edit-exercise-page button {
-  background: #004d40;
+.admin-edit-exercise button {
+  background: #004D40;
   color: #fff;
   border: none;
-  padding: 15px;
+  padding: 12px 20px; 
   border-radius: 15px;
-  font-size: 18px;
+  font-size: 18px; 
   font-family: 'Rubik', sans-serif;
   cursor: pointer;
   font-weight: 600;
   width: 30%;
-  margin: 0 auto;
-  display: block;
+  min-width: 160px; 
+  margin: 0; 
   transition: all 0.3s ease;
+  height: 52px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.edit-exercise-page button:hover {
-  background: #dc6719;
+.admin-edit-exercise button:hover {
+  background: #00796B;
 }
 
-.edit-exercise-page .success-message,
-.edit-exercise-page .error-message {
-  border-radius: 15px;
-  padding: 12px 20px;
-  font-size: 16px;
-  font-weight: 600;
+.admin-edit-exercise .cancel-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.admin-edit-exercise .cancel-btn:hover {
+  background: #c82333;
+}
+
+.success-message-container {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.success-message {
+  color: green;
+  background-color: #e8f5e9;
+  border: 1px solid #4caf50;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 80%;
   text-align: center;
+  animation: fadeInOut 3s ease-in-out forwards;
 }
 
-.edit-exercise-page .success-message {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
+.error-message {
+  color: #d32f2f;
+  background-color: #fde7e9;
+  border: 1px solid #d32f2f;
+  padding: 12px;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+  font-weight: 600;
 }
 
-.edit-exercise-page .error-message {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-}
-
-.edit-exercise-page textarea:hover,
-.edit-exercise-page input[type="text"]:hover {
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(-20px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-20px); }
 }
 
 @media (max-width: 768px) {
-  .edit-exercise-page {
+  .admin-edit-exercise {
     padding: 20px;
     max-width: 90%;
   }
 
-  .edit-exercise-page h1 {
+  .admin-edit-exercise h1 {
     font-size: 24px;
   }
 
-  .edit-exercise-page button {
-    font-size: 16px;
-    padding: 12px;
+  .button-group {
+    flex-direction: column;
+  }
+
+  .admin-edit-exercise button {
+    width: 100%;
   }
 }
