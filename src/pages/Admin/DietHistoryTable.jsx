@@ -26,7 +26,7 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistor
             date: formatDate(diet.date),
             dietString: diet.diet_string,
             weight: diet.weight || '-',
-            templateName: diet.name || '-',
+            templateName: diet.name || 'Custom Template',
             feedback: diet.feedback || '-'
         })).sort((a, b) => b.week - a.week);
     };

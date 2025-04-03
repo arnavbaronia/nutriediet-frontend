@@ -368,8 +368,15 @@ const ClientDetailsPage = () => {
         </div>
       )}
       <h2 className="client-heading">{client.name}'s Details</h2>
-      <div className="form-row">
-        <div className="form-group">
+      <div className="form-row" style={{ 
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 350px)',
+        gap: '145px',
+        justifyContent: 'center',
+        alignItems: 'left',
+        marginBottom: '15px'
+      }}>
+        <div className="form-group" style={{ display: 'flex', flexDirection: 'column' }}>
           <label htmlFor="client_id">Client ID</label>
           <input
             type="text"
@@ -378,10 +385,11 @@ const ClientDetailsPage = () => {
             value={client_id}
             className="client-input"
             readOnly
+            style={{ width: '100%', textAlign: 'left' }}
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="name">Name</label>
+        <div className="form-group" style={{ display: 'flex', flexDirection: 'column' }}>
+          <label htmlFor="name" style={{ textAlign: 'left' }}>Name</label>
           <input
             type="text"
             id="name"
@@ -389,11 +397,11 @@ const ClientDetailsPage = () => {
             value={client.name}
             className="client-input"
             readOnly
-            style={{ width: '390px' }}
+            style={{ width: '100%', textAlign: 'left' }}
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="phone_number">Phone Number</label>
+        <div className="form-group" style={{ display: 'flex', flexDirection: 'column' }}>
+          <label htmlFor="phone_number" style={{ textAlign: 'left' }}>Phone Number</label>
           <input
             type="text"
             id="phone_number"
@@ -401,6 +409,7 @@ const ClientDetailsPage = () => {
             value={client.phone_number}
             className="client-input"
             readOnly
+            style={{ width: '100%', textAlign: 'left' }}
           />
         </div>
       </div>
