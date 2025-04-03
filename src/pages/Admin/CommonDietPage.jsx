@@ -479,7 +479,7 @@ const CommonDietPage = () => {
               theme="snow"
             />
           </div>
-          <div className="button-group">
+          <div className="button-group1">
             <Button 
               className="save-btn" 
               onClick={handleSubmit}

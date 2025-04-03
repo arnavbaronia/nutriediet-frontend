@@ -69,6 +69,7 @@ function AppContent() {
         <Route path="/admin/*" element={<AdminNavBar />} />
         <Route path="/*" element={<HomeNavBar />} />
         <Route path="/clients/*" element={<NavigationBar />} />
+        <Route path="/admin/login" element={<HomeNavBar />} />
         <Route path="/account-activation" element={<NavigationBar />} />
       </Routes>
       <div className="main-content">
