@@ -235,17 +235,40 @@
   background-color: #e0e0e0 !important;
 }
 
-.motivation-success-message {
-  margin-bottom: 20px;
+.success-message-container {
+  position: fixed;
+  top: 70px; 
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none; 
 }
 
-.motivation-alert-success {
-  background: #e8f5e9;
-  color: #2E7D32;
-  padding: 10px 15px;
+.success-message {
+  color: green;
+  background-color: #e8f5e9;
+  border: 1px solid #4caf50;
+  padding: 10px 20px;
   border-radius: 5px;
-  border: 1px solid #a5d6a7;
+  font-weight: bold;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  max-width: 80%;
+  text-align: center;
+  animation: fadeInOut 3s ease-in-out forwards;
+  display: inline-block;
+  max-width: 80%; 
+  white-space: nowrap;
 }
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(-20px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-20px); }
+}  
 
 .motivation-error-message {
   background-color: #ffcccc;
@@ -292,4 +315,29 @@
   .motivation-message-cell {
     max-width: 200px;
   }
+}
+
+.motivation-toggle-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.motivation-toggle-btn.active {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.motivation-toggle-btn.inactive {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.motivation-toggle-btn:hover {
+  opacity: 0.8;
 }

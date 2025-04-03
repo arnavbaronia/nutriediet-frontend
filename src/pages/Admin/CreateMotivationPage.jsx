@@ -50,14 +50,13 @@ const CreateMotivationPage = () => {
       {showSuccess && (
         <div className="success-message-container">
           <div className="success-message">
-            <FaCheck className="success-icon" />
             Motivation created successfully!
           </div>
         </div>
       )}
 
       <div className="motivation-box">
-        <div className="motivation-header">
+        <div className="motivation-headerk">
           <h2>Create New Motivation</h2>
         </div>
 
@@ -88,7 +87,7 @@ const CreateMotivationPage = () => {
           <button 
             type="submit" 
             disabled={loading} 
-            className="submit-button"
+            className="submit-buttonn"
           >
             {loading ? "Creating..." : "Create Motivation"}
           </button>

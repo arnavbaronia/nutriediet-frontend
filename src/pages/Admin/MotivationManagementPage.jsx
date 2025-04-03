@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getToken } from "../../auth/token";
-import { FaEdit, FaToggleOn, FaToggleOff, FaPlus, FaSearch } from "react-icons/fa";
+import { FaToggleOn, FaToggleOff, FaPlus, FaSearch, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "../../styles/MotivationManagementPage.css";
 
@@ -43,7 +43,7 @@ const MotivationManagementPage = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       fetchMotivations();
-      setSuccess(`Motivation ${currentStatus ? "unposted" : "posted"} successfully`);
+      setSuccess(`Motivation ${currentStatus ? "deactivated" : "activated"} successfully`);
       setTimeout(() => setSuccess(""), 3000);
     } catch (err) {
       setError(err.response?.data?.error || "Failed to update status");
@@ -54,15 +54,9 @@ const MotivationManagementPage = () => {
     navigate("/admin/motivations/new");
   };
 
-  const handleEdit = (id) => {
-    navigate(`/admin/motivations/edit/${id}`);
-  };
-
   const filteredMotivations = motivations.filter(motivation => {
-    // Search filter
     const matchesSearch = motivation.text.toLowerCase().includes(searchTerm.toLowerCase());
     
-    // Status filter
     const matchesStatus = statusFilter === "all" || 
       (statusFilter === "active" && motivation.posting_active) ||
       (statusFilter === "inactive" && !motivation.posting_active);
@@ -71,7 +65,7 @@ const MotivationManagementPage = () => {
   });
 
   if (loading) return <div className="motivation-loading">Loading...</div>;
-  if (error) return <div className="motivation-error-message">Error: {error}</div>;
+  if (error) return <div className="error-message"><FaTimes /> {error}</div>;
 
   return (
     <div className="motivation-page-container">
@@ -83,8 +77,8 @@ const MotivationManagementPage = () => {
       </div>
 
       {success && (
-        <div className="motivation-success-message">
-          <div className="motivation-alert-success">
+        <div className="success-message-container">
+          <div className="success-message">
             {success}
           </div>
         </div>
@@ -126,7 +120,7 @@ const MotivationManagementPage = () => {
                 <th>Message</th>
                 <th>Status</th>
                 <th>Created At</th>
-                <th>Actions</th>
+                <th>Toggle Status</th>
               </tr>
             </thead>
             <tbody>
@@ -147,17 +141,11 @@ const MotivationManagementPage = () => {
                   <td className="motivation-actions">
                     <button
                       onClick={() => handleToggleStatus(motivation.id, motivation.posting_active)}
-                      className="motivation-toggle-btn"
+                      className={`motivation-toggle-btn ${motivation.posting_active ? 'active' : 'inactive'}`}
                       title={motivation.posting_active ? "Deactivate" : "Activate"}
                     >
                       {motivation.posting_active ? <FaToggleOn /> : <FaToggleOff />}
-                    </button>
-                    <button
-                      onClick={() => handleEdit(motivation.id)}
-                      className="motivation-edit-btn"
-                      title="Edit"
-                    >
-                      <FaEdit />
+                      {motivation.posting_active ? " Deactivate" : " Activate"}
                     </button>
                   </td>
                 </tr>
