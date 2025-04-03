@@ -1,24 +1,27 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { getToken } from "../../auth/token";
-import { FaSpinner } from "react-icons/fa";
-import { Alert } from "react-bootstrap";
+import { FaSpinner, FaTimes } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import "../../styles/MotivationPage.css";
 
 const MotivationPage = () => {
   const [text, setText] = useState("");
   const [postingActive, setPostingActive] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState({ text: "", variant: "" });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setMessage({ text: "", variant: "" });
+    setError("");
+    setSuccess("");
 
     const token = getToken();
     if (!token) {
-      setMessage({ text: "Authentication required", variant: "danger" });
+      setError("Authentication required");
       setLoading(false);
       return;
     }
@@ -30,17 +33,11 @@ const MotivationPage = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      setMessage({ 
-        text: "Motivation created successfully!", 
-        variant: "success" 
-      });
+      setSuccess("Motivation created successfully!");
       setText("");
       setPostingActive(true);
     } catch (error) {
-      setMessage({ 
-        text: error.response?.data?.error || "Error creating motivation.", 
-        variant: "danger" 
-      });
+      setError(error.response?.data?.error || "Error creating motivation.");
       console.error("Error:", error);
     } finally {
       setLoading(false);
@@ -54,10 +51,17 @@ const MotivationPage = () => {
           <h2>Create New Motivation</h2>
         </div>
         
-        {message.text && (
-          <Alert variant={message.variant} className="motivation-alert">
-            {message.text}
-          </Alert>
+        {success && (
+          <div className="success-message-container">
+            <div className="success-message">
+            </div>
+          </div>
+        )}
+        
+        {error && (
+          <div className="error-message">
+            <FaTimes /> {error}
+          </div>
         )}
 
         <form onSubmit={handleSubmit} className="motivation-form">
@@ -84,20 +88,29 @@ const MotivationPage = () => {
             </label>
           </div>
           
-          <button 
-            type="submit" 
-            disabled={loading} 
-            className="submit-button1"
-          >
-            {loading ? (
-              <>
-                <FaSpinner className="spin-icon" />
-                Creating...
-              </>
-            ) : (
-              "Create Motivation"
-            )}
-          </button>
+          <div className="button-group">
+            <button 
+              type="submit" 
+              disabled={loading} 
+              className="submit-button"
+            >
+              {loading ? (
+                <>
+                  <FaSpinner className="spin-icon" />
+                  Creating...
+                </>
+              ) : (
+                "Create Motivation"
+              )}
+            </button>
+            <button
+              type="button"
+              className="cancel-btn"
+              onClick={() => navigate(-1)}
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       </div>
     </div>
