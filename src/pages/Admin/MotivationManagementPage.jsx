@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getToken } from "../../auth/token";
-import { FaToggleOn, FaToggleOff, FaPlus, FaSearch, FaTimes } from "react-icons/fa";
+import { FaPlus, FaSearch, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "../../styles/MotivationManagementPage.css";
 
@@ -12,6 +12,7 @@ const MotivationManagementPage = () => {
   const [success, setSuccess] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [togglingId, setTogglingId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,6 +28,7 @@ const MotivationManagementPage = () => {
       );
       setMotivations(response.data.motivation);
       setLoading(false);
+      setTogglingId(null);
     } catch (err) {
       setError(err.response?.data?.error || "Failed to fetch motivations");
       setLoading(false);
@@ -34,6 +36,7 @@ const MotivationManagementPage = () => {
   };
 
   const handleToggleStatus = async (id, currentStatus) => {
+    setTogglingId(id);
     try {
       const token = getToken();
       const endpoint = currentStatus ? "unpost" : "post";
@@ -42,11 +45,21 @@ const MotivationManagementPage = () => {
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      fetchMotivations();
+      
+      // Optimistic UI update
+      setMotivations(prev => prev.map(motivation => 
+        motivation.id === id 
+          ? { ...motivation, posting_active: !currentStatus } 
+          : motivation
+      ));
+      
       setSuccess(`Motivation ${currentStatus ? "deactivated" : "activated"} successfully`);
       setTimeout(() => setSuccess(""), 3000);
     } catch (err) {
       setError(err.response?.data?.error || "Failed to update status");
+      fetchMotivations(); // Revert on error
+    } finally {
+      setTogglingId(null);
     }
   };
 
@@ -56,11 +69,9 @@ const MotivationManagementPage = () => {
 
   const filteredMotivations = motivations.filter(motivation => {
     const matchesSearch = motivation.text.toLowerCase().includes(searchTerm.toLowerCase());
-    
     const matchesStatus = statusFilter === "all" || 
       (statusFilter === "active" && motivation.posting_active) ||
       (statusFilter === "inactive" && !motivation.posting_active);
-    
     return matchesSearch && matchesStatus;
   });
 
@@ -139,14 +150,19 @@ const MotivationManagementPage = () => {
                   </td>
                   <td>{new Date(motivation.created_at).toLocaleDateString()}</td>
                   <td className="motivation-actions">
-                    <button
-                      onClick={() => handleToggleStatus(motivation.id, motivation.posting_active)}
-                      className={`motivation-toggle-btn ${motivation.posting_active ? 'active' : 'inactive'}`}
-                      title={motivation.posting_active ? "Deactivate" : "Activate"}
-                    >
-                      {motivation.posting_active ? <FaToggleOn /> : <FaToggleOff />}
-                      {motivation.posting_active ? " Deactivate" : " Activate"}
-                    </button>
+                    <label className="toggle-switch">
+                      <input
+                        type="checkbox"
+                        checked={motivation.posting_active}
+                        onChange={() => handleToggleStatus(motivation.id, motivation.posting_active)}
+                        disabled={togglingId === motivation.id}
+                      />
+                      <span className="toggle-slider">
+                        {togglingId === motivation.id && (
+                          <span className="toggle-loading"></span>
+                        )}
+                      </span>
+                    </label>
                   </td>
                 </tr>
               ))}
