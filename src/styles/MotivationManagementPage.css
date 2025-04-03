@@ -1,0 +1,164 @@
+.motivation-management {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 20px;
+    font-family: 'Rubik', sans-serif;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  .header h2 {
+    color: #333;
+    font-size: 28px;
+    margin: 0;
+  }
+  
+  .create-btn {
+    background: #004D40;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.3s;
+  }
+  
+  .create-btn:hover {
+    background: #2E7D32;
+  }
+  
+  .success-message {
+    margin-bottom: 20px;
+  }
+  
+  .success-message .alert-success {
+    background: #e8f5e9;
+    color: #2E7D32;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid #a5d6a7;
+  }
+  
+  .motivation-list {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+  }
+  
+  .empty-state {
+    padding: 40px;
+    text-align: center;
+    color: #666;
+  }
+  
+  .motivation-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .motivation-table th,
+  .motivation-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .motivation-table th {
+    background: #f5f5f5;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .message-cell {
+    max-width: 400px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .status {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .status.active {
+    background: #e8f5e9;
+    color: #2E7D32;
+  }
+  
+  .status.inactive {
+    background: #ffebee;
+    color: #c62828;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .toggle-btn, .edit-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 5px;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  
+  .toggle-btn {
+    color: #004D40;
+  }
+  
+  .toggle-btn:hover {
+    color: #2E7D32;
+    background: #e8f5e9;
+  }
+  
+  .edit-btn {
+    color: #1565c0;
+  }
+  
+  .edit-btn:hover {
+    color: #0d47a1;
+    background: #e3f2fd;
+  }
+  
+  .loading, .error {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+  }
+  
+  .error {
+    color: #c62828;
+  }
+  
+  @media (max-width: 768px) {
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+    
+    .motivation-table {
+      display: block;
+      overflow-x: auto;
+    }
+    
+    .message-cell {
+      max-width: 200px;
+    }
+  }

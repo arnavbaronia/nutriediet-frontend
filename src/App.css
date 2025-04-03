@@ -17,11 +17,11 @@ body {
   padding-top: 70px;
 }
 
-.admin-container {
+.admin-container6 {
   position: relative;
 }
 
-.back-button {
+.back-button6 {
   position: fixed;
   top: 80px;
   left: 20px;
@@ -41,13 +41,13 @@ body {
   z-index: 999;
 }
 
-.back-button:hover {
+.back-button6:hover {
   background: #d0eacc; 
   transform: translateY(-3px); 
   box-shadow: 5px 5px 12px rgba(0, 0, 0, 0.2);
 }
 
-.back-icon {
+.back-icon6 {
   margin-right: 8px;
   font-size: 18px; 
 }

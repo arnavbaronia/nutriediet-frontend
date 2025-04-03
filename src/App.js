@@ -27,7 +27,9 @@ import ExercisesPage from './pages/Admin/ExercisesPage';
 import CreateExercisePage from './pages/Admin/CreateExercisePage';
 import EditExercisePage from './pages/Admin/EditExercisePage';
 import CreateDietPage from './pages/Admin/CreateDietPage';
-import MotivationPage from './pages/Admin/MotivationPage';
+import CreateMotivationPage from './pages/Admin/CreateMotivationPage';
+import MotivationManagementPage from "./pages/Admin/MotivationManagementPage";
+import EditMotivationPage from "./pages/Admin/EditMotivationPage";
 import NavigationBar from './components/NavigationBar';
 import AdminNavBar from './components/AdminNavBar';
 import HomeNavBar from './components/HomeNavBar';
@@ -209,7 +211,21 @@ function AppContent() {
           <Route path="/admin/motivations" element={
             <ProtectedRoute requireduser_type="ADMIN">
               <AdminRouteWrapper>
-                <MotivationPage />
+                <MotivationManagementPage />
+              </AdminRouteWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/motivations/new" element={
+            <ProtectedRoute requireduser_type="ADMIN">
+              <AdminRouteWrapper>
+                <CreateMotivationPage />
+              </AdminRouteWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/motivations/edit/:id" element={
+            <ProtectedRoute requireduser_type="ADMIN">
+              <AdminRouteWrapper>
+                <EditMotivationPage />
               </AdminRouteWrapper>
             </ProtectedRoute>
           } />

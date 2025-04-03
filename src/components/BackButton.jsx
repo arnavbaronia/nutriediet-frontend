@@ -14,9 +14,9 @@ const BackButton = ({ children }) => {
   };
 
   return (
-    <div className="admin-container">
-      <button className="back-button" onClick={handleGoBack}>
-        <ArrowBackIcon className="back-icon" />
+    <div className="admin-container6">
+      <button className="back-button6" onClick={handleGoBack}>
+        <ArrowBackIcon className="back-icon6" />
         <span>Back</span>
       </button>
       {children}

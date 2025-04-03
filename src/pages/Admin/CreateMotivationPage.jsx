@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { getToken } from "../../auth/token";
-import { FaCheckCircle, FaTimes } from "react-icons/fa";
+import { FaCheckCircle, FaTimes, FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import "../../styles/MotivationPage.css";
+import "../../styles/MotivationForm.css";
 
-const MotivationPage = () => {
+const CreateMotivationPage = () => {
   const [text, setText] = useState("");
   const [postingActive, setPostingActive] = useState(true);
   const [successMessage, setSuccessMessage] = useState("");
@@ -31,9 +31,7 @@ const MotivationPage = () => {
       );
 
       setSuccessMessage("Motivation created successfully!");
-      setText("");
-      setPostingActive(true);
-      setTimeout(() => setSuccessMessage(""), 3000);
+      setTimeout(() => navigate("/admin/motivations"), 2000);
     } catch (error) {
       setErrorMessage(error.response?.data?.error || "Error creating motivation.");
       console.error("Error:", error);
@@ -41,17 +39,18 @@ const MotivationPage = () => {
   };
 
   return (
-    <div className="motivation-container">
-      <div className="motivation-box">
-        <div className="motivation-header">
+    <div className="motivation-form-container">
+      <div className="motivation-form-box">
+        <div className="form-header">
+          <button onClick={() => navigate("/admin/motivations")} className="back-button">
+            <FaArrowLeft /> Back to List
+          </button>
           <h2>Create New Motivation</h2>
         </div>
         
         {successMessage && (
-          <div className="success-message-container">
-            <div className="success-message">
-              <FaCheckCircle /> {successMessage}
-            </div>
+          <div className="success-message">
+            <FaCheckCircle /> {successMessage}
           </div>
         )}
         
@@ -63,29 +62,31 @@ const MotivationPage = () => {
 
         <form onSubmit={handleSubmit} className="motivation-form">
           <div className="form-group">
+            <label>Motivation Text</label>
             <textarea 
               value={text} 
               onChange={(e) => setText(e.target.value)} 
               required
               className="form-textarea"
               placeholder="Enter motivational message for clients..."
+              rows="8"
             />
           </div>
           
-          <div className="form-checkbox-group">
-            <label className="checkbox-label">
+          <div className="form-group">
+            <label className="checkbox-container">
               <input 
                 type="checkbox" 
                 checked={postingActive} 
                 onChange={() => setPostingActive(!postingActive)}
                 className="checkbox-input"
               />
-              <span className="checkbox-custom"></span>
+              <span className="checkmark"></span>
               Posting Active
             </label>
           </div>
           
-          <div className="button-group">
+          <div className="form-actions">
             <button 
               type="submit" 
               className="submit-button"
@@ -94,8 +95,8 @@ const MotivationPage = () => {
             </button>
             <button
               type="button"
-              className="cancel-btn4"
-              onClick={() => navigate(-1)}
+              className="cancel-button"
+              onClick={() => navigate("/admin/motivations")}
             >
               Cancel
             </button>
@@ -106,4 +107,4 @@ const MotivationPage = () => {
   );
 };
 
-export default MotivationPage;
+export default CreateMotivationPage;
