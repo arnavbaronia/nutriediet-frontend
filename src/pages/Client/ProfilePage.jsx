@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getToken } from "../../auth/token";
 import { useNavigate } from "react-router-dom";
-import { FaUser } from "react-icons/fa";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; 
+import { FaUser, FaCheckCircle, FaTimes } from "react-icons/fa";
 import "../../styles/ProfilePage.css";
 
 const ProfilePage = () => {
@@ -27,7 +25,9 @@ const ProfilePage = () => {
   });
 
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -114,17 +114,14 @@ const ProfilePage = () => {
         }
       );
 
-      toast.success("Profile updated successfully!", {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-      });
+      setSuccess("Profile updated successfully!");
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+      setError("");
       
     } catch (error) {
       setError(error.response?.data?.error || "Error updating profile.");
+      setSuccess("");
     }
   };
 
@@ -136,6 +133,22 @@ const ProfilePage = () => {
       <h2 className="profile-heading">
         <FaUser /> My Profile
       </h2>
+
+      {showSuccess && (
+        <div className="success-popup">
+          <div className="popup-content">
+            <h3>Success! <FaCheckCircle /></h3>
+            <p>{success}</p>
+          </div>
+        </div>
+      )}
+
+      {error && (
+        <div className="error-message">
+          <FaTimes /> {error}
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="profile-form">
         {/* Inline group for Name, Phone Number, and Email */}
         <div className="form-group-inline">
@@ -314,7 +327,6 @@ const ProfilePage = () => {
           Update
         </button>
       </form>
-      <ToastContainer />
     </div>
   );
 };

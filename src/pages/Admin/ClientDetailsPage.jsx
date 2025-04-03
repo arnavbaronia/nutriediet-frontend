@@ -613,7 +613,7 @@ const ClientDetailsPage = () => {
             </div>
           </div>
 
-          {/* Package, Amount Paid, Next Payment Date, Last Payment Date, Date of Joining */}
+          {/* Package, Amount Paid, Next Payment Date, Last Payment Date, Date of Joining, Dietitian ID, Group ID */}
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="package">Package</label>
