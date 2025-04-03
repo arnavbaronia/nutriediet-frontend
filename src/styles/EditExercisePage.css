@@ -96,13 +96,14 @@
   background: #00796B;
 }
 
-.admin-edit-exercise .cancel-btn {
+.admin-edit-exercise .cancel-btn3 {
   background: #dc3545;
   color: white;
   width: 30% !important;
+  margin-top: 15px;
 }
 
-.admin-edit-exercise .cancel-btn:hover {
+.admin-edit-exercise .cancel-btn3:hover {
   background: #c82333;
 }
 

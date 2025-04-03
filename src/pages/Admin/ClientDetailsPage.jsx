@@ -388,7 +388,7 @@ const ClientDetailsPage = () => {
             name="name"
             value={client.name}
             className="client-input"
-            onChange={handleChange}
+            readOnly
             style={{ width: '390px' }}
           />
         </div>
@@ -400,7 +400,7 @@ const ClientDetailsPage = () => {
             name="phone_number"
             value={client.phone_number}
             className="client-input"
-            onChange={handleChange}
+            readOnly
           />
         </div>
       </div>

@@ -100,7 +100,7 @@ const EditExercisePage = () => {
           <button type="submit">Update Exercise</button>
           <button 
             type="button" 
-            className="cancel-btn"
+            className="cancel-btn3"
             onClick={() => navigate('/admin/exercises')}
           >
             Cancel

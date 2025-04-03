@@ -4,7 +4,6 @@ import axios from "axios";
 import "../../styles/CommonDietPage.css";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { FaCheckCircle, FaTimes } from 'react-icons/fa';
 
 const CommonDietPage = () => {
   const [dietType, setDietType] = useState(2);

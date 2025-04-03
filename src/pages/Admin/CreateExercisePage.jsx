@@ -85,7 +85,7 @@ const CreateExercisePage = () => {
           <button type="submit">Create Exercise</button>
           <button 
             type="button" 
-            className="cancel-btn"
+            className="cancel-btn3"
             onClick={() => navigate('/admin/exercises')}
           >
             Cancel

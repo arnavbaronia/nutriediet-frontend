@@ -154,6 +154,9 @@ const ExercisesPage = () => {
                 />
               )}
               <h3 className="selected-exercise-title">{selectedExerciseDetails.name}</h3>
+              {selectedExerciseDetails.description && (
+                <p className="exercise-description">{selectedExerciseDetails.description}</p>
+              )}
               <a 
                 href={selectedExerciseDetails.link} 
                 target="_blank" 

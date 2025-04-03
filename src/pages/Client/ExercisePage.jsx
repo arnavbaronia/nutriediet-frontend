@@ -37,6 +37,7 @@ const ExercisePage = () => {
           return {
             id: exercise.id,
             title: exercise.name || "Unknown Title",
+            description: exercise.description || "",
             video_url: exercise.link || "#",
             thumbnail: videoId
               ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
@@ -100,6 +101,9 @@ const ExercisePage = () => {
                 
                 <div className="card-footer">
                   <h3 className="video-title">{exercise.title}</h3>
+                  {exercise.description && (
+                    <p className="exercise-description">{exercise.description}</p>
+                  )}
                   <div className="button-container">
                     <a
                       href={exercise.video_url}
