@@ -9,7 +9,11 @@ const DietTemplatesPage = () => {
   const [dietTemplates, setDietTemplates] = useState([]);
   const [selectedDietTemplate, setSelectedDietTemplate] = useState(null);
   const [dietDetails, setDietDetails] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [templateToDelete, setTemplateToDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -52,20 +56,36 @@ const DietTemplatesPage = () => {
     fetchDietTemplateById(template.ID);
   };
 
-  const handleDelete = async () => {
-    if (!selectedDietTemplate) return;
-    const confirmDelete = window.confirm(
-      `Are you sure you want to delete the diet template: "${selectedDietTemplate.Name}"?`
-    );
-    if (!confirmDelete) return;
+  const confirmDelete = (templateId) => {
+    setTemplateToDelete(templateId);
+    setShowDeleteModal(true);
+  };
+  
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setTemplateToDelete(null);
+  };
+  
+  const executeDelete = async () => {
+    if (!templateToDelete) return;
+  
+    setShowDeleteModal(false);
+    setDeleting(true);
+    
     try {
-      await api.post(`/admin/diet_templates/${selectedDietTemplate.ID}/delete`);
-      setDietTemplates(dietTemplates.filter((t) => t.ID !== selectedDietTemplate.ID));
-      setSelectedDietTemplate(null);
-      setDietDetails("");
-      alert("Diet template deleted successfully.");
+      await api.post(`/admin/diet_templates/${templateToDelete}/delete`);
+      setDietTemplates(dietTemplates.filter((t) => t.ID !== templateToDelete));
+      if (selectedDietTemplate?.ID === templateToDelete) {
+        setSelectedDietTemplate(null);
+        setDietDetails("");
+      }
+      setSuccessMessage("Diet template deleted successfully!");
+      setTimeout(() => setSuccessMessage(""), 3000);
     } catch (err) {
-      alert("Failed to delete diet template. Please try again.");
+      setError("Failed to delete diet template. Please try again.");
+    } finally {
+      setDeleting(false);
+      setTemplateToDelete(null);
     }
   };
 
@@ -82,6 +102,13 @@ const DietTemplatesPage = () => {
   return (
     <div className="diet-templates-page">
       <h1 className="page-title">Diet Templates</h1>
+      {successMessage && (
+      <div className="success-message-container">
+        <div className="success-message">
+          <span>{successMessage}</span>
+        </div>
+      </div>
+    )}
       <div className="template-container">
         <div className="template-menu">
           <div className="menu-header">
@@ -119,7 +146,11 @@ const DietTemplatesPage = () => {
             >
               <FaEdit /> Edit
             </Button>
-            <Button onClick={handleDelete} disabled={!selectedDietTemplate} className="btn-delete">
+            <Button 
+              onClick={() => confirmDelete(selectedDietTemplate?.ID)} 
+              disabled={!selectedDietTemplate} 
+              className="btn-delete"
+            >
               <FaTrashAlt /> Delete
             </Button>
           </div>
@@ -138,6 +169,30 @@ const DietTemplatesPage = () => {
               <p className="info-text">Select a template from the menu to view details.</p>
             )}
           </div>
+          {showDeleteModal && (
+          <div className="modal-overlay">
+            <div className="delete-modal">
+              <h3>Confirm Deletion</h3>
+              <p>Are you sure you want to delete the diet template: "{dietTemplates.find(t => t.ID === templateToDelete)?.Name}"?</p>
+              <div className="modal-buttons">
+                <button 
+                  className="modal-button modal-cancel"
+                  onClick={cancelDelete}
+                  disabled={deleting}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="modal-button modal-confirm"
+                  onClick={executeDelete}
+                  disabled={deleting}
+                >
+                  {deleting ? 'Deleting...' : 'Delete'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         </div>
       </div>
     </div>

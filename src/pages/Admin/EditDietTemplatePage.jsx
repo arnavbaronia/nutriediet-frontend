@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FaCheckCircle } from "react-icons/fa";
 import "../../styles/EditDietTemplatePage.css";
 
 const EditDietTemplatePage = () => {
@@ -9,7 +10,9 @@ const EditDietTemplatePage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ name: "", diet: "" });
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState({ text: "", type: "" });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const token = localStorage.getItem("token");
 
@@ -29,7 +32,7 @@ const EditDietTemplatePage = () => {
       setFormData({ name: name || "", diet: template || "" }); 
       setLoading(false);
     } catch (error) {
-      setMessage({ text: "Failed to load diet template.", type: "error" });
+      setError("Failed to load diet template.");
       setLoading(false);
     }
   };  
@@ -41,7 +44,21 @@ const EditDietTemplatePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage({ text: "", type: "" });
+    setError("");
+    setSuccess("");
+    setIsSubmitting(true);
+
+    if (!formData.name.trim()) {
+      setError("Template name is required");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!formData.diet.trim()) {
+      setError("Diet plan is required");
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       await api.post(`/admin/diet_templates/${diet_template_id}`, {
@@ -50,15 +67,26 @@ const EditDietTemplatePage = () => {
         Diet: formData.diet,
       });
 
-      setMessage({ text: "Diet template updated successfully!", type: "success" });
+      setSuccess("Diet template updated successfully!");
+      setTimeout(() => setSuccess(""), 3000);
     } catch (error) {
-      setMessage({ text: "Failed to update diet template.", type: "error" });
+      setError("Failed to update diet template. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <div className="edit-diet-template-page">
       <h1 className="page-title1">Edit Diet Template</h1>
+
+      {success && (
+        <div className="success-message-container">
+          <div className="success-message">
+            <span>{success}</span>
+          </div>
+        </div>
+      )}
 
       {loading ? (
         <p className="loading-text">Loading...</p>
@@ -73,6 +101,7 @@ const EditDietTemplatePage = () => {
               onChange={handleInputChange}
               required
               className="small-input"
+              autoFocus
             />
           </Form.Group>
 
@@ -89,14 +118,23 @@ const EditDietTemplatePage = () => {
             />
           </Form.Group>
 
-          <div className="button-group">
-            <Button type="submit" className="btn-update">Update</Button>
-            <Button variant="secondary" onClick={() => navigate("/admin/diet_templates")} className="btn-cancel">
+          <div className="edit-template-btn-group">
+            <Button 
+              type="submit" 
+              className="edit-template-btn-update"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Updating...' : 'Update'}
+            </Button>
+            <Button 
+              onClick={() => navigate("/admin/diet_templates")} 
+              className="edit-template-btn-cancel"
+            >
               Cancel
             </Button>
           </div>
 
-          {message.text && <p className={message.type === "success" ? "success-message" : "error-message"}>{message.text}</p>}
+          {error && <p className="error-message">{error}</p>}
         </Form>
       )}
     </div>

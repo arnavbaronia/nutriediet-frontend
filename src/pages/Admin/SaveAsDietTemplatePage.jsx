@@ -3,6 +3,7 @@ import { Form, Button } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import "../../styles/SaveAsDietTemplatePage.css";
+import { FaCheckCircle } from 'react-icons/fa';
 
 const SaveAsDietTemplatePage = () => {
   const location = useLocation();
@@ -18,7 +19,8 @@ const SaveAsDietTemplatePage = () => {
     name: originalName, 
     diet: dietDetails 
   });
-  const [message, setMessage] = useState({ text: "", type: "" });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const api = axios.create({
     baseURL: "https://nutriediet-go.onrender.com",
@@ -32,15 +34,16 @@ const SaveAsDietTemplatePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage({ text: "", type: "" });
+    setError("");
+    setSuccess("");
 
     if (!formData.name.trim()) {
-      setMessage({ text: "Template name is required", type: "error" });
+      setError("Template name is required");
       return;
     }
 
     if (!formData.diet.trim()) {
-      setMessage({ text: "Diet plan is required", type: "error" });
+      setError("Diet plan is required");
       return;
     }
 
@@ -51,25 +54,16 @@ const SaveAsDietTemplatePage = () => {
       });
 
       if (response.data && response.data.success) {
-        setMessage({ 
-          text: "Diet template saved successfully!", 
-          type: "success" 
-        });
+        setSuccess("Diet template saved successfully!");
         setTimeout(() => {
           navigate("/admin/diet_templates");
         }, 1500);
       }
     } catch (err) {
       if (err.response && err.response.status === 409) {
-        setMessage({ 
-          text: "A template with this name already exists. Please choose a different name.", 
-          type: "error" 
-        });
+        setError("A template with this name already exists. Please choose a different name.");
       } else {
-        setMessage({ 
-          text: "Failed to save diet template. Please try again.", 
-          type: "error" 
-        });
+        setError("Failed to save diet template. Please try again.");
       }
     }
   };
@@ -77,6 +71,16 @@ const SaveAsDietTemplatePage = () => {
   return (
     <div className="save-as-diet-template-page">
       <h1 className="page-title1">Save As New Diet Template</h1>
+
+      {success && (
+        <div className="success-message-container">
+          <div className="success-message">
+            <span>{success}</span>
+          </div>
+        </div>
+      )}
+
+      {error && <p className="error-message">{error}</p>}
 
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="name">
@@ -108,23 +112,17 @@ const SaveAsDietTemplatePage = () => {
         </Form.Group>
 
         <div className="button-group2">
-            <Button type="submit" className="btn-save1">
-                Save As New Template
-            </Button>
-            <Button 
-                type="button"
-                className="btn-cancel"
-                onClick={() => navigate("/admin/diet_templates")}
-            >
-                Cancel
-            </Button>
+          <Button type="submit" className="btn-save1">
+            Save As New Template
+          </Button>
+          <Button 
+            type="button"
+            className="btn-cancel"
+            onClick={() => navigate("/admin/diet_templates")}
+          >
+            Cancel
+          </Button>
         </div>
-
-        {message.text && (
-          <p className={message.type === "success" ? "success-message" : "error-message"}>
-            {message.text}
-          </p>
-        )}
       </Form>
     </div>
   );

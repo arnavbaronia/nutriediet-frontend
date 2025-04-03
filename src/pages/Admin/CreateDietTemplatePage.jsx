@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../styles/CreateDietTemplatePage.css";
+import { FaCheckCircle, FaTimes } from 'react-icons/fa';
 
 const CreateDietTemplatePage = () => {
   const [name, setName] = useState("");
@@ -24,6 +25,7 @@ const CreateDietTemplatePage = () => {
       setErrorMessage("");
       setName("");
       setDiet("");
+      setTimeout(() => setSuccessMessage(""), 3000);
     } catch (err) {
       setErrorMessage("Failed to create diet template. Please try again.");
       setSuccessMessage("");
@@ -33,6 +35,17 @@ const CreateDietTemplatePage = () => {
   return (
     <div className="admin-create-diet">
       <h1><strong>Create a New Diet Template</strong></h1>
+      
+      {successMessage && (
+        <div className="success-message-container">
+          <div className="success-message">
+            <span>{successMessage}</span>
+          </div>
+        </div>
+      )}
+      
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
+      
       <form onSubmit={handleCreateTemplate}>
         <div>
           <label htmlFor="name">Template Name</label>
@@ -64,8 +77,6 @@ const CreateDietTemplatePage = () => {
           Cancel
         </button>
       </form>
-      {successMessage && <p className="success-message">{successMessage}</p>}
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
     </div>
   );
 };
