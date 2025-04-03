@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { FaCheckCircle } from 'react-icons/fa';
 import '../../styles/CreateRecipePage.css';
 
 const CreateRecipePage = () => {
@@ -8,8 +10,10 @@ const CreateRecipePage = () => {
     ingredients: '',
     preparation: '',
   });
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [success, setSuccess] = useState('');
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -18,6 +22,9 @@ const CreateRecipePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSuccess('');
+    setError('');
+    setIsSubmitting(true);
 
     try {
       const token = localStorage.getItem('token');
@@ -25,27 +32,38 @@ const CreateRecipePage = () => {
 
       const payload = {
         name: formData.name,
-        ingredients: formData.ingredients.split('\n'),
-        preparation: formData.preparation.split('\n'),
+        ingredients: formData.ingredients.split('\n').filter(line => line.trim()),
+        preparation: formData.preparation.split('\n').filter(line => line.trim()),
       };
 
-      const response = await axios.post('https://nutriediet-go.onrender.com/admin/recipe/new', payload, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.post(
+        'https://nutriediet-go.onrender.com/admin/recipe/new', 
+        payload, 
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
       if (response.data.success) {
-        setSuccessMessage('Recipe created successfully!');
-        setErrorMessage('');
+        setSuccess('Recipe created successfully!');
         setFormData({ name: '', ingredients: '', preparation: '' });
+        setTimeout(() => setSuccess(''), 3000);
       }
     } catch (err) {
-      setErrorMessage('Failed to create recipe. Please try again.');
-      setSuccessMessage('');
+      setError(err.response?.data?.error || 'Failed to create recipe. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <div className="admin-create-recipe">
+      {success && (
+        <div className="success-message-container">
+          <div className="success-message">
+            <span>{success}</span>
+          </div>
+        </div>
+      )}
+
       <h1>Create a New Recipe</h1>
       <form onSubmit={handleSubmit}>
         <div>
@@ -84,10 +102,24 @@ const CreateRecipePage = () => {
             required
           ></textarea>
         </div>
-        <button type="submit">Create Recipe</button>
+        <div className="button-group">
+          <button 
+            type="submit" 
+            className="btn-submit"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Creating...' : 'Create Recipe'}
+          </button>
+          <button 
+            type="button" 
+            className="btn-cancel"
+            onClick={() => navigate('/admin/recipes')}
+          >
+            Cancel
+          </button>
+        </div>
       </form>
-      {successMessage && <p className="success-message">{successMessage}</p>}
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
+      {error && <p className="error-message">{error}</p>}
     </div>
   );
 };

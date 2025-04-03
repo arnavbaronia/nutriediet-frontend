@@ -7,6 +7,8 @@ const AdminUpdateRecipePage = () => {
   const { meal_id } = useParams();
   const [recipe, setRecipe] = useState(null);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,6 +43,9 @@ const AdminUpdateRecipePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
+    setIsSubmitting(true);
 
     try {
       const token = localStorage.getItem('token');
@@ -56,21 +61,30 @@ const AdminUpdateRecipePage = () => {
       await axios.post(
         `https://nutriediet-go.onrender.com/admin/recipe/${meal_id}`,
         payload,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      navigate('/admin/recipes');
+      setSuccess('Recipe updated successfully!');
+      setTimeout(() => navigate('/admin/recipes'), 1500);
     } catch (err) {
       setError(err.response?.data?.error || err.message || 'Failed to update recipe.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  if (!recipe) return <p>Loading recipe...</p>;
+  if (!recipe) return <p className="loading-text">Loading recipe...</p>;
 
   return (
     <div className="admin-create-recipe">
+      {success && (
+        <div className="success-message-container">
+          <div className="success-message">
+            <span>{success}</span>
+          </div>
+        </div>
+      )}
+
       <h1>Update Recipe</h1>
       {error && <p className="error-message">{error}</p>}
       <form onSubmit={handleSubmit}>
@@ -107,7 +121,22 @@ const AdminUpdateRecipePage = () => {
             required
           ></textarea>
         </div>
-        <button type="submit">Update Recipe</button>
+        <div className="button-group">
+          <button 
+            type="submit" 
+            className="btn-submit"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Updating...' : 'Update Recipe'}
+          </button>
+          <button 
+            type="button" 
+            className="btn-cancel"
+            onClick={() => navigate('/admin/recipes')}
+          >
+            Cancel
+          </button>
+        </div>
       </form>
     </div>
   );
