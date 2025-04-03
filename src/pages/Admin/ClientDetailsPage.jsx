@@ -362,7 +362,11 @@ const ClientDetailsPage = () => {
 
   return (
     <div className="client-container">
-      {successMessage && <p className="success-message">{successMessage}</p>}
+      {successMessage && (
+        <div className="success-message-container">
+          <div className="success-message">{successMessage}</div>
+        </div>
+      )}
       <h2 className="client-heading">{client.name}'s Details</h2>
       <div className="form-row">
         <div className="form-group">

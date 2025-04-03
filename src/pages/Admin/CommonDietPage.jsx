@@ -200,14 +200,7 @@ const CommonDietPage = () => {
         setSuccess(editingDietId 
           ? `Diet updated successfully for Group ${selectedGroup}!`
           : `Diet saved successfully for Group ${selectedGroup}!`);
-        
-        setError("");
-        setDiet("");
-        setSelectedTemplate("");
-        setEditingDietId(null);
-        fetchDietHistory();
-        
-        setTimeout(() => setSuccess(""), 5000);
+        setTimeout(() => setSuccess(""), 3000);
       } else {
         throw new Error(response.data?.error || "Failed to save diet");
       }
@@ -273,9 +266,11 @@ const CommonDietPage = () => {
         throw new Error("No authentication token found");
       }
   
-      await axios.post(
+      const dietId = Number(dietToDelete);
+      
+      const response = await axios.post(
         `https://nutriediet-go.onrender.com/admin/common_diet/${selectedGroup}/delete_diet`,
-        dietToDelete,
+        dietId, 
         {
           headers: { 
             Authorization: `Bearer ${token}`,
@@ -284,12 +279,21 @@ const CommonDietPage = () => {
         }
       );
       
-      fetchDietHistory(); 
-      setSuccess("Diet deleted successfully!");
-      setTimeout(() => setSuccess(""), 3000);
+      if (response.status === 200) {
+        fetchDietHistory(); 
+        setSuccess("Diet deleted successfully!");
+        setTimeout(() => setSuccess(""), 3000);
+      } else {
+        throw new Error(response.data?.error || "Failed to delete diet");
+      }
     } catch (error) {
-      console.error("Error deleting diet:", error);
-      setError(error.response?.data?.err || "Failed to delete diet. Please try again.");
+      console.error("Error deleting diet:", {
+        error: error.message,
+        response: error.response?.data
+      });
+      
+      setError(error.response?.data?.error || 
+              "Failed to delete diet. Please try again.");
     } finally {
       setDeleting(false);
       setDietToDelete(null);
@@ -307,14 +311,10 @@ const CommonDietPage = () => {
       </Alert>}
       
       {success && (
-        <div className="success-message">
-          <div className="message-content">
-            <FaCheckCircle className="icon" />
-            <span>{success}</span>
+      <div className="success-message-container">
+          <div className="success-message">
+            {success}
           </div>
-          <button className="close-btn" onClick={() => setSuccess("")}>
-            <FaTimes />
-          </button>
         </div>
       )}
 

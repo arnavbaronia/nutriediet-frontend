@@ -19,6 +19,7 @@ const CreateDietPage = () => {
   const [selectedPastTemplate, setSelectedPastTemplate] = useState("");
   const [pastDiet, setPastDiet] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(null);
   
   const quillModules = {
     toolbar: [
@@ -132,7 +133,7 @@ const CreateDietPage = () => {
     try {
       await axios.post(
         `https://nutriediet-go.onrender.com/admin/${client_id}/delete_diet`, 
-        { diet_id: dietId },
+        dietId,
         {
           headers: { 
             Authorization: `Bearer ${token}`, 
@@ -140,7 +141,8 @@ const CreateDietPage = () => {
           },
         }
       );
-      alert("Diet deleted successfully!");
+      setSuccessMessage("Diet deleted successfully!");
+      setTimeout(() => setSuccessMessage(null), 3000);
       fetchDietHistory();
     } catch (err) {
       console.error("Error deleting diet:", err);
@@ -208,8 +210,9 @@ const CreateDietPage = () => {
         }
       );
   
-      alert(editMode ? "Diet updated successfully!" : "Diet saved successfully!");
-      
+      setSuccessMessage(editMode ? "Diet updated successfully!" : "Diet saved successfully!");
+      setTimeout(() => setSuccessMessage(null), 3000);
+
       setEditMode(false);
       setDiet("");
       setSelectedTemplate("");
@@ -238,6 +241,14 @@ const CreateDietPage = () => {
           {typeof error === 'object' ? JSON.stringify(error) : error}
         </Alert>
       )}
+
+      {successMessage && (
+        <div className="success-message-container">
+          <div className="success-message">
+            {successMessage}
+          </div>
+        </div>
+      )}
       
       <DietHistoryTable 
         clientId={client_id} 
@@ -257,7 +268,7 @@ const CreateDietPage = () => {
               onChange={handleTemplateSelect}
               className="styled-dropdown"
             >
-              <option value="">Select Template (Optional)</option>
+              <option value="">Select Template</option>
               {dietTemplates.map((template) => (
                 <option key={template.ID} value={template.ID}>
                   {template.Name}
