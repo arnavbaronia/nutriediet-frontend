@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getToken } from "../../auth/token";
-import { FaPlus, FaSearch, FaTimes } from "react-icons/fa";
+import { FaPlusCircle, FaSearch, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
 import "../../styles/MotivationManagementPage.css";
 
 const MotivationManagementPage = () => {
@@ -46,7 +47,6 @@ const MotivationManagementPage = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       
-      // Optimistic UI update
       setMotivations(prev => prev.map(motivation => 
         motivation.id === id 
           ? { ...motivation, posting_active: !currentStatus } 
@@ -57,7 +57,7 @@ const MotivationManagementPage = () => {
       setTimeout(() => setSuccess(""), 3000);
     } catch (err) {
       setError(err.response?.data?.error || "Failed to update status");
-      fetchMotivations(); // Revert on error
+      fetchMotivations();
     } finally {
       setTogglingId(null);
     }
@@ -82,9 +82,9 @@ const MotivationManagementPage = () => {
     <div className="motivation-page-container">
       <div className="motivation-header">
         <h1 className="motivation-title">Motivation Management</h1>
-        <button onClick={handleCreateNew} className="motivation-create-btn">
-          <FaPlus /> Create New
-        </button>
+        <Button onClick={handleCreateNew} className="btn-createeee">
+          <FaPlusCircle style={{ position: 'relative', top: '2px' }} /> Create New
+        </Button>
       </div>
 
       {success && (
