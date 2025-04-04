@@ -14,7 +14,11 @@ const DIET_TYPES = {
 
 const DietPage = () => {
   const { client_id } = useParams();
-  const [diet, setDiet] = useState('');
+  const [diets, setDiets] = useState({
+    regular_diet: '',
+    detox_diet: '',
+    detox_water: ''
+  });
   const [dietType, setDietType] = useState(DIET_TYPES.REGULAR);
   const [isActive, setIsActive] = useState(true);
   const [error, setError] = useState(null);
@@ -26,9 +30,9 @@ const DietPage = () => {
   const clientName = JSON.parse(localStorage.getItem('user'))?.name || 'there';
 
   useEffect(() => {
-    fetchDiet(dietType);
+    fetchAllDiets();
     fetchMotivations();
-  }, [dietType, client_id]);
+  }, [client_id]);
 
   const fetchMotivations = async () => {
     setLoadingMotivations(true);
@@ -61,7 +65,7 @@ const DietPage = () => {
     }
   };
 
-  const fetchDiet = async (type) => {
+  const fetchAllDiets = async () => {
     setLoading(true);
     setError(null);
 
@@ -72,32 +76,23 @@ const DietPage = () => {
       return;
     }
 
-    let endpoint;
-    switch(type) {
-      case DIET_TYPES.REGULAR:
-        endpoint = `https://nutriediet-go.onrender.com/clients/${client_id}/diet`;
-        break;
-      case DIET_TYPES.DETOX:
-        endpoint = `https://nutriediet-go.onrender.com/clients/${client_id}/detox_diet`;
-        break;
-      case DIET_TYPES.DETOX_WATER:
-        endpoint = `https://nutriediet-go.onrender.com/clients/${client_id}/detox_water`;
-        break;
-      default:
-        endpoint = `https://nutriediet-go.onrender.com/clients/${client_id}/diet`;
-    }
-
     try {
-      const response = await axios.get(endpoint, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        `https://nutriediet-go.onrender.com/clients/${client_id}/diet`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-      if (response.data.isActive) {
-        setDiet(response.data.diet || '');
-        setIsActive(true);
-      } else {
+      if (response.data.isActive === false) {
         setIsActive(false);
-        setDiet('');
+      } else {
+        setIsActive(true);
+        setDiets({
+          regular_diet: response.data.regular_diet || '',
+          detox_diet: response.data.detox_diet || '',
+          detox_water: response.data.detox_water || ''
+        });
       }
     } catch (error) {
       setError(error.response?.data?.error || 'Failed to fetch diet.');
@@ -108,6 +103,19 @@ const DietPage = () => {
 
   const handleDietTypeChange = (type) => {
     setDietType(type);
+  };
+
+  const getCurrentDiet = () => {
+    switch(dietType) {
+      case DIET_TYPES.REGULAR:
+        return diets.regular_diet;
+      case DIET_TYPES.DETOX:
+        return diets.detox_diet;
+      case DIET_TYPES.DETOX_WATER:
+        return diets.detox_water;
+      default:
+        return diets.regular_diet;
+    }
   };
 
   return (
@@ -164,7 +172,7 @@ const DietPage = () => {
         </div>
       ) : (
         <div className="diet-container">
-          <p className="diet-content">{diet || "No diet data available."}</p>
+          <p className="diet-content">{getCurrentDiet() || "No diet data available."}</p>
         </div>
       )}
       <WeightUpdatePage client_id={client_id} />
