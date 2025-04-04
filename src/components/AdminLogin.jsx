@@ -91,7 +91,7 @@ const AdminLogin = () => {
             />
           )}
         </div>
-        <button type="submit" className="submit-button">
+        <button type="submit" className="submit-buttonnn">
           Login
         </button>
       </form>
