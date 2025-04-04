@@ -14,6 +14,7 @@ import SendIcon from "@mui/icons-material/Send";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import TestimonialsPageUpdated from "./TestimonialsPageUpdated";
 
 const HomePage = () => {
   useEffect(() => {
@@ -146,6 +147,7 @@ const HomePage = () => {
         </div>
       </div>
 
+      <TestimonialsPageUpdated />
       <a
         href="https://wa.me/+919391450725 "
         target="_blank"

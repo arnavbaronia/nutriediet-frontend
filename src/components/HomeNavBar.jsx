@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../styles/HomeNavBar.css";
 import logo from "../assets/Nutriediet_Logo_Transparent.png";
@@ -16,6 +16,17 @@ const HomeNavBar = () => {
     }
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setMenuOpen(false);
+      }
+    };
+  
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <nav className="navigation-bar">
       <div className="nav-logo">
@@ -27,10 +38,10 @@ const HomeNavBar = () => {
         <FiMenu />
       </div>
       <div className={`nav-buttons ${menuOpen ? "show-menu" : ""}`}>
-        <Link to="/" className={`nav-link ${isActive("/")}`} onClick={handleLinkClick}>
+        {/* <Link to="/" className={`nav-link ${isActive("/")}`} onClick={handleLinkClick}>
           Home
-        </Link>
-        <Link to="/about" className={`nav-link ${isActive("/about")}`} onClick={handleLinkClick}>
+        </Link> */}
+        {/* <Link to="/about" className={`nav-link ${isActive("/about")}`} onClick={handleLinkClick}>
           About
         </Link>
         <Link to="/services" className={`nav-link ${isActive("/services")}`} onClick={handleLinkClick}>
@@ -38,7 +49,7 @@ const HomeNavBar = () => {
         </Link>
         <Link to="/testimonials" className={`nav-link ${isActive("/testimonials")}`} onClick={handleLinkClick}>
           Testimonials
-        </Link>
+        </Link> */}
         <div className="auth-buttons">
           <Link to="/login" className={`nav-button login-btn ${isActive("/login")}`} onClick={handleLinkClick}>
             Login

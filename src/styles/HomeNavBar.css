@@ -113,23 +113,28 @@ body {
 
   .nav-buttons {
     flex-direction: column;
-    max-height: 0;
-    overflow: hidden;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
     width: 100%;
     background: white;
-    backdrop-filter: blur(0px);
     position: absolute;
     top: 70px;
     left: 0;
-    padding: 10px 0;
-    transition: background 0.3s ease;
-  }
+    padding: 0;
+    z-index: 999;
+  }  
 
   .nav-buttons.show-menu {
-    max-height: 600px;
-    background: white;
+    transform: scaleY(1);
+    opacity: 1;
+    visibility: visible;
+    padding: 10px 0;
     backdrop-filter: blur(10px);
-  }
+    min-height: 120px;
+  }  
 
   .nav-link {
     margin: 10px 0;
