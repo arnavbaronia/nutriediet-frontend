@@ -14,6 +14,7 @@ const CommonDietPage = () => {
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("");
   const [pastDiet, setPastDiet] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const [selectedPastTemplate, setSelectedPastTemplate] = useState("");
   const [dietHistory, setDietHistory] = useState({
     detox: [],
@@ -154,6 +155,7 @@ const CommonDietPage = () => {
   };
 
   const handleSubmit = async () => {
+    if (submitting) return;
     if (!diet || !dietType) {
       setError("Please provide both diet content and select a diet type.");
       return;
@@ -170,6 +172,9 @@ const CommonDietPage = () => {
       return;
     }
   
+    setSubmitting(true);
+    setError(null);
+  
     try {
       const headers = {
         Authorization: `Bearer ${token}`,
@@ -183,8 +188,6 @@ const CommonDietPage = () => {
         ...(selectedTemplate && { diet_template_id: parseInt(selectedTemplate) })
       };
   
-      console.log("Sending diet data:", requestData); 
-
       const response = await axios.post(
         editingDietId 
           ? `https://nutriediet-go.onrender.com/admin/common_diet/${selectedGroup}/update`
@@ -214,6 +217,8 @@ const CommonDietPage = () => {
               err.response?.data?.message || 
               err.message || 
               "Failed to save diet. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -482,9 +487,9 @@ const CommonDietPage = () => {
             <Button 
               className="save-btn" 
               onClick={handleSubmit}
-              disabled={!selectedGroup || !diet.trim()}
+              disabled={!selectedGroup || !diet.trim() || submitting}
             >
-              {editingDietId ? 'Update' : 'Send'}
+              {submitting ? "Processing..." : (editingDietId ? 'Update' : 'Send')}
             </Button>
             {editingDietId && (
               <Button 
