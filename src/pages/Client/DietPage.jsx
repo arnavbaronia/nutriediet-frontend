@@ -19,24 +19,47 @@ const DietPage = () => {
   const [isActive, setIsActive] = useState(true);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [motivations, setMotivations] = useState([]);
+  const [currentQuote, setCurrentQuote] = useState('Stay motivated on your health journey!');
+  const [loadingMotivations, setLoadingMotivations] = useState(false);
   
   const clientName = JSON.parse(localStorage.getItem('user'))?.name || 'there';
 
-  const motivationalQuotes = [
-    "Every healthy choice you make is a step towards a better you!",
-    "Your diet is a bank account. Good food choices are good investments.",
-    "Take care of your body. It's the only place you have to live.",
-    "Small changes today lead to big results tomorrow. Keep going!",
-    "You don't have to be perfect, just consistent. Your efforts matter!"
-  ];
-
-  const [currentQuote] = useState(
-    motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)]
-  );
-
   useEffect(() => {
     fetchDiet(dietType);
+    fetchMotivations();
   }, [dietType, client_id]);
+
+  const fetchMotivations = async () => {
+    setLoadingMotivations(true);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setLoadingMotivations(false);
+      return;
+    }
+  
+    try {
+      const response = await axios.get(
+        `https://nutriediet-go.onrender.com/clients/${client_id}/motivation`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+  
+      if (response.data.isActive && response.data.motivations?.length > 0) {
+        setMotivations(response.data.motivations);
+        const randomIndex = Math.floor(Math.random() * response.data.motivations.length);
+        setCurrentQuote(response.data.motivations[randomIndex].text);
+      } else {
+        setCurrentQuote('Stay motivated on your health journey!');
+      }
+    } catch (error) {
+      console.error('Failed to fetch motivations:', error);
+      setCurrentQuote('Stay positive and keep working towards your goals!');
+    } finally {
+      setLoadingMotivations(false);
+    }
+  };
 
   const fetchDiet = async (type) => {
     setLoading(true);
@@ -92,9 +115,15 @@ const DietPage = () => {
       <div className="greeting-container">
         <h2 className="greeting-text">Hello, {clientName}!</h2>
         <div className="motivational-quote">
-          <FaQuoteLeft className="quote-icon left" />
-          <p>{currentQuote}</p>
-          <FaQuoteRight className="quote-icon right" />
+          {loadingMotivations ? (
+            <Spinner animation="border" size="sm" />
+          ) : (
+            <>
+              <FaQuoteLeft className="quote-icon left" />
+              <p>{currentQuote}</p>
+              <FaQuoteRight className="quote-icon right" />
+            </>
+          )}
         </div>
         <h1 className="diet-title">
           <FaClipboardList /> Your Diet Plan
