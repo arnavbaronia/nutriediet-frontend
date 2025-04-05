@@ -2,7 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../styles/ClientDetailsPage.css';
 
-const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistory, onDietHistoryChange }) => {
+const DietHistoryTable = ({ 
+    clientId, 
+    handleDietAction, 
+    handleDelete, 
+    dietHistory: propsDietHistory, 
+    onDietHistoryChange,
+    refreshTrigger 
+}) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -84,12 +91,6 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistor
         
         try {
             await handleDelete(dietToDelete);
-            const updatedHistory = formattedHistory.filter(diet => diet.id !== dietToDelete);
-            setFormattedHistory(updatedHistory);
-            
-            if (onDietHistoryChange) {
-                onDietHistoryChange(updatedHistory);
-            }
         } catch (error) {
             console.error("Error deleting diet:", error);
             setError("Failed to delete diet.");
@@ -103,7 +104,14 @@ const DietHistoryTable = ({ clientId, handleDietAction, handleDelete, dietHistor
         if (clientId) {
             fetchDietHistory();
         }
-    }, [clientId]);
+    }, [clientId, refreshTrigger]);
+
+    useEffect(() => {
+        if (propsDietHistory && propsDietHistory.length > 0) {
+            const formattedData = formatHistoryData(propsDietHistory);
+            setFormattedHistory(formattedData);
+        }
+    }, [propsDietHistory]);
 
     const latestDietId = formattedHistory.length > 0 ? formattedHistory[0].id : null;
 

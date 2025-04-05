@@ -20,6 +20,7 @@ const CreateDietPage = () => {
   const [pastDiet, setPastDiet] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   
   const quillModules = {
     toolbar: [
@@ -37,7 +38,7 @@ const CreateDietPage = () => {
   useEffect(() => {
     fetchDietTemplates();
     fetchDietHistory();
-  }, [client_id]);
+  }, [client_id, refreshTrigger]);
 
   const fetchDietTemplates = async () => {
     try {
@@ -143,7 +144,7 @@ const CreateDietPage = () => {
       );
       setSuccessMessage("Diet deleted successfully!");
       setTimeout(() => setSuccessMessage(null), 3000);
-      fetchDietHistory();
+      setRefreshTrigger(prev => prev + 1);
     } catch (err) {
       console.error("Error deleting diet:", err);
       setError(formatError(err, "Failed to delete diet."));
@@ -190,8 +191,8 @@ const CreateDietPage = () => {
     const requestData = {
       diet_type: 1,
       diet: diet,
-      ...(selectedTemplate && { diet_template_id: parseInt(selectedTemplate) }), // Optional template ID
-      ...(editMode && selectedHistory && { diet_id: selectedHistory.id }) // Only include in edit mode
+      ...(selectedTemplate && { diet_template_id: parseInt(selectedTemplate) }), 
+      ...(editMode && selectedHistory && { diet_id: selectedHistory.id })
     };
 
     try {
@@ -218,7 +219,7 @@ const CreateDietPage = () => {
       setSelectedTemplate("");
       setSelectedHistory(null);
       
-      fetchDietHistory();
+      setRefreshTrigger(prev => prev + 1);
     } catch (err) {
       console.error("Error saving diet:", err);
       setError(formatError(err, "Failed to save diet."));
@@ -255,6 +256,7 @@ const CreateDietPage = () => {
         dietHistory={dietHistory} 
         handleDietAction={handleHistorySelect} 
         handleDelete={handleDelete}
+        refreshTrigger={refreshTrigger} 
       />      
       
       <div className="diet-section">
