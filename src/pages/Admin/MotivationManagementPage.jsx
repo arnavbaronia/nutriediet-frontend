@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getToken } from "../../auth/token";
-import { FaPlusCircle, FaSearch, FaTimes } from "react-icons/fa";
+import { FaPlusCircle, FaSearch, FaTimes, FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import "../../styles/MotivationManagementPage.css";
@@ -14,6 +14,10 @@ const MotivationManagementPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [togglingId, setTogglingId] = useState(null);
+  const [sortConfig, setSortConfig] = useState({
+    key: null,
+    direction: 'ascending'
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -67,7 +71,38 @@ const MotivationManagementPage = () => {
     navigate("/admin/motivations/new");
   };
 
-  const filteredMotivations = motivations.filter(motivation => {
+  const requestSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const getSortIcon = (key) => {
+    if (sortConfig.key !== key) return <FaSort />;
+    return sortConfig.direction === 'ascending' ? <FaSortUp /> : <FaSortDown />;
+  };
+
+  const sortedMotivations = [...motivations].sort((a, b) => {
+    if (!sortConfig.key) return 0;
+    
+    if (sortConfig.key === 'created_at') {
+      const dateA = new Date(a.created_at).getTime();
+      const dateB = new Date(b.created_at).getTime();
+      return sortConfig.direction === 'ascending' ? dateA - dateB : dateB - dateA;
+    }
+    
+    if (sortConfig.key === 'id') {
+      return sortConfig.direction === 'ascending' 
+        ? a.id - b.id 
+        : b.id - a.id;
+    }
+    
+    return 0;
+  });
+
+  const filteredMotivations = sortedMotivations.filter(motivation => {
     const matchesSearch = motivation.text.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || 
       (statusFilter === "active" && motivation.posting_active) ||
@@ -127,10 +162,18 @@ const MotivationManagementPage = () => {
           <table className="motivation-table">
             <thead>
               <tr>
-                <th>ID</th>
+                <th onClick={() => requestSort('id')}>
+                  <div className="sortable-header">
+                    ID {getSortIcon('id')}
+                  </div>
+                </th>
                 <th>Message</th>
                 <th>Status</th>
-                <th>Created At</th>
+                <th onClick={() => requestSort('created_at')}>
+                  <div className="sortable-header">
+                    Created At {getSortIcon('created_at')}
+                  </div>
+                </th>
                 <th>Toggle Status</th>
               </tr>
             </thead>
