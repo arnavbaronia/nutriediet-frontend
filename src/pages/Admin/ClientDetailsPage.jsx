@@ -44,6 +44,7 @@ const ClientDetailsPage = () => {
   const [updatedWeight, setUpdatedWeight] = useState("");
   const [feedback, setFeedback] = useState("");
   const [weightUpdateSuccess, setWeightUpdateSuccess] = useState(null);
+  const [originalValues, setOriginalValues] = useState({});
   // const [dietHistory, setDietHistory] = useState([]);
 
   const navigate = useNavigate();
@@ -77,7 +78,7 @@ const ClientDetailsPage = () => {
           }`.trim() ||
           "N/A";
   
-        setClient({
+        const formattedClient = {
           ...clientData,
           name,
           amount_paid: clientData.amount_paid?.toString() || "",
@@ -85,6 +86,14 @@ const ClientDetailsPage = () => {
           last_payment_date: formatDateForInput(clientData.last_payment_date),
           date_of_joining: formatDateForInput(clientData.date_of_joining),
           created_at: formatDateForInput(clientData.created_at),
+        };
+  
+        setClient(formattedClient);
+        
+        setOriginalValues({
+          ...clientData,
+          name: clientData.name || name,
+          amount_paid: clientData.amount_paid,
         });
   
         setDiets(response.data.diets);
@@ -142,6 +151,15 @@ const ClientDetailsPage = () => {
       );
   
       if (response.status === 200) {
+        const today = new Date();
+        const newWeightEntry = {
+          date: today,
+          weight: parseFloat(updatedWeight)
+        };
+        
+        const updatedWeightHistory = [...weightHistory, newWeightEntry].sort((a, b) => a.date - b.date);
+        
+        setWeightHistory(updatedWeightHistory);
         setWeightUpdateSuccess("Weight and feedback updated successfully!");
         setUpdatedWeight("");
         setFeedback("");
@@ -161,9 +179,13 @@ const ClientDetailsPage = () => {
             date: new Date(entry.date),
             weight: parseFloat(entry.weight)
           }))
-          .sort((a, b) => a.date - b.date); 
+          .sort((a, b) => a.date - b.date);
         
-        setWeightHistory(weightDataFromDiet);
+        const combinedWeightHistory = [...weightDataFromDiet];
+        
+        if (combinedWeightHistory.length !== weightHistory.length) {
+          setWeightHistory(combinedWeightHistory);
+        }
       }
     } catch (error) {
       console.error("Error updating weight and feedback:", error);
@@ -295,53 +317,75 @@ const ClientDetailsPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
-
-    const [first_name, ...last_nameArr] = client.name.split(' ');
-    const last_name = last_nameArr.join(' ');
-
-    const payload = {
-      name: client.name || '',
-      first_name: first_name || '',
-      last_name: last_name || '',
-      age: client.age ? parseInt(client.age, 10) : null,
-      email: client.email || '',
-      city: client.city || '',
-      phone_number: client.phone_number || '',
-      height: client.height ? parseInt(client.height, 10) : null,
-      starting_weight: client.starting_weight ? parseInt(client.starting_weight, 10) : null,
-      dietary_preference: client.dietary_preference || '',
-      medical_history: client.medical_history || '',
-      allergies: client.allergies || '',
-      locality: client.locality || '',
-      diet_recall: client.diet_recall || '',
-      exercise: client.exercise || '',
-      package: client.package || '',
-      amount_paid: client.amount_paid ? parseInt(client.amount_paid, 10) : null,
-      remarks: client.remarks || '',
-      next_payment_date: formatDateForPayload(client.next_payment_date),
-      last_payment_date: formatDateForPayload(client.last_payment_date),
-      date_of_joining: formatDateForPayload(client.date_of_joining),
-      created_at: formatDateForPayload(client.created_at),
-      dietitian_id: client.dietitian_id ? parseInt(client.dietitian_id, 10) : null,
-      group_id: client.group_id ? parseInt(client.group_id, 10) : null,
-    };
-
+  
+    const payload = {};
+    const fieldsToCheck = [
+      'name', 'age', 'email', 'city', 'phone_number', 'height', 
+      'starting_weight', 'dietary_preference', 'medical_history', 
+      'allergies', 'locality', 'diet_recall', 'exercise', 'package', 
+      'amount_paid', 'remarks', 'last_payment_date', 'date_of_joining',
+      'dietitian_id', 'group_id'
+    ];
+  
+    fieldsToCheck.forEach(field => {
+      const currentValue = client[field];
+      const originalValue = originalValues[field];
+  
+      if (currentValue === originalValue) return;
+  
+      if (field.includes('_date') || field === 'date_of_joining') {
+        payload[field] = formatDateForPayload(currentValue);
+      } 
+      else if (['age', 'height', 'starting_weight', 'amount_paid', 'dietitian_id', 'group_id'].includes(field)) {
+        payload[field] = currentValue ? parseInt(currentValue, 10) : null;
+      }
+      else {
+        payload[field] = currentValue;
+      }
+    });
+  
+    if (payload.name) {
+      const [first_name, ...last_nameArr] = payload.name.split(' ');
+      payload.first_name = first_name || '';
+      payload.last_name = last_nameArr.join(' ') || '';
+    }
+  
+    if (Object.keys(payload).length === 0) {
+      setSuccessMessage('No changes detected.');
+      setTimeout(() => setSuccessMessage(null), 3000);
+      return;
+    }
+  
     axios
       .post(`https://nutriediet-go.onrender.com/admin/client/${client_id}`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
         const updatedClient = response.data.client;
-
-        setClient((prevState) => ({
-          ...prevState,
+  
+        const updatedValues = {
           ...updatedClient,
-          name: prevState.name,
-          next_payment_date: formatDateForInput(updatedClient.next_payment_date),
-          last_payment_date: formatDateForInput(updatedClient.last_payment_date),
-          date_of_joining: formatDateForInput(updatedClient.date_of_joining),
-          created_at: formatDateForInput(updatedClient.created_at),
+          name: updatedClient.name || client.name,
+          next_payment_date: updatedClient.next_payment_date,
+          last_payment_date: updatedClient.last_payment_date,
+          date_of_joining: updatedClient.date_of_joining,
+          created_at: updatedClient.created_at,
+        };
+  
+        setClient(prev => ({
+          ...prev,
+          ...updatedValues,
+          next_payment_date: formatDateForInput(updatedValues.next_payment_date),
+          last_payment_date: formatDateForInput(updatedValues.last_payment_date),
+          date_of_joining: formatDateForInput(updatedValues.date_of_joining),
+          created_at: formatDateForInput(updatedValues.created_at),
         }));
+  
+        setOriginalValues(prev => ({
+          ...prev,
+          ...updatedValues
+        }));
+  
         setError(null);
         setSuccessMessage('Details updated successfully!');
         setTimeout(() => setSuccessMessage(null), 3000);
