@@ -144,12 +144,14 @@ const CreateDietPage = () => {
       );
       setSuccessMessage("Diet deleted successfully!");
       setTimeout(() => setSuccessMessage(null), 3000);
+      
+      setDietHistory(prev => prev.filter(d => d.id !== dietId));
       setRefreshTrigger(prev => prev + 1);
     } catch (err) {
       console.error("Error deleting diet:", err);
       setError(formatError(err, "Failed to delete diet."));
     }
-  };  
+  };
   
   const handleTemplateSelect = (e) => {
     const templateId = e.target.value;
@@ -191,10 +193,10 @@ const CreateDietPage = () => {
     const requestData = {
       diet_type: 1,
       diet: diet,
-      ...(selectedTemplate && { diet_template_id: parseInt(selectedTemplate) }), 
+      ...(selectedTemplate && { diet_template_id: parseInt(selectedTemplate) }),
       ...(editMode && selectedHistory && { diet_id: selectedHistory.id })
     };
-
+  
     try {
       const endpoint = editMode 
         ? `https://nutriediet-go.onrender.com/admin/${client_id}/edit_diet`
@@ -213,13 +215,29 @@ const CreateDietPage = () => {
   
       setSuccessMessage(editMode ? "Diet updated successfully!" : "Diet saved successfully!");
       setTimeout(() => setSuccessMessage(null), 3000);
-
+  
+      const updatedDiet = {
+        id: editMode ? selectedHistory.id : response.data.diet_id,
+        week_number: editMode ? selectedHistory.week_number : (dietHistory[0]?.week_number || 0) + 1,
+        date: new Date().toISOString(),
+        diet_string: diet,
+        name: selectedTemplate ? dietTemplates.find(t => t.ID === parseInt(selectedTemplate))?.Name : 'Custom Diet',
+        feedback: ''
+      };
+  
+      if (editMode) {
+        setDietHistory(prev => prev.map(d => 
+          d.id === selectedHistory.id ? updatedDiet : d
+        ));
+      } else {
+        setDietHistory(prev => [updatedDiet, ...prev]);
+      }
+  
       setEditMode(false);
       setDiet("");
       setSelectedTemplate("");
       setSelectedHistory(null);
       
-      setRefreshTrigger(prev => prev + 1);
     } catch (err) {
       console.error("Error saving diet:", err);
       setError(formatError(err, "Failed to save diet."));
@@ -251,12 +269,11 @@ const CreateDietPage = () => {
         </div>
       )}
       
-      <DietHistoryTable 
-        clientId={client_id} 
+      <DietHistoryTable
+        clientId={client_id}
         dietHistory={dietHistory} 
         handleDietAction={handleHistorySelect} 
-        handleDelete={handleDelete}
-        refreshTrigger={refreshTrigger} 
+        handleDelete={handleDelete} 
       />      
       
       <div className="diet-section">
