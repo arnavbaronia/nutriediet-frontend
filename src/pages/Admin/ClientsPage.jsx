@@ -54,11 +54,11 @@ const ClientsPage = () => {
       if (!showAllClients && (client.is_active === false || client.is_active === undefined)) {
         return false;
       }
-
+  
       const matchesSearch =
         (client.name?.toLowerCase() || "").includes(search.toLowerCase()) ||
         (client.email?.toLowerCase() || "").includes(search.toLowerCase());
-
+  
       let matchesFilters = true;
       if (selectedFilters.includes("diets_due_today")) {
         const today = new Date();
@@ -73,13 +73,16 @@ const ClientsPage = () => {
       if (selectedFilters.includes("payment_due")) {
         matchesFilters = matchesFilters && new Date(client.next_payment_date) < new Date();
       }
-
+      if (selectedFilters.includes("amount_due")) {
+        matchesFilters = matchesFilters && (client.amount_due > 0);
+      }
+  
       const matchesDietitian = selectedDietitian ? client.dietitian_id === Number(selectedDietitian) : true;
       const matchesGroup = selectedGroup ? client.group_id === Number(selectedGroup) : true;
-
+  
       return matchesSearch && matchesFilters && matchesDietitian && matchesGroup;
     });
-
+  
     setFilteredClients(filtered);
   }, [search, selectedFilters, selectedDietitian, selectedGroup, clients, showAllClients]);
 
@@ -213,6 +216,7 @@ const ClientsPage = () => {
             <option value="">Add Filter</option>
             <option value="diets_due_today">Diets Due Today</option>
             <option value="payment_due">Payment Due</option>
+            <option value="amount_due">Amount Due</option>
           </select>
 
           <select 
@@ -265,6 +269,7 @@ const ClientsPage = () => {
             <th onClick={() => handleSort("group_id")}>Group</th>
             <th onClick={() => handleSort("next_payment_date")}>Next Payment Date</th>
             <th onClick={() => handleSort("last_diet_date")}>Last Diet Date</th>
+            <th onClick={() => handleSort("amount_due")}>Amount Due (₹)</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -272,12 +277,17 @@ const ClientsPage = () => {
         <tbody>
           {filteredClients.map((client) => {
             const paymentOverdue = isPaymentOverdue(client.next_payment_date);
+            const hasAmountDue = client.amount_due > 0;
             const isInactive = client.is_active === false || client.is_active === undefined;
             
             return (
               <tr 
                 key={client.id} 
-                className={`${paymentOverdue ? "payment-overdue" : ""} ${isInactive ? "inactive-client" : ""}`}
+                className={`
+                  ${paymentOverdue ? "payment-overdue" : ""} 
+                  ${hasAmountDue ? "amount-due" : ""}
+                  ${isInactive ? "inactive-client" : ""}
+                `}
               >
                 <td>{client.id}</td>
                 <td>{client.name}</td>
@@ -289,6 +299,7 @@ const ClientsPage = () => {
                     : new Date(client.next_payment_date).toLocaleDateString()}
                 </td>
                 <td>{client.last_diet_date ? new Date(client.last_diet_date).toLocaleDateString() : "N/A"}</td>
+                <td>{client.amount_due ? `₹${client.amount_due}` : "₹0"}</td>
                 <td>
                   {isInactive ? (
                     <span className="inactive-tag">Inactive</span>
@@ -306,6 +317,21 @@ const ClientsPage = () => {
           })}
         </tbody>
       </table>
+      <div className="legend-wrapper">
+        <div className="legend-card">
+          <h4 className="legend-heading">Table Color Guide</h4>
+          <div className="legend-items">
+            <div className="legend-row">
+              <div className="legend-color payment-overdue-bg"></div>
+              <span>Payment overdue</span>
+            </div>
+            <div className="legend-row">
+              <div className="legend-color amount-due-even-bg"></div>
+              <span>Amount due</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

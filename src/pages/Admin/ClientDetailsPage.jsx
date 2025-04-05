@@ -27,6 +27,8 @@ const ClientDetailsPage = () => {
     exercise: '',
     package: '',
     amount_paid: '',
+    total_amount: '',
+    amount_due: '',
     remarks: '',
     next_payment_date: '',
     last_payment_date: '',
@@ -257,12 +259,12 @@ const ClientDetailsPage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
+  
     console.log(`Updated Field: ${name}, Value: ${value}`);
-
+  
     setClient((prevClient) => {
       const updatedClient = { ...prevClient, [name]: value };
-
+  
       if (name === "package" || name === "last_payment_date") {
         if (updatedClient.package && updatedClient.last_payment_date) {
           const nextPaymentDate = calculateNextPaymentDate(
@@ -273,7 +275,13 @@ const ClientDetailsPage = () => {
           updatedClient.next_payment_date = nextPaymentDate;
         }
       }
-
+  
+      if (name === "total_amount" || name === "amount_paid") {
+        const total = parseFloat(updatedClient.total_amount) || 0;
+        const paid = parseFloat(updatedClient.amount_paid) || 0;
+        updatedClient.amount_due = total - paid;
+      }
+  
       return updatedClient;
     });
   };
@@ -323,8 +331,8 @@ const ClientDetailsPage = () => {
       'name', 'age', 'email', 'city', 'phone_number', 'height', 
       'starting_weight', 'dietary_preference', 'medical_history', 
       'allergies', 'locality', 'diet_recall', 'exercise', 'package', 
-      'amount_paid', 'remarks', 'last_payment_date', 'date_of_joining',
-      'dietitian_id', 'group_id'
+      'amount_paid', 'total_amount', 'amount_due', 'remarks', 
+      'last_payment_date', 'date_of_joining', 'dietitian_id', 'group_id'
     ];
   
     fieldsToCheck.forEach(field => {
@@ -336,7 +344,7 @@ const ClientDetailsPage = () => {
       if (field.includes('_date') || field === 'date_of_joining') {
         payload[field] = formatDateForPayload(currentValue);
       } 
-      else if (['age', 'height', 'starting_weight', 'amount_paid', 'dietitian_id', 'group_id'].includes(field)) {
+      else if (['age', 'height', 'starting_weight', 'amount_paid', 'total_amount', 'amount_due', 'dietitian_id', 'group_id'].includes(field)) {
         payload[field] = currentValue ? parseInt(currentValue, 10) : null;
       }
       else {
@@ -626,7 +634,7 @@ const ClientDetailsPage = () => {
               </div>
           </div>
 
-          {/* Medical History, Allergies, Exercise */}
+          {/* Medical History, Allergies, Exercise, Dietitian ID, Group ID */}
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="medical_history">Medical History</label>
@@ -664,9 +672,40 @@ const ClientDetailsPage = () => {
                 style={{ width: '96%' }}
               />
             </div>
+            <div className="form-group">
+              <label htmlFor="dietitian_id">Dietitian</label>
+              <select
+                id="dietitian_id"
+                name="dietitian_id"
+                value={client.dietitian_id}
+                className="client-input select-input"
+                onChange={handleChange}
+              >
+                <option value="">Select Dietitian</option>
+                {[...Array(10)].map((_, i) => (
+                  <option key={i+1} value={i+1}>Dietitian {i+1}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="group_id">Group</label>
+              <select
+                id="group_id"
+                name="group_id"
+                value={client.group_id}
+                className="client-input select-input"
+                onChange={handleChange}
+              >
+                <option value="">Select Group</option>
+                {[...Array(6)].map((_, i) => (
+                  <option key={i+1} value={i+1}>Group {i+1}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
-          {/* Package, Amount Paid, Next Payment Date, Last Payment Date, Date of Joining, Dietitian ID, Group ID */}
+          {/* Package, Total Amount, Amount Paid, Amount Due, Next Payment Date, Last Payment Date, Date of Joining */}
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="package">Package</label>
@@ -684,7 +723,17 @@ const ClientDetailsPage = () => {
                 <option value="12 Weeks">3 Months</option>
               </select>
             </div>
-
+            <div className="form-group">
+              <label htmlFor="total_amount">Total Amount (₹)</label>
+              <input
+                type="number"
+                id="total_amount"
+                name="total_amount"
+                value={client.total_amount}
+                className="client-input"
+                onChange={handleChange}
+              />
+            </div>
             <div className="form-group">
               <label htmlFor="amount_paid">Amount Paid (₹)</label>
               <input
@@ -694,6 +743,17 @@ const ClientDetailsPage = () => {
                 value={client.amount_paid}
                 className="client-input"
                 onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="amount_due">Amount Due (₹)</label>
+              <input
+                type="number"
+                id="amount_due"
+                name="amount_due"
+                value={client.amount_due || (client.total_amount - client.amount_paid)}
+                className="client-input"
+                readOnly
               />
             </div>
             <div className="form-group">
@@ -728,37 +788,6 @@ const ClientDetailsPage = () => {
                 className="client-input"
                 onChange={handleChange}
               />
-            </div>
-            <div className="form-group">
-              <label htmlFor="dietitian_id">Dietitian</label>
-              <select
-                id="dietitian_id"
-                name="dietitian_id"
-                value={client.dietitian_id}
-                className="client-input select-input"
-                onChange={handleChange}
-              >
-                <option value="">Select Dietitian</option>
-                {[...Array(10)].map((_, i) => (
-                  <option key={i+1} value={i+1}>Dietitian {i+1}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="group_id">Group</label>
-              <select
-                id="group_id"
-                name="group_id"
-                value={client.group_id}
-                className="client-input select-input"
-                onChange={handleChange}
-              >
-                <option value="">Select Group</option>
-                {[...Array(6)].map((_, i) => (
-                  <option key={i+1} value={i+1}>Group {i+1}</option>
-                ))}
-              </select>
             </div>
           </div>
 
