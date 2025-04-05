@@ -106,16 +106,16 @@ const DietPage = () => {
   };
 
   const getCurrentDiet = () => {
-    switch(dietType) {
-      case DIET_TYPES.REGULAR:
-        return diets.regular_diet;
-      case DIET_TYPES.DETOX:
-        return diets.detox_diet;
-      case DIET_TYPES.DETOX_WATER:
-        return diets.detox_water;
-      default:
-        return diets.regular_diet;
-    }
+    const dietContent = {
+      [DIET_TYPES.REGULAR]: diets.regular_diet,
+      [DIET_TYPES.DETOX]: diets.detox_diet,
+      [DIET_TYPES.DETOX_WATER]: diets.detox_water
+    }[dietType] || '';
+  
+    return dietContent
+      .replace(/<[^>]*>/g, '') 
+      .replace(/\n{3,}/g, '\n\n') 
+      .trim();
   };
 
   return (
