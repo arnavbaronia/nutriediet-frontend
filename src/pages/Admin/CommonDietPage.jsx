@@ -73,11 +73,11 @@ const CommonDietPage = () => {
       );
   
       const detoxHistory = (response.data.diet_history_detox_diet || [])
-        .sort((a, b) => b.week_number - a.week_number)
-        .map(diet => ({
+        .sort((a, b) => new Date(b.date) - new Date(a.date)) 
+        .map((diet, index) => ({
           ...diet,
           id: diet.id,
-          week: diet.week_number,
+          week: index + 1, 
           date: formatDate(diet.date),
           dietString: diet.diet_string,
           templateId: diet.diet_template_id, 
@@ -86,11 +86,11 @@ const CommonDietPage = () => {
         }));
   
       const detoxWaterHistory = (response.data.diet_history_detox_water || [])
-        .sort((a, b) => b.week_number - a.week_number)
-        .map(diet => ({
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .map((diet, index) => ({
           ...diet,
           id: diet.id,
-          week: diet.week_number,
+          week: index + 1,
           date: formatDate(diet.date),
           dietString: diet.diet_string,
           templateId: diet.diet_template_id,
@@ -109,6 +109,7 @@ const CommonDietPage = () => {
   };
 
   const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
     const date = new Date(dateString);
     return date.toLocaleDateString('en-GB', {
       day: '2-digit',
@@ -203,6 +204,15 @@ const CommonDietPage = () => {
           ? `Diet updated successfully for Group ${selectedGroup}!`
           : `Diet saved successfully for Group ${selectedGroup}!`);
         setTimeout(() => setSuccess(""), 3000);
+        
+        await fetchDietHistory();
+        
+        if (!editingDietId) {
+          setDiet("");
+          setSelectedTemplate("");
+        } else {
+          setEditingDietId(null);
+        }
       } else {
         throw new Error(response.data?.error || "Failed to save diet");
       }
@@ -284,7 +294,7 @@ const CommonDietPage = () => {
       );
       
       if (response.status === 200) {
-        fetchDietHistory(); 
+        await fetchDietHistory();
         setSuccess("Diet deleted successfully!");
         setTimeout(() => setSuccess(""), 3000);
       } else {
