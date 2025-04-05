@@ -44,6 +44,7 @@ const ClientDetailsPage = () => {
   const [updatedWeight, setUpdatedWeight] = useState("");
   const [feedback, setFeedback] = useState("");
   const [weightUpdateSuccess, setWeightUpdateSuccess] = useState(null);
+  const [originalClient, setOriginalClient] = useState(null); 
   // const [dietHistory, setDietHistory] = useState([]);
 
   const navigate = useNavigate();
@@ -77,7 +78,7 @@ const ClientDetailsPage = () => {
           }`.trim() ||
           "N/A";
   
-        setClient({
+        const formattedClient = {
           ...clientData,
           name,
           amount_paid: clientData.amount_paid?.toString() || "",
@@ -85,8 +86,10 @@ const ClientDetailsPage = () => {
           last_payment_date: formatDateForInput(clientData.last_payment_date),
           date_of_joining: formatDateForInput(clientData.date_of_joining),
           created_at: formatDateForInput(clientData.created_at),
-        });
+        };
   
+        setClient(formattedClient);
+        setOriginalClient(formattedClient); 
         setDiets(response.data.diets);
         setIsActive(clientData.is_active);
   
@@ -295,53 +298,64 @@ const ClientDetailsPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
-
+  
     const [first_name, ...last_nameArr] = client.name.split(' ');
     const last_name = last_nameArr.join(' ');
-
-    const payload = {
-      name: client.name || '',
-      first_name: first_name || '',
-      last_name: last_name || '',
-      age: client.age ? parseInt(client.age, 10) : null,
-      email: client.email || '',
-      city: client.city || '',
-      phone_number: client.phone_number || '',
-      height: client.height ? parseInt(client.height, 10) : null,
-      starting_weight: client.starting_weight ? parseInt(client.starting_weight, 10) : null,
-      dietary_preference: client.dietary_preference || '',
-      medical_history: client.medical_history || '',
-      allergies: client.allergies || '',
-      locality: client.locality || '',
-      diet_recall: client.diet_recall || '',
-      exercise: client.exercise || '',
-      package: client.package || '',
-      amount_paid: client.amount_paid ? parseInt(client.amount_paid, 10) : null,
-      remarks: client.remarks || '',
-      next_payment_date: formatDateForPayload(client.next_payment_date),
-      last_payment_date: formatDateForPayload(client.last_payment_date),
-      date_of_joining: formatDateForPayload(client.date_of_joining),
-      created_at: formatDateForPayload(client.created_at),
-      dietitian_id: client.dietitian_id ? parseInt(client.dietitian_id, 10) : null,
-      group_id: client.group_id ? parseInt(client.group_id, 10) : null,
-    };
-
+  
+    const payload = {};
+    
+    Object.keys(client).forEach(key => {
+      if (key === 'name') {
+        if (client.name !== originalClient.name) {
+          payload.first_name = first_name || '';
+          payload.last_name = last_name || '';
+        }
+      } else if (client[key] !== originalClient[key]) {
+        if (key.includes('date')) {
+          payload[key] = formatDateForPayload(client[key]);
+        } else if (key === 'amount_paid' || key === 'age' || key === 'height' || key === 'starting_weight') {
+          payload[key] = client[key] ? parseInt(client[key], 10) : null;
+        } else if (key === 'dietitian_id' || key === 'group_id') {
+          payload[key] = client[key] ? parseInt(client[key], 10) : null;
+        } else {
+          payload[key] = client[key];
+        }
+      }
+    });
+  
+    if (Object.keys(payload).length === 0) {
+      setSuccessMessage('No changes detected.');
+      setTimeout(() => setSuccessMessage(null), 3000);
+      return;
+    }
+  
     axios
       .post(`https://nutriediet-go.onrender.com/admin/client/${client_id}`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
         const updatedClient = response.data.client;
-
-        setClient((prevState) => ({
+  
+        setClient(prevState => ({
           ...prevState,
           ...updatedClient,
-          name: prevState.name,
-          next_payment_date: formatDateForInput(updatedClient.next_payment_date),
-          last_payment_date: formatDateForInput(updatedClient.last_payment_date),
-          date_of_joining: formatDateForInput(updatedClient.date_of_joining),
-          created_at: formatDateForInput(updatedClient.created_at),
+          name: prevState.name, 
+          next_payment_date: formatDateForInput(updatedClient.next_payment_date || prevState.next_payment_date),
+          last_payment_date: formatDateForInput(updatedClient.last_payment_date || prevState.last_payment_date),
+          date_of_joining: formatDateForInput(updatedClient.date_of_joining || prevState.date_of_joining),
+          created_at: formatDateForInput(updatedClient.created_at || prevState.created_at),
         }));
+        
+        setOriginalClient(prev => ({
+          ...prev,
+          ...updatedClient,
+          name: client.name, 
+          next_payment_date: updatedClient.next_payment_date || prev.next_payment_date,
+          last_payment_date: updatedClient.last_payment_date || prev.last_payment_date,
+          date_of_joining: updatedClient.date_of_joining || prev.date_of_joining,
+          created_at: updatedClient.created_at || prev.created_at,
+        }));
+  
         setError(null);
         setSuccessMessage('Details updated successfully!');
         setTimeout(() => setSuccessMessage(null), 3000);
