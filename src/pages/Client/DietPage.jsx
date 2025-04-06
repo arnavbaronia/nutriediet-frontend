@@ -136,9 +136,17 @@ const DietPage = () => {
         <h1 className="diet-title">
           <FaClipboardList /> Your Diet Plan
         </h1>
+        {error && (
+          <div
+            className="error-message4"
+            style={{ width: '20%', margin: '0 auto', textAlign: 'center' }}
+          >
+            {error}
+          </div>
+        )}
       </div>
 
-      {error && <Alert variant="danger">{error}</Alert>}
+      {/* {error && <Alert variant="danger">{error}</Alert>} */}
       {!isActive && <Alert variant="warning">Your diet plan is not active.</Alert>}
 
       <div className="diet-toggle-container">

@@ -165,6 +165,21 @@ const ClientsPage = () => {
 
   return (
     <div className="clients-page-container">
+    <div className="legend-wrapper">
+        <div className="legend-card">
+          <h4 className="legend-heading">Table Color Guide</h4>
+          <div className="legend-items">
+            <div className="legend-row">
+              <div className="legend-color payment-overdue-bg"></div>
+              <span>Payment overdue</span>
+            </div>
+            <div className="legend-row">
+              <div className="legend-color amount-due-even-bg"></div>
+              <span>Amount due</span>
+            </div>
+          </div>
+        </div>
+      </div>
       <h1>Clients</h1>
       {error && <div className="error-message">{error}</div>}
 
@@ -317,21 +332,6 @@ const ClientsPage = () => {
           })}
         </tbody>
       </table>
-      <div className="legend-wrapper">
-        <div className="legend-card">
-          <h4 className="legend-heading">Table Color Guide</h4>
-          <div className="legend-items">
-            <div className="legend-row">
-              <div className="legend-color payment-overdue-bg"></div>
-              <span>Payment overdue</span>
-            </div>
-            <div className="legend-row">
-              <div className="legend-color amount-due-even-bg"></div>
-              <span>Amount due</span>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
