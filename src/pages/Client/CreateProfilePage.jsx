@@ -168,7 +168,7 @@ const CreateProfilePage = () => {
 
           <div className="form-row">
             <div className="form-group">
-              <label>Height</label>
+              <label>Height (cm)</label>
               <input
                 type="number"
                 name="height"
@@ -189,13 +189,18 @@ const CreateProfilePage = () => {
             </div>
             <div className="form-group">
               <label>Dietary Preference</label>
-              <input
-                type="text"
+              <select
                 name="dietary_preference"
                 value={formData.dietary_preference}
                 onChange={handleChange}
                 className="client-input"
-              />
+                style={{ width: "100%" }}
+              >
+                <option value="">Select</option>
+                <option value="Veg">Veg</option>
+                <option value="Non-Veg">Non-Veg</option>
+                <option value="Eggetarian">Eggetarian</option>
+              </select>
             </div>
           </div>
 
@@ -266,4 +271,4 @@ const CreateProfilePage = () => {
   );
 };
 
-export default CreateProfilePage;          
+export default CreateProfilePage;

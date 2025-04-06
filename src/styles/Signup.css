@@ -89,7 +89,7 @@ select.input-field {
   cursor: pointer;
 }
 
-.submit-button {
+.submit-buttonk {
   width: 100%;
   padding: 12px 0;
   background-color: #004d40;
@@ -103,10 +103,10 @@ select.input-field {
   transition: background-color 0.3s, transform 0.2s;
 }
 
-.submit-button:hover {
+.submit-buttonk:hover {
   background-color: #357ab8;
 }
 
-.submit-button:active {
+.submit-buttonk:active {
   transform: scale(0.98);
 }

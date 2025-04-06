@@ -86,7 +86,7 @@ const Signup = () => {
           className="input-field"
           required
         />
-        <button type="submit" className="submit-button">
+        <button type="submit" className="submit-buttonk">
           Sign Up
         </button>
       </form>
