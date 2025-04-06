@@ -59,7 +59,7 @@ const AdminLogin = () => {
     <div className="login-wrapper">
       <form onSubmit={handleLogin} className="login-form">
         <h1>Admin Login</h1>
-        {error && <p className="error-message">{error}</p>}
+        {error && <p className="error-message4">{error}</p>}
         <input
           type="email"
           name="email"
