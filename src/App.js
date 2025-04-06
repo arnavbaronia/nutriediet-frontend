@@ -172,7 +172,7 @@ function AppContent() {
               </AdminRouteWrapper>
             </ProtectedRoute>
           } />
-          <Route path="/admin/recipes/new" element={
+          <Route path="/admin/recipes/create" element={
             <ProtectedRoute requireduser_type="ADMIN">
               <AdminRouteWrapper>
                 <CreateRecipePage />

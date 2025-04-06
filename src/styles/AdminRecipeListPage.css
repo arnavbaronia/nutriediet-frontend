@@ -1,15 +1,39 @@
-.custom-dropdown {
+.admin-recipes-container {
+  display: flex;
+  height: 100vh;
+  font-family: 'Rubik', sans-serif;
+}
+
+.recipe-left-section {
+  margin-top: 20px;
+  flex: 1;
+  border-right: 1px solid black;
+  padding: 20px;
+}
+
+.recipe-right-section {
+  flex: 2;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.recipe-left-section h2 {
+  text-align: center;
+}
+
+.recipe-controls-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.recipe-custom-dropdown {
   width: 100%;
   max-width: 250px;
 }
 
-.controls-container {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.btn-create {
+.recipe-btn-create {
   padding: 10px 15px;
   font-size: 16px;
   font-weight: 600;
@@ -24,124 +48,86 @@
   gap: 5px;
 }
 
-.btn-create:hover {
-  background: #2E7D32;
+.recipe-btn-create:hover {
+  background: #2E7D32 !important;
 }
 
-.admin-recipes-container {
-  display: flex;
-  height: 100vh;
-  font-family: "Rubik", sans-serif;
-}
-
-.left-section {
-  margin-top: 20px;
-  flex: 1;
-  padding: 20px;
-}
-
-.right-section {
-  flex: 2;
-  padding: 20px;
-  margin-top: 20px;
-}
-
-h2 {
-  text-align: center;
-  font-size: 32px;
-}
-
-.dropdown-wrapper {
-  position: relative;
-}
-
-.dropdown-button {
-  padding: 12px 24px;
-  background: #28a745;
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.dropdown-menu {
-  position: absolute;
-  background: #f8f9fa;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  list-style: none;
-  padding: 10px 0;
-  margin-top: 5px;
-  width: 250px;
-  z-index: 1000;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  overflow-y: auto;
-  max-height: 200px;
-}
-
-.dropdown-item {
-  padding: 12px 20px;
-  cursor: pointer;
-  font-size: 14px;
-  color: #333;
+.recipe-error-text {
+  color: red;
   text-align: center;
 }
 
-.dropdown-item:hover {
-  background: #e9ecef;
+.recipe-image-thumbnail {
+  width: 100%;
+  height: 400px; 
+  object-fit: cover;
+  border-radius: 12px 12px 0 0;
+  display: block;
+  margin: 0;
+  padding: 0;
 }
 
-.recipe-details {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.recipe-section {
-  background: #a5d6a7;
+.recipe-image-container {
+  background-color: #A5D6A7;
   border-radius: 20px;
-  padding: 20px;
-  flex: 1 1 400px; 
-  max-width: 400px; 
-  min-height: 360px; 
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 0;
   text-align: center;
+  height: 459px; 
+  max-width: 500px;
+  margin: 20px auto;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden; 
 }
 
-.recipe-section h3 {
-  text-align: center;
-  margin-bottom: 10px;
+.selected-recipe-title {
+  font-size: 24px;
+  margin: 10px 0;
+  font-weight: bold;
+  color: #333;
+  padding: 0 15px;
 }
 
-.bullet-list {
-  text-align: left;
-  padding-left: 20px;
+.recipe-action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 15px;
 }
 
-.action-buttons {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.action-buttons button {
+.recipe-action-buttons button {
   padding: 10px 20px;
-  margin-right: 10px;
-  background: #007bff;
-  color: #fff;
   border: none;
   border-radius: 8px;
+  font-size: 1rem;
   cursor: pointer;
+  transition: 0.3s;
 }
 
-.action-buttons .delete {
+.recipe-action-buttons button:hover {
+  opacity: 0.8;
+}
+
+.recipe-btn-edit {
+  background: #007bff;
+  color: white;
+}
+
+.recipe-btn-delete {
   background: #dc3545;
+  color: white;
 }
 
-/* Success Message Styles */
-.success-message-container {
+.recipe-centered-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 35%;
+  text-align: center;
+  font-size: 1.2rem;
+  color: black;
+}
+
+.recipe-success-message-container {
   position: fixed;
   top: 70px;
   left: 0;
@@ -152,7 +138,7 @@ h2 {
   pointer-events: none;
 }
 
-.success-message {
+.recipe-success-message {
   color: green;
   background-color: #e8f5e9;
   border: 1px solid #4caf50;
@@ -165,22 +151,17 @@ h2 {
   gap: 8px;
   max-width: 80%;
   text-align: center;
-  animation: fadeInOut 3s ease-in-out forwards;
+  animation: recipeFadeInOut 3s ease-in-out forwards;
 }
 
-.success-message .icon {
-  font-size: 1.2em;
-}
-
-@keyframes fadeInOut {
+@keyframes recipeFadeInOut {
   0% { opacity: 0; transform: translateY(-20px); }
   10% { opacity: 1; transform: translateY(0); }
   90% { opacity: 1; transform: translateY(0); }
   100% { opacity: 0; transform: translateY(-20px); }
 }
 
-/* Delete Modal Styles */
-.modal-overlay {
+.recipe-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -193,7 +174,7 @@ h2 {
   z-index: 1000;
 }
 
-.delete-modal {
+.recipe-delete-modal {
   background-color: #A5D6A7;
   padding: 25px;
   border-radius: 8px;
@@ -202,24 +183,24 @@ h2 {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
-.delete-modal h3 {
+.recipe-delete-modal h3 {
   margin-top: 0;
   color: #d32f2f;
   font-size: 1.3rem;
 }
 
-.delete-modal p {
+.recipe-delete-modal p {
   margin: 15px 0 25px;
   color: #555;
 }
 
-.modal-buttons {
+.recipe-modal-buttons {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
 }
 
-.modal-button {
+.recipe-modal-button {
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
@@ -228,20 +209,20 @@ h2 {
   transition: all 0.2s ease;
 }
 
-.modal-cancel {
+.recipe-modal-cancel {
   background-color: #f0f0f0;
   color: #333;
 }
 
-.modal-cancel:hover {
+.recipe-modal-cancel:hover {
   background-color: #e0e0e0;
 }
 
-.modal-confirm {
+.recipe-modal-confirm {
   background-color: #d32f2f;
   color: white;
 }
 
-.modal-confirm:hover {
+.recipe-modal-confirm:hover {
   background-color: #b71c1c;
 }
