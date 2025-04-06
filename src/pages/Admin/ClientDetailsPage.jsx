@@ -703,6 +703,17 @@ const ClientDetailsPage = () => {
                 ))}
               </select>
             </div>
+            <div className="form-group">
+              <label htmlFor="date_of_joining">Date of Joining</label>
+              <input
+                type="date"
+                id="date_of_joining"
+                name="date_of_joining"
+                value={client.date_of_joining}
+                className="client-input"
+                onChange={handleChange}
+              />
+            </div>
           </div>
 
           {/* Package, Total Amount, Amount Paid, Amount Due, Next Payment Date, Last Payment Date, Date of Joining */}
@@ -776,17 +787,6 @@ const ClientDetailsPage = () => {
                 value={client.next_payment_date}
                 className="client-input"
                 readOnly
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="date_of_joining">Date of Joining</label>
-              <input
-                type="date"
-                id="date_of_joining"
-                name="date_of_joining"
-                value={client.date_of_joining}
-                className="client-input"
-                onChange={handleChange}
               />
             </div>
           </div>
