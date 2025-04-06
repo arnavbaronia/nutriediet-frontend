@@ -5,66 +5,81 @@ import { FaCheckCircle } from 'react-icons/fa';
 import '../../styles/CreateRecipePage.css';
 
 const CreateRecipePage = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    ingredients: '',
-    preparation: '',
-  });
-  const [success, setSuccess] = useState('');
-  const [error, setError] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [name, setName] = useState("");
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const api = axios.create({
+    baseURL: 'https://nutriediet-go.onrender.com',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+    
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreview(reader.result);
+    };
+    reader.readAsDataURL(selectedFile);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccess('');
-    setError('');
-    setIsSubmitting(true);
+    setLoading(true);
+    setErrorMessage("");
+
+    if (!file || !name) {
+      setErrorMessage("Please provide both name and image");
+      setLoading(false);
+      return;
+    }
 
     try {
-      const token = localStorage.getItem('token');
-      if (!token) throw new Error('Unauthorized: No token found');
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("name", name);
 
-      const payload = {
-        name: formData.name,
-        ingredients: formData.ingredients.split('\n').filter(line => line.trim()),
-        preparation: formData.preparation.split('\n').filter(line => line.trim()),
-      };
+      const response = await api.post('/admin/recipes/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
 
-      const response = await axios.post(
-        'https://nutriediet-go.onrender.com/admin/recipe/new', 
-        payload, 
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      if (response.data.success) {
-        setSuccess('Recipe created successfully!');
-        setFormData({ name: '', ingredients: '', preparation: '' });
-        setTimeout(() => setSuccess(''), 3000);
-      }
+      setSuccessMessage("Recipe created successfully!");
+      setName("");
+      setFile(null);
+      setPreview("");
+      setTimeout(() => {
+        setSuccessMessage("");
+        navigate('/admin/recipes');
+      }, 2000);
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to create recipe. Please try again.');
+      setErrorMessage(err.response?.data?.error || "Failed to create recipe. Please try again.");
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   };
 
   return (
     <div className="admin-create-recipe">
-      {success && (
+      <h1><strong>Create a New Recipe</strong></h1>
+      
+      {successMessage && (
         <div className="success-message-container">
           <div className="success-message">
-            <span>{success}</span>
+            <FaCheckCircle style={{ marginRight: '8px' }} />
+            <span>{successMessage}</span>
           </div>
         </div>
       )}
-
-      <h1>Create a New Recipe</h1>
+      
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
+      
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="name">Recipe Name</label>
@@ -72,54 +87,47 @@ const CreateRecipePage = () => {
             type="text"
             id="name"
             name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-            placeholder="Enter the recipe name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter recipe name"
+            className="small-input"
             required
           />
         </div>
+        
         <div>
-          <label htmlFor="ingredients">Ingredients</label>
-          <textarea
-            id="ingredients"
-            name="ingredients"
-            value={formData.ingredients}
-            onChange={handleInputChange}
-            rows="6"
-            placeholder="Enter ingredients, one per line"
+          <label htmlFor="image">Recipe Image</label>
+          <input
+            type="file"
+            id="image"
+            name="image"
+            onChange={handleFileChange}
+            style={{ width: '97%' }}
+            accept="image/*"
+            className="file-input"
             required
-          ></textarea>
+          />
+          {preview && (
+            <div className="image-preview-container">
+              <img src={preview} alt="Preview" className="image-preview" />
+            </div>
+          )}
         </div>
-        <div>
-          <label htmlFor="preparation">Preparation Steps</label>
-          <textarea
-            id="preparation"
-            name="preparation"
-            value={formData.preparation}
-            onChange={handleInputChange}
-            rows="6"
-            placeholder="Enter preparation steps, one per line"
-            required
-          ></textarea>
-        </div>
+        
         <div className="button-group">
-          <button 
-            type="submit" 
-            className="btn-submit"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Creating...' : 'Create Recipe'}
+          <button type="submit" disabled={loading}>
+            {loading ? 'Creating...' : 'Create Recipe'}
           </button>
           <button 
             type="button" 
-            className="btn-cancel"
+            className="cancel-btn9" 
             onClick={() => navigate('/admin/recipes')}
+            disabled={loading}
           >
             Cancel
           </button>
         </div>
       </form>
-      {error && <p className="error-message">{error}</p>}
     </div>
   );
 };
