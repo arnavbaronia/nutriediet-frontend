@@ -36,6 +36,7 @@ const ClientDetailsPage = () => {
     date_of_joining: '',
     dietitian_id: '',
     group_id: '',
+    stay: '',
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -332,7 +333,7 @@ const ClientDetailsPage = () => {
       'starting_weight', 'dietary_preference', 'medical_history', 
       'allergies', 'locality', 'diet_recall', 'exercise', 'package', 
       'amount_paid', 'total_amount', 'amount_due', 'remarks', 
-      'next_payment_date', 'last_payment_date', 'date_of_joining', 'dietitian_id', 'group_id'
+      'next_payment_date', 'last_payment_date', 'date_of_joining', 'dietitian_id', 'group_id', 'stay'
     ];
   
     fieldsToCheck.forEach(field => {
@@ -638,40 +639,15 @@ const ClientDetailsPage = () => {
 
           {/* Medical History, Allergies, Exercise, Dietitian ID, Group ID */}
           <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="medical_history">Medical History</label>
+          <div className="form-group">
+              <label htmlFor="stay">Stay</label>
               <input
                 type="text"
-                id="medical_history"
-                name="medical_history"
-                value={client.medical_history}
-                className="client-input wide-input"
+                id="stay"
+                name="stay"
+                value={client.stay}
+                className="client-input"
                 onChange={handleChange}
-                style={{ width: '96%' }}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="allergies">Allergies</label>
-              <input
-                type="text"
-                id="allergies"
-                name="allergies"
-                value={client.allergies}
-                className="client-input wide-input"
-                onChange={handleChange}
-                style={{ width: '96%' }}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="exercise">Exercise</label>
-              <input
-                type="text"
-                id="exercise"
-                name="exercise"
-                value={client.exercise}
-                className="client-input wide-input"
-                onChange={handleChange}
-                style={{ width: '96%' }}
               />
             </div>
             <div className="form-group">
@@ -792,7 +768,39 @@ const ClientDetailsPage = () => {
               />
             </div>
           </div>
-
+          <div className="form-group">
+              <label htmlFor="medical_history">Medical History</label>
+              <input
+                type="text"
+                id="medical_history"
+                name="medical_history"
+                value={client.medical_history}
+                className="client-textarea client-textarea-large"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="allergies">Allergies</label>
+              <input
+                type="text"
+                id="allergies"
+                name="allergies"
+                value={client.allergies}
+                className="client-textarea client-textarea-large"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="exercise">Exercise</label>
+              <input
+                type="text"
+                id="exercise"
+                name="exercise"
+                value={client.exercise}
+                className="client-textarea client-textarea-large"
+                onChange={handleChange}
+              />
+            </div>
           {/* Diet Recall and Remarks */}
           <div className="form-group">
             <label htmlFor="diet_recall">Diet Recall</label>
