@@ -718,9 +718,9 @@ const ClientDetailsPage = () => {
                 style={{ width: '100%' }}
               >
                 <option value="">Select</option>
-                <option value="4 Weeks">1 Month</option>
-                <option value="8 Weeks">2 Months</option>
-                <option value="12 Weeks">3 Months</option>
+                <option value="4 Weeks">4 Weeks</option>
+                <option value="8 Weeks">8 Weeks</option>
+                <option value="12 Weeks">12 Weeks</option>
               </select>
             </div>
             <div className="form-group">
