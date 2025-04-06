@@ -332,23 +332,23 @@ const ClientDetailsPage = () => {
       'starting_weight', 'dietary_preference', 'medical_history', 
       'allergies', 'locality', 'diet_recall', 'exercise', 'package', 
       'amount_paid', 'total_amount', 'amount_due', 'remarks', 
-      'last_payment_date', 'date_of_joining', 'dietitian_id', 'group_id'
+      'next_payment_date', 'last_payment_date', 'date_of_joining', 'dietitian_id', 'group_id'
     ];
   
     fieldsToCheck.forEach(field => {
       const currentValue = client[field];
       const originalValue = originalValues[field];
   
-      if (currentValue === originalValue) return;
-  
-      if (field.includes('_date') || field === 'date_of_joining') {
-        payload[field] = formatDateForPayload(currentValue);
-      } 
-      else if (['age', 'height', 'starting_weight', 'amount_paid', 'total_amount', 'amount_due', 'dietitian_id', 'group_id'].includes(field)) {
-        payload[field] = currentValue ? parseInt(currentValue, 10) : null;
-      }
-      else {
-        payload[field] = currentValue;
+      if (field === 'next_payment_date' || currentValue !== originalValue) {
+        if (field.includes('_date') || field === 'date_of_joining') {
+          payload[field] = formatDateForPayload(currentValue);
+        } 
+        else if (['age', 'height', 'starting_weight', 'amount_paid', 'total_amount', 'amount_due', 'dietitian_id', 'group_id'].includes(field)) {
+          payload[field] = currentValue ? parseInt(currentValue, 10) : null;
+        }
+        else {
+          payload[field] = currentValue;
+        }
       }
     });
   
@@ -364,6 +364,8 @@ const ClientDetailsPage = () => {
       return;
     }
   
+    console.log("Sending payload to server:", payload);
+  
     axios
       .post(`https://nutriediet-go.onrender.com/admin/client/${client_id}`, payload, {
         headers: { Authorization: `Bearer ${token}` },
@@ -374,7 +376,7 @@ const ClientDetailsPage = () => {
         const updatedValues = {
           ...updatedClient,
           name: updatedClient.name || client.name,
-          next_payment_date: updatedClient.next_payment_date,
+          next_payment_date: updatedClient.next_payment_date || client.next_payment_date,
           last_payment_date: updatedClient.last_payment_date,
           date_of_joining: updatedClient.date_of_joining,
           created_at: updatedClient.created_at,

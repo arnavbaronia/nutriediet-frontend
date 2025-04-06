@@ -251,25 +251,27 @@ h1 {
 }
 
 .amount-due {
-  background-color: #ffebee !important;
-  color: #c62828;
+  background-color: #fff3e0 !important;
+  color: #e65100;
 }
 
 .amount-due:hover {
-  background-color: #ffcdd2 !important;
+  background-color: #ffe0b2 !important;
 }
 
 .amount-due td {
-  color: #c62828;
+  color: #e65100;
   font-weight: 500;
 }
 
-.client-table tr.amount-due:nth-child(even) {
-  background-color: #e0ffeb !important;
-}
-
+.client-table tr.amount-due:nth-child(even),
 .client-table tr.amount-due:nth-child(odd) {
   background-color: #fff3e0 !important;
+}
+
+.amount-due-even-bg {
+  background-color: #fff3e0;
+  box-shadow: inset 0 0 0 2px #ffe0b2;
 }
 
 .legend-wrapper {
@@ -329,9 +331,4 @@ h1 {
 .payment-overdue-bg {
   background-color: #ffebee;
   box-shadow: inset 0 0 0 2px #ffcdd2;
-}
-
-.amount-due-even-bg {
-  background-color: #e0ffeb;
-  box-shadow: inset 0 0 0 2px #c8e6c9;
 }
