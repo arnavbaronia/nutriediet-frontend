@@ -83,18 +83,22 @@ const AdminRecipeListPage = () => {
 
     try {
       const response = await api.post(`/admin/recipes/${selectedRecipeId}/delete`);
-      if (response.data.success) {
+      await fetchRecipes();
+      setSelectedRecipeDetails(null);
+      setSelectedRecipeId('');
+      setSuccess('Recipe deleted successfully!');
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (err) {
+      console.error('Error deleting recipe:', err);
+      if (err.response?.data?.err && err.response.data.err.includes('no such file or directory')) {
         await fetchRecipes();
         setSelectedRecipeDetails(null);
         setSelectedRecipeId('');
-        setSuccess('Recipe deleted successfully!');
-        setTimeout(() => setSuccess(''), 3000);
+        setSuccess('Recipe record deleted successfully (image file was already removed)');
+        setTimeout(() => setSuccess(''), 4000);
       } else {
         setError('Failed to delete recipe.');
       }
-    } catch (err) {
-      console.error('Error deleting recipe:', err);
-      setError('Failed to delete recipe.');
     } finally {
       setDeleting(false);
     }
