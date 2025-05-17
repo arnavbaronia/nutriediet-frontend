@@ -21,6 +21,8 @@ const CreateRecipePage = () => {
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
+    if (!selectedFile) return;
+    
     setFile(selectedFile);
     
     const reader = new FileReader();
@@ -115,12 +117,16 @@ const CreateRecipePage = () => {
         </div>
         
         <div className="button-group">
-          <button type="submit" disabled={loading}>
+          <button 
+            type="submit" 
+            className="btn-submit"
+            disabled={loading}
+          >
             {loading ? 'Creating...' : 'Create Recipe'}
           </button>
           <button 
             type="button" 
-            className="cancel-btn9" 
+            className="btn-cancel" 
             onClick={() => navigate('/admin/recipes')}
             disabled={loading}
           >
