@@ -119,14 +119,14 @@ const CreateRecipePage = () => {
         <div className="button-group">
           <button 
             type="submit" 
-            className="btn-submit"
+            className="admin-create-recipe1"
             disabled={loading}
           >
             {loading ? 'Creating...' : 'Create Recipe'}
           </button>
           <button 
             type="button" 
-            className="btn-cancel" 
+            className="cancel-btn9" 
             onClick={() => navigate('/admin/recipes')}
             disabled={loading}
           >
