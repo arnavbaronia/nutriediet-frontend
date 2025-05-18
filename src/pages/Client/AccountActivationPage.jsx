@@ -1,67 +1,130 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/AccountActivationPage.css';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 const AccountActivationPage = () => {
-  const [isChecking, setIsChecking] = useState(true);
   const navigate = useNavigate();
+  const [status, setStatus] = useState({
+    loading: false,
+    isActive: false,
+    error: null
+  });
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  useEffect(() => {
-    const checkActivationStatus = async () => {
-      try {
-        const clientId = localStorage.getItem('client_id');
-        const token = localStorage.getItem('token');
-        
-        if (!clientId || !token) {
-          navigate('/login');
-          return;
-        }
-
-        const response = await axios.get(
-          `https://nutriediet-go.onrender.com/clients/${clientId}/profile_created`,
-          {
-            headers: { Authorization: `Bearer ${token}` }
-          }
-        );
-
-        const { profile_created, is_active } = response.data;
-
-        if (profile_created && is_active) {
-          navigate(`/clients/${clientId}/diet`);
-        }
-      } catch (error) {
-        console.error('Error checking activation status:', error);
-        if (error.response?.status === 401) {
-          localStorage.clear();
-          navigate('/login');
-        }
-      } finally {
-        setIsChecking(false);
+  const checkActivationStatus = async () => {
+    try {
+      setStatus(prev => ({ ...prev, loading: true, error: null }));
+      
+      const clientId = localStorage.getItem('client_id');
+      const token = localStorage.getItem('token');
+      
+      if (!clientId || !token) {
+        localStorage.clear();
+        navigate('/login');
+        return;
       }
-    };
 
-    checkActivationStatus();
-  }, [navigate]); 
+      const response = await axios.get(
+        `https://nutriediet-go.onrender.com/clients/${clientId}/profile_created`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          timeout: 10000
+        }
+      );
 
-  if (isChecking) {
-    return (
-      <div className="page-container">
-        <div className="account-activation-container">
-          <h2 className="account-activation-heading">Checking account status...</h2>
-        </div>
-      </div>
-    );
-  }
+      setStatus({
+        loading: false,
+        isActive: response.data.is_active,
+        error: null
+      });
+
+    } catch (error) {
+      setStatus({
+        loading: false,
+        isActive: false,
+        error: error.response?.data?.error || error.message
+      });
+
+      if (error.response?.status === 401) {
+        localStorage.clear();
+        navigate('/login');
+      }
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/login');
+  };
 
   return (
-    <div className="page-container">
-      <div className="account-activation-container">
-        <h2 className="account-activation-heading">Account Needs Activation</h2>
-        <p className="account-activation-text">
-          Please contact your dietitian to activate your account.
-        </p>
+    <div className="activation-page-container">
+      <div className="activation-status-container">
+        <h2 className="activation-heading">Account Activation Status</h2>
+        
+        <div className="activation-content">
+          {status.isActive ? (
+            <>
+              <p className="activation-text success-message">
+                ✅ Your account has been activated!
+              </p>
+              <p className="activation-text instruction">
+                Please logout and login again to access all features.
+              </p>
+              <button 
+                className="activation-logout-btn"
+                onClick={() => setShowLogoutModal(true)}
+              >
+                <ExitToAppIcon className="logout-icon" />
+                <span>Logout</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <p className="activation-text">
+                {status.loading 
+                  ? 'Checking status...' 
+                  : status.error 
+                    ? `Error: ${status.error}`
+                    : 'Account pending activation by dietitian'
+                }
+              </p>
+              <button 
+                className="activation-check-btn"
+                onClick={checkActivationStatus}
+                disabled={status.loading}
+              >
+                {status.loading ? 'Checking...' : 'Check Status'}
+              </button>
+            </>
+          )}
+        </div>
       </div>
+
+      {showLogoutModal && (
+        <div className="activation-modal-overlay">
+          <div className="activation-modal-content">
+            <h2>Confirm Logout</h2>
+            <p>Are you sure you want to log out?</p>
+            <div className="activation-modal-buttons">
+              <button 
+                className="activation-confirm-btn"
+                onClick={handleLogout}
+              >
+                Confirm
+              </button>
+              <button 
+                className="activation-cancel-btn"
+                onClick={() => setShowLogoutModal(false)}
+              >
+                Go Back
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

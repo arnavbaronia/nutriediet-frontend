@@ -1,27 +1,182 @@
-.page-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 70vh; 
+.activation-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  padding: 20px;
+}
+
+.activation-status-container {
+  text-align: center;
+  padding: 30px;
+  width: 70%;
+  max-width: 400px;
+  min-height: 150px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background-color: #a5d6aa;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.activation-heading {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #000;
+  font-weight: 600;
+}
+
+.activation-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.activation-text {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.4;
+}
+
+.success-message {
+  font-weight: 600;
+  font-size: 17px;
+  text-align: center; 
+  margin: 0 auto; 
+  width: 100%; 
+}
+
+.instruction {
+  margin-top: 10px;
+  font-size: 15px;
+  text-align: center; 
+  width: 100%; 
+}
+
+.activation-check-btn,
+.activation-logout-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 10px auto 0; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 40%; 
+  max-width: 200px; 
+}
+
+.activation-check-btn {
+  background-color: #2e7d32;
+  color: white;
+}
+
+.activation-logout-btn {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.activation-check-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.activation-check-btn:hover:not(:disabled),
+.activation-logout-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.logout-icon {
+  font-size: 18px;
+}
+
+/* Modal Styles */
+.activation-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.activation-modal-content {
+  background: #a5d6aa;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  width: 350px;
+  max-width: 90%;
+}
+
+.activation-modal-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.activation-confirm-btn {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.activation-confirm-btn:hover {
+  background-color: #e04343;
+}
+
+.activation-cancel-btn {
+  background-color: #dddddd;
+  color: #333333;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.activation-cancel-btn:hover {
+  background-color: #c7c7c7;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+  .activation-status-container {
+    width: 85%;
+    padding: 25px;
+  }
+
+  .activation-heading {
+    font-size: 22px;
+    margin-bottom: 15px;
+  }
+
+  .activation-text {
+    font-size: 15px;
+  }
+
+  .activation-check-btn,
+  .activation-logout-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 400px) {
+  .activation-status-container {
+    width: 90%;
     padding: 20px;
   }
-  
-  .account-activation-container {
-    text-align: center;
-    padding: 40px;
-    width: 70%; 
-    max-width: 400px; 
-    height: 150px; 
-    border: 1px solid #ccc;
-    border-radius: 20px; 
-    background-color: #a5d6aa;
-  }
-  
-  .account-activation-heading {
-    font-size: 28px; 
-    margin-bottom: 35px;
-  }
-  
-  .account-activation-text {
-    font-size: 18px; 
-  }
+}
