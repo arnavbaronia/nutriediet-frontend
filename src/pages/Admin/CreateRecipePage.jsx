@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { FaCheckCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
 import '../../styles/CreateRecipePage.css';
 
 const CreateRecipePage = () => {
@@ -23,7 +23,14 @@ const CreateRecipePage = () => {
     const selectedFile = e.target.files[0];
     if (!selectedFile) return;
     
+    // Validate file type
+    if (!selectedFile.type.match('image.*')) {
+      setErrorMessage('Please select an image file (JPEG, PNG, etc.)');
+      return;
+    }
+    
     setFile(selectedFile);
+    setErrorMessage('');
     
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -37,8 +44,14 @@ const CreateRecipePage = () => {
     setLoading(true);
     setErrorMessage("");
 
-    if (!file || !name) {
-      setErrorMessage("Please provide both name and image");
+    if (!name.trim()) {
+      setErrorMessage("Please provide a recipe name");
+      setLoading(false);
+      return;
+    }
+
+    if (!file) {
+      setErrorMessage("Please select an image file");
       setLoading(false);
       return;
     }
@@ -53,15 +66,15 @@ const CreateRecipePage = () => {
       });
 
       setSuccessMessage("Recipe created successfully!");
-      setName("");
-      setFile(null);
-      setPreview("");
       setTimeout(() => {
-        setSuccessMessage("");
         navigate('/admin/recipes');
-      }, 2000);
+      }, 1500);
     } catch (err) {
-      setErrorMessage(err.response?.data?.error || "Failed to create recipe. Please try again.");
+      console.error('Error creating recipe:', err);
+      setErrorMessage(
+        err.response?.data?.error || 
+        "Failed to create recipe. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -73,17 +86,24 @@ const CreateRecipePage = () => {
       
       {successMessage && (
         <div className="success-message-container">
-          <div className="success-message">
+          <div className="success-message2">
             <FaCheckCircle style={{ marginRight: '8px' }} />
             <span>{successMessage}</span>
           </div>
         </div>
       )}
       
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
+      {errorMessage && (
+        <div className="error-message-container">
+          <div className="error-message2">
+            <FaExclamationTriangle style={{ marginRight: '8px' }} />
+            <span>{errorMessage}</span>
+          </div>
+        </div>
+      )}
       
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="form-group">
           <label htmlFor="name">Recipe Name</label>
           <input
             type="text"
@@ -97,20 +117,20 @@ const CreateRecipePage = () => {
           />
         </div>
         
-        <div>
+        <div className="form-group">
           <label htmlFor="image">Recipe Image</label>
           <input
             type="file"
             id="image"
             name="image"
             onChange={handleFileChange}
-            style={{ width: '97%' }}
             accept="image/*"
             className="file-input"
             required
           />
           {preview && (
             <div className="image-preview-container">
+              <p>Image Preview:</p>
               <img src={preview} alt="Preview" className="image-preview" />
             </div>
           )}
@@ -119,7 +139,7 @@ const CreateRecipePage = () => {
         <div className="button-group">
           <button 
             type="submit" 
-            className="admin-create-recipe1"
+            className="btn-submit"
             disabled={loading}
           >
             {loading ? 'Creating...' : 'Create Recipe'}
