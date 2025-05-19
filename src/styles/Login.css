@@ -126,3 +126,39 @@ select.input-field {
 .password-toggle:hover {
   color: #357ab8;
 }
+
+.forgot-password-link {
+  color: #004D40;
+  font-size: 14px;
+  text-align: left;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  text-decoration: underline;
+  width: 100%;
+  display: block;
+}
+
+.forgot-password-link:hover {
+  color: #357ab8;
+}
+
+.MuiModal-root {
+  backdrop-filter: blur(5px);
+}
+
+.MuiBox-root {
+  outline: none;
+}
+
+.MuiTextField-root {
+  margin-bottom: 16px;
+}
+
+.MuiButton-contained {
+  background-color: #004D40;
+}
+
+.MuiButton-contained:hover {
+  background-color: #357ab8;
+}

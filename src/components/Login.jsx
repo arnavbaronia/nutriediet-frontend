@@ -4,6 +4,12 @@ import "../styles/Login.css";
 import { useNavigate } from "react-router-dom";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -12,7 +18,15 @@ const Login = () => {
     user_type: "CLIENT",
   });
   const [error, setError] = useState(null);
-  const [showPassword, setShowPassword] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false);
+  const [forgotPasswordModal, setForgotPasswordModal] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [resetStep, setResetStep] = useState(1); // 1: email, 2: OTP and new password
+  const [resetError, setResetError] = useState("");
+  const [resetSuccess, setResetSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,7 +44,7 @@ const Login = () => {
     setCredentials((prev) => ({ ...prev, [name]: value }));
   };
 
-  const getFriendlyErrorMessage = (error) => {
+    const getFriendlyErrorMessage = (error) => {
     if (error.includes("hashedPassword is not the hash of the given password")) {
       return "Incorrect password. Please try again.";
     }
@@ -91,6 +105,69 @@ const Login = () => {
     }
   };
 
+  const handleForgotPassword = () => {
+    setForgotPasswordModal(true);
+    setResetStep(1);
+    setResetEmail("");
+    setOtp("");
+    setNewPassword("");
+    setResetError("");
+    setResetSuccess("");
+  };
+
+  const handleResetEmailSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setResetError("");
+    
+    try {
+      await axios.post("https://nutriediet-go.onrender.com/password-reset/initiate", {
+        email: resetEmail
+      });
+      setResetStep(2);
+      setResetSuccess("OTP sent to your email");
+    } catch (err) {
+      setResetError(err.response?.data?.error || "Failed to send OTP. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePasswordResetSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setResetError("");
+    
+    try {
+      await axios.post("https://nutriediet-go.onrender.com/password-reset/complete", {
+        email: resetEmail,
+        otp,
+        new_password: newPassword
+      });
+      setResetSuccess("Password updated successfully!");
+      setTimeout(() => {
+        setForgotPasswordModal(false);
+      }, 2000);
+    } catch (err) {
+      setResetError(err.response?.data?.error || "Failed to reset password. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const modalStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    p: 4,
+    borderRadius: 2,
+    outline: 'none'
+  };
+
   return (
     <div className="login-wrapper">
       <form onSubmit={handleLogin} className="login-form">
@@ -127,10 +204,101 @@ const Login = () => {
             />
           )}
         </div>
+        <div className="forgot-password-link" onClick={handleForgotPassword}>
+          Forgot Password?
+        </div>
         <button type="submit" className="submit-buttonnn">
           Login
         </button>
       </form>
+
+      <Modal
+        open={forgotPasswordModal}
+        onClose={() => setForgotPasswordModal(false)}
+        aria-labelledby="forgot-password-modal"
+        aria-describedby="forgot-password-modal-description"
+      >
+        <Box sx={modalStyle}>
+          <Typography variant="h6" component="h2" gutterBottom>
+            Reset Password
+          </Typography>
+          
+          {resetStep === 1 ? (
+            <form onSubmit={handleResetEmailSubmit}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Email"
+                type="email"
+                value={resetEmail}
+                onChange={(e) => setResetEmail(e.target.value)}
+                required
+              />
+              {resetError && <Typography color="error">{resetError}</Typography>}
+              <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                <Button 
+                  onClick={() => setForgotPasswordModal(false)}
+                  sx={{ mr: 1 }}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  type="submit" 
+                  variant="contained"
+                  disabled={loading}
+                >
+                  {loading ? <CircularProgress size={24} /> : "Send OTP"}
+                </Button>
+              </Box>
+            </form>
+          ) : (
+            <form onSubmit={handlePasswordResetSubmit}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="OTP"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                required
+                inputProps={{ maxLength: 4 }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="New Password"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                required
+              />
+              {resetError && <Typography color="error">{resetError}</Typography>}
+              {resetSuccess && <Typography color="success">{resetSuccess}</Typography>}
+              <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
+                <Button 
+                  onClick={() => setResetStep(1)}
+                >
+                  Back
+                </Button>
+                <Box>
+                  <Button 
+                    onClick={() => setForgotPasswordModal(false)}
+                    sx={{ mr: 1 }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button 
+                    type="submit" 
+                    variant="contained"
+                    disabled={loading}
+                  >
+                    {loading ? <CircularProgress size={24} /> : "Reset Password"}
+                  </Button>
+                </Box>
+              </Box>
+            </form>
+          )}
+        </Box>
+      </Modal>
     </div>
   );
 };
