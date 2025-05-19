@@ -50,8 +50,22 @@ const AdminLogin = () => {
       console.log("Admin login successful. Navigating to admin dashboard...");
       setTimeout(() => navigate("/admin/dashboard"), 10);
     } catch (err) {
-      console.error("Error during login:", err);
-      setError(err.response?.data?.err || "Login failed. Please try again.");
+      const status = err.response?.status;
+      const serverMessage = err.response?.data?.err || "";
+
+      if (status === 404 && serverMessage.includes("Record Not Found")) {
+        setError("No account found with this email address.");
+      } else if (
+        status === 403 &&
+        (serverMessage.toLowerCase().includes("bcrypt") ||
+          serverMessage.toLowerCase().includes("password"))
+      ) {
+        setError("Incorrect password. Please try again.");
+      } else if (serverMessage === "Only admins can log in here.") {
+        setError("Only admins can log in here.");
+      } else {
+        setError("Something went wrong. Please try again later.");
+      }
     }
   };
 
@@ -71,7 +85,7 @@ const AdminLogin = () => {
         />
         <div className="password-wrapper">
           <input
-            type={showPassword ? "text" : "password"} 
+            type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Password"
             value={credentials.password}
@@ -82,12 +96,12 @@ const AdminLogin = () => {
           {showPassword ? (
             <VisibilityOffOutlinedIcon
               className="password-toggle"
-              onClick={() => setShowPassword(!showPassword)} 
+              onClick={() => setShowPassword(!showPassword)}
             />
           ) : (
             <VisibilityOutlinedIcon
               className="password-toggle"
-              onClick={() => setShowPassword(!showPassword)} 
+              onClick={() => setShowPassword(!showPassword)}
             />
           )}
         </div>

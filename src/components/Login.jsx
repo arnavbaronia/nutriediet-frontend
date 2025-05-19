@@ -30,6 +30,31 @@ const Login = () => {
     setCredentials((prev) => ({ ...prev, [name]: value }));
   };
 
+  const getFriendlyErrorMessage = (error) => {
+    if (error.includes("hashedPassword is not the hash of the given password")) {
+      return "Incorrect password. Please try again.";
+    }
+    if (error === "Record Not Found") {
+      return "No account found with this email address.";
+    }
+    if (error === "Can't extract record") {
+      return "Error accessing your account. Please try again later.";
+    }
+    if (error.includes("password does not match")) {
+      return "Incorrect password. Please try again.";
+    }
+    if (error.includes("invalid password")) {
+      return "Incorrect password. Please try again.";
+    }
+    if (error.includes("cannot generate tokens")) {
+      return "Login error. Please try again.";
+    }
+    if (error.includes("cannot update tokens")) {
+      return "Login error. Please try again.";
+    }
+    return error;
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
@@ -61,7 +86,8 @@ const Login = () => {
       }
     } catch (err) {
       console.error("Error during login:", err);
-      setError(err.response?.data?.err || "Login failed. Please try again.");
+      const backendError = err.response?.data?.err || "Login failed. Please try again.";
+      setError(getFriendlyErrorMessage(backendError));
     }
   };
 
