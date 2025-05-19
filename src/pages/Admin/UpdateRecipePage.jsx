@@ -120,8 +120,8 @@ const UpdateRecipePage = () => {
       <h1><strong>Update Recipe</strong></h1>
       
       {successMessage && (
-        <div className="success-message-container11">
-          <div className="success-message2">
+        <div className="success-message-container">
+          <div className="success-message28">
             <FaCheckCircle style={{ marginRight: '8px' }} />
             <span>{successMessage}</span>
           </div>
@@ -130,7 +130,7 @@ const UpdateRecipePage = () => {
       
       {errorMessage && (
         <div className="error-message-container11">
-          <div className="error-message2">
+          <div className="error-message28">
             <FaExclamationTriangle style={{ marginRight: '8px' }} />
             <span>{errorMessage}</span>
           </div>

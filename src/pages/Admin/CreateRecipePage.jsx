@@ -85,7 +85,7 @@ const CreateRecipePage = () => {
       
       {successMessage && (
         <div className="success-message-container">
-          <div className="success-message24">
+          <div className="success-message28">
             <FaCheckCircle style={{ marginRight: '8px' }} />
             <span>{successMessage}</span>
           </div>
@@ -94,7 +94,7 @@ const CreateRecipePage = () => {
       
       {errorMessage && (
         <div className="error-message-container">
-          <div className="error-message24">
+          <div className="error-message28">
             <FaExclamationTriangle style={{ marginRight: '8px' }} />
             <span>{errorMessage}</span>
           </div>

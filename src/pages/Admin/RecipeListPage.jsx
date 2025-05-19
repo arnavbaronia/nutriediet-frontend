@@ -116,8 +116,8 @@ const AdminRecipeListPage = () => {
   return (
     <div className="admin-recipes-container">
       {success && (
-        <div className="success-message-container11">
-          <div className="success-message2">
+        <div className="success-message-container">
+          <div className="success-message28">
             <span>{success}</span>
           </div>
         </div>

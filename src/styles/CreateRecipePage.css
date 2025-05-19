@@ -157,18 +157,19 @@
   }
 }
 
-.success-message-container11 {
+.success-message-container {
   position: fixed;
-  top: 70px;
+  top: 70px; 
   left: 0;
   right: 0;
   z-index: 1000;
   display: flex;
   justify-content: center;
-  pointer-events: none;
+  align-items: center;
+  pointer-events: none; 
 }
 
-.success-message24 {
+.success-message28 {
   color: #155724;
   background-color: #d4edda;
   border: 1px solid #c3e6cb;
@@ -183,7 +184,7 @@
   animation: fadeInOut 3s ease-in-out forwards;
 }
 
-.error-message24 {
+.error-message28 {
   color: #d32f2f;
   background-color: #fde7e9;
   border: 1px solid #d32f2f;
