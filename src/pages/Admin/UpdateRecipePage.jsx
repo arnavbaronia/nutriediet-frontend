@@ -25,15 +25,14 @@ const UpdateRecipePage = () => {
 
   useEffect(() => {
     const fetchRecipe = async () => {
-      setFetchingRecipe(true);
       try {
         const response = await api.get(`/admin/recipes/${recipe_id}`);
-        const recipeData = response.data.recipe || response.data; // Handle both response formats
+        const recipeData = response.data.recipe || response.data;
         
         if (recipeData) {
-          setName(recipeData.name || "");
-          if (recipeData.image_url || recipeData.ImageURL) {
-            const imageUrl = recipeData.image_url || recipeData.ImageURL;
+          setName(recipeData.Name || recipeData.name || "");
+          const imageUrl = recipeData.ImageURL || recipeData.image_url;
+          if (imageUrl) {
             setCurrentImageUrl(`https://nutriediet-go.onrender.com${imageUrl}`);
           }
         } else {
@@ -41,10 +40,11 @@ const UpdateRecipePage = () => {
         }
       } catch (err) {
         console.error('Error fetching recipe:', err);
-        setErrorMessage(err.response?.data?.error || 
-                        err.response?.data?.err || 
-                        err.message || 
-                        'Failed to fetch recipe details.');
+        setErrorMessage(
+          err.response?.data?.error || 
+          err.response?.data?.err || 
+          'Failed to fetch recipe details. Please try again.'
+        );
       } finally {
         setFetchingRecipe(false);
       }
@@ -72,7 +72,7 @@ const UpdateRecipePage = () => {
     setErrorMessage("");
 
     if (!name) {
-      setErrorMessage("Please provide a recipe name");
+      setErrorMessage("Recipe name is required");
       setLoading(false);
       return;
     }
@@ -85,19 +85,21 @@ const UpdateRecipePage = () => {
         formData.append("file", file);
       }
 
-      const response = await api.post(`/admin/recipes/${recipe_id}/update`, formData, {
+      await api.post(`/admin/recipes/${recipe_id}/update`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
       setSuccessMessage("Recipe updated successfully!");
       setTimeout(() => {
         navigate('/admin/recipes');
-      }, 2000);
+      }, 1500);
     } catch (err) {
       console.error('Error updating recipe:', err);
-      setErrorMessage(err.response?.data?.error || 
-                     err.response?.data?.err || 
-                     "Failed to update recipe. Please try again.");
+      setErrorMessage(
+        err.response?.data?.error || 
+        err.response?.data?.err || 
+        "Failed to update recipe. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -119,7 +121,7 @@ const UpdateRecipePage = () => {
       
       {successMessage && (
         <div className="success-message-container">
-          <div className="success-message">
+          <div className="success-message2">
             <FaCheckCircle style={{ marginRight: '8px' }} />
             <span>{successMessage}</span>
           </div>
@@ -128,7 +130,7 @@ const UpdateRecipePage = () => {
       
       {errorMessage && (
         <div className="error-message-container">
-          <div className="error-message">
+          <div className="error-message2">
             <FaExclamationTriangle style={{ marginRight: '8px' }} />
             <span>{errorMessage}</span>
           </div>
@@ -176,7 +178,7 @@ const UpdateRecipePage = () => {
           />
           {preview && (
             <div className="image-preview-container">
-              <p>New Image:</p>
+              <p>New Image Preview:</p>
               <img src={preview} alt="Preview" className="image-preview" />
             </div>
           )}
@@ -192,10 +194,9 @@ const UpdateRecipePage = () => {
           </button>
           <button 
             type="button" 
-            className="btn-cancel9" 
+            className="cancel-btn9" 
             onClick={() => navigate('/admin/recipes')}
             disabled={loading}
-            style={{ backgroundColor: '#ff4444', color: 'white' }}
           >
             Cancel
           </button>
