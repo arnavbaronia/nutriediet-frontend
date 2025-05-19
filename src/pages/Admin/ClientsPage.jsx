@@ -166,7 +166,7 @@ const ClientsPage = () => {
   return (
     <div className="clients-page-container">
       <h1>Clients</h1>
-      {error && <div className="error-message">{error}</div>}
+      {error && <div className="error-message3">{error}</div>}
 
       <div className="filters-container">
         <div className="search-and-filters">

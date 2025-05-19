@@ -65,16 +65,6 @@ label {
   box-shadow: 0px 0px 8px rgba(76, 175, 80, 0.5);
 }
 
-.error-message {
-  color: #d32f2f;
-  background-color: #fde7e9;
-  border: 1px solid #d32f2f;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 4px;
-  text-align: center;
-}
-
 .edit-template-btn-group {
   display: flex;
   justify-content: center;
@@ -152,20 +142,35 @@ label {
   pointer-events: none;
 }
 
-.success-message {
-  color: green;
-  background-color: #e8f5e9;
-  border: 1px solid #4caf50;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-weight: bold;
+.success-message13 {
+  color: #155724;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  padding: 12px 20px;
+  border-radius: 15px;
+  font-weight: 600;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  max-width: 80%;
+  max-width: 60% !important;
   text-align: center;
   animation: fadeInOut 3s ease-in-out forwards;
+}
+
+.error-message13 {
+  color: #d32f2f;
+  background-color: #fde7e9;
+  border: 1px solid #d32f2f;
+  padding: 12px;
+  border-radius: 10px;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px;
+  margin: 10px auto !important; 
+  font-weight: 600;
+  width: 40%;
+  justify-content: center !important;
+  text-align: center;
 }
 
 .success-message .icon {

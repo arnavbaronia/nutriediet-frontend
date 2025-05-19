@@ -38,13 +38,13 @@ const CreateExercisePage = () => {
       
       {success && (
         <div className="success-message-container">
-          <div className="success-message">
+          <div className="success-message23">
             {success}
           </div>
         </div>
       )}
       
-      {error && <div className="error-message"><FaTimes /> {error}</div>}
+      {error && <div className="error-message23"><FaTimes /> {error}</div>}
       
       <form onSubmit={handleCreateExercise}>
         <div>

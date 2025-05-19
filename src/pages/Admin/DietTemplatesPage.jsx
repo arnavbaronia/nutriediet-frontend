@@ -104,7 +104,7 @@ const DietTemplatesPage = () => {
       <h1 className="page-title">Diet Templates</h1>
       {successMessage && (
       <div className="success-message-container">
-        <div className="success-message">
+        <div className="success-message12">
           <span>{successMessage}</span>
         </div>
       </div>

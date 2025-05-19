@@ -326,7 +326,7 @@ const CommonDietPage = () => {
       
       {success && (
       <div className="success-message-container">
-          <div className="success-message">
+          <div className="success-message9">
             {success}
           </div>
         </div>

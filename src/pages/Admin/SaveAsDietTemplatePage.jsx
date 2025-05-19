@@ -74,7 +74,7 @@ const SaveAsDietTemplatePage = () => {
 
       {success && (
         <div className="success-message-container">
-          <div className="success-message">
+          <div className="success-message18">
             <span>{success}</span>
           </div>
         </div>

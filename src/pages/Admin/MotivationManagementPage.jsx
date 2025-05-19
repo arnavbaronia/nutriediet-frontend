@@ -124,7 +124,7 @@ const MotivationManagementPage = () => {
 
       {success && (
         <div className="success-message-container">
-          <div className="success-message">
+          <div className="success-message17">
             {success}
           </div>
         </div>

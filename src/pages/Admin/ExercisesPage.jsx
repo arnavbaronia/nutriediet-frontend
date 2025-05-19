@@ -113,7 +113,7 @@ const ExercisesPage = () => {
     <div className="admin-exercises-container">
       {success && (
         <div className="success-message-container">
-          <div className="success-message">
+          <div className="success-message16">
             <span>{success}</span>
           </div>
         </div>

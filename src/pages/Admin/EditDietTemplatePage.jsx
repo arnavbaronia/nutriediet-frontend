@@ -82,7 +82,7 @@ const EditDietTemplatePage = () => {
 
       {success && (
         <div className="success-message-container">
-          <div className="success-message">
+          <div className="success-message13">
             <span>{success}</span>
           </div>
         </div>

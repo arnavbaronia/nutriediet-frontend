@@ -38,13 +38,13 @@ const CreateDietTemplatePage = () => {
       
       {successMessage && (
         <div className="success-message-container">
-          <div className="success-message">
+          <div className="success-message22">
             <span>{successMessage}</span>
           </div>
         </div>
       )}
       
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
+      {errorMessage && <p className="error-message22">{errorMessage}</p>}
       
       <form onSubmit={handleCreateTemplate}>
         <div>

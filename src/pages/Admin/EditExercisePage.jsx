@@ -53,13 +53,13 @@ const EditExercisePage = () => {
       
       {success && (
         <div className="success-message-container">
-          <div className="success-message">
+          <div className="success-message15">
             {success}
           </div>
         </div>
       )}
       
-      {error && <div className="error-message"><FaTimes /> {error}</div>}
+      {error && <div className="error-message15"><FaTimes /> {error}</div>}
       
       <form onSubmit={updateExercise}>
         <div>

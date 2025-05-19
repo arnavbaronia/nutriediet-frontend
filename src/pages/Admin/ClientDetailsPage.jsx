@@ -419,7 +419,7 @@ const ClientDetailsPage = () => {
     <div className="client-container">
       {successMessage && (
         <div className="success-message-container">
-          <div className="success-message">{successMessage}</div>
+          <div className="success-message4">{successMessage}</div>
         </div>
       )}
       <h2 className="client-heading">{client.name}'s Details</h2>

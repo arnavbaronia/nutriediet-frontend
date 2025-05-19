@@ -263,7 +263,7 @@ const CreateDietPage = () => {
 
       {successMessage && (
         <div className="success-message-container">
-          <div className="success-message">
+          <div className="success-message11">
             {successMessage}
           </div>
         </div>

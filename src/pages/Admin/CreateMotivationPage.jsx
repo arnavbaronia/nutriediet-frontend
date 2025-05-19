@@ -49,7 +49,7 @@ const CreateMotivationPage = () => {
       {/* Floating success message */}
       {showSuccess && (
         <div className="success-message-container">
-          <div className="success-message">
+          <div className="success-message21">
             Motivation created successfully!
           </div>
         </div>
