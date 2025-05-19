@@ -179,7 +179,7 @@ function AppContent() {
               </AdminRouteWrapper>
             </ProtectedRoute>
           } />
-          <Route path="/admin/recipes/:meal_id" element={
+          <Route path="/admin/recipes/:recipe_id" element={
             <ProtectedRoute requireduser_type="ADMIN">
               <AdminRouteWrapper>
                 <UpdateRecipePage />
