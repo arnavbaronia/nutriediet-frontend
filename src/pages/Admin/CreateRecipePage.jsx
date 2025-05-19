@@ -23,7 +23,6 @@ const CreateRecipePage = () => {
     const selectedFile = e.target.files[0];
     if (!selectedFile) return;
     
-    // Validate file type
     if (!selectedFile.type.match('image.*')) {
       setErrorMessage('Please select an image file (JPEG, PNG, etc.)');
       return;

@@ -56,7 +56,6 @@ const AdminRecipeListPage = () => {
       if (response.data.success && response.data.recipe) {
         setSelectedRecipeDetails(response.data.recipe);
       } else if (response.data.recipe) {
-        // Handle case where backend doesn't wrap in success object
         setSelectedRecipeDetails(response.data.recipe);
       } else {
         throw new Error('Recipe not found');
@@ -98,7 +97,6 @@ const AdminRecipeListPage = () => {
     try {
       await api.post(`/admin/recipes/${selectedRecipeId}/delete`);
       setSuccess('Recipe deleted successfully!');
-      // Refresh the list and clear selection
       await fetchRecipes();
       setSelectedRecipeDetails(null);
       setSelectedRecipeId('');
@@ -118,8 +116,8 @@ const AdminRecipeListPage = () => {
   return (
     <div className="admin-recipes-container">
       {success && (
-        <div className="recipe-success-message-container">
-          <div className="recipe-success-message2">
+        <div className="success-message-container11">
+          <div className="success-message2">
             <span>{success}</span>
           </div>
         </div>
@@ -174,6 +172,7 @@ const AdminRecipeListPage = () => {
                   <span>No Image Available</span>
                 </div>
               )}
+
               <h3 className="selected-recipe-title">
                 {selectedRecipeDetails.Name || selectedRecipeDetails.name}
               </h3>

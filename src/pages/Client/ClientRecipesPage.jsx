@@ -10,9 +10,11 @@ const ClientRecipeListPage = () => {
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchRecipes = async () => {
+      setLoading(true);
       try {
         const token = localStorage.getItem("token");
         const clientEmail = localStorage.getItem("email") || "";
@@ -20,30 +22,32 @@ const ClientRecipeListPage = () => {
 
         if (!token || !clientID) {
           setError("Authentication error. Please log in.");
+          setLoading(false);
           return;
         }
 
-        const headers = {
-          Authorization: `Bearer ${token}`,
-          "Client-Email": clientEmail,
-        };
-
-        console.log("Requesting recipes for client ID:", clientID);
-
-        const response = await axios.get(`https://nutriediet-go.onrender.com/clients/${clientID}/recipe`, { headers });
+        const response = await axios.get(
+          `https://nutriediet-go.onrender.com/clients/${clientID}/recipe`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (!response.data.isActive) {
           setError("Your account is inactive. Please contact support.");
+          setLoading(false);
           return;
         }
 
-        const recipeList = response.data.recipe || [];
-
-        setRecipes(recipeList);
-        setFilteredRecipes(recipeList);
+        setRecipes(response.data.recipes || []);
+        setFilteredRecipes(response.data.recipes || []);
       } catch (err) {
-        console.error("Error fetching recipes:", err.response?.data || err);
-        setError("Failed to fetch recipes. Please try again.");
+        console.error("Error fetching recipes:", err);
+        setError(err.response?.data?.error || "Failed to fetch recipes. Please try again.");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -58,11 +62,25 @@ const ClientRecipeListPage = () => {
       setFilteredRecipes(recipes);
     } else {
       const filtered = recipes.filter((recipe) =>
-        recipe?.Name?.toLowerCase().includes(query)
+        recipe?.name?.toLowerCase().includes(query)
       );
       setFilteredRecipes(filtered);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="recipe-page">
+        <NavigationBar />
+        <div className="recipe-content">
+          <h1 className="recipe-title">
+            <FaMortarPestle /> Recipes
+          </h1>
+          <p>Loading recipes...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="recipe-page">
@@ -71,7 +89,7 @@ const ClientRecipeListPage = () => {
         <h1 className="recipe-title">
           <FaMortarPestle /> Recipes
         </h1>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="error-message">{error}</p>}
         <input
           type="text"
           className="recipe-search"
@@ -84,50 +102,51 @@ const ClientRecipeListPage = () => {
           {filteredRecipes.length > 0 ? (
             filteredRecipes.map((recipe) => (
               <div
-                key={recipe.ID}
+                key={recipe.id}
                 className="recipe-box"
                 onClick={() => setSelectedRecipe(recipe)}
               >
-                <h3>{recipe?.Name || "Unnamed Recipe"}</h3> 
+                <h3>{recipe?.name || "Unnamed Recipe"}</h3>
               </div>
             ))
           ) : (
-            <p className="no-recipes">No recipes found</p>
+            <p className="no-recipes">
+              {searchTerm ? "No matching recipes found" : "No recipes available"}
+            </p>
           )}
         </div>
 
         {selectedRecipe && (
-          <div className="recipe-popup-overlay" onClick={() => setSelectedRecipe(null)}>
+          <div
+            className="recipe-popup-overlay"
+            onClick={() => setSelectedRecipe(null)}
+          >
             <div className="recipe-popup" onClick={(e) => e.stopPropagation()}>
-              <button className="close-btn" onClick={() => setSelectedRecipe(null)}>✖</button>
-              <h2>{selectedRecipe?.Name || "Unnamed Recipe"}</h2> 
-
-              <div className="recipe-sections">
-                <div className="recipe-section ingredients">
-                  <h3>Ingredients</h3>
-                  <ul>
-                    {selectedRecipe?.Ingredients?.length > 0 ? (
-                      selectedRecipe.Ingredients.map((ingredient, index) => (
-                        <li key={index}>{ingredient || "Unknown ingredient"}</li>
-                      ))
-                    ) : (
-                      <p>No ingredients available</p>
-                    )}
-                  </ul>
-                </div>
-
-                <div className="recipe-section preparation">
-                  <h3>Preparation</h3>
-                  <ol>
-                    {selectedRecipe?.Preparation?.length > 0 ? (
-                      selectedRecipe.Preparation.map((step, index) => (
-                        <li key={index}>{step || "Unknown step"}</li>
-                      ))
-                    ) : (
-                      <p>No preparation steps available</p>
-                    )}
-                  </ol>
-                </div>
+              <button
+                className="close-btn"
+                onClick={() => setSelectedRecipe(null)}
+              >
+                ✖
+              </button>
+              <h2>{selectedRecipe?.name || "Unnamed Recipe"}</h2>
+              
+              {/* Updated to show only the image */}
+              <div className="recipe-image-container">
+                {selectedRecipe.imageUrl ? (
+                  <img
+                    src={`https://nutriediet-go.onrender.com${selectedRecipe.imageUrl}`}
+                    alt={selectedRecipe.name}
+                    className="recipe-image"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "/placeholder-recipe.jpg";
+                    }}
+                  />
+                ) : (
+                  <div className="recipe-image-placeholder">
+                    <p>No image available</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
