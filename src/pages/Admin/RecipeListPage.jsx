@@ -28,30 +28,44 @@ const AdminRecipeListPage = () => {
   const fetchRecipes = async () => {
     setLoading(true);
     try {
-      const response = await api.get(`/admin/recipes?timestamp=${Date.now()}`);
-      const formattedRecipes = response.data.list.map((recipe) => ({
-        id: recipe.RecipeID,
-        name: recipe.Name,
-      }));
-      setRecipes(formattedRecipes);
-      setError('');
+      const response = await api.get('/admin/recipes');
+      if (response.data.success && response.data.list) {
+        const formattedRecipes = response.data.list.map((recipe) => ({
+          id: recipe.RecipeID,
+          name: recipe.Name,
+        }));
+        setRecipes(formattedRecipes);
+        setError('');
+      } else {
+        throw new Error('Invalid response format');
+      }
     } catch (err) {
       console.error('Error fetching recipes:', err);
-      setError('Failed to fetch recipes.');
+      setError('Failed to fetch recipes. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   const fetchRecipeById = async (recipeId) => {
+    if (!recipeId) return;
+    
     setLoading(true);
     try {
       const response = await api.get(`/admin/recipes/${recipeId}`);
-      setSelectedRecipeDetails(response.data.recipe);
+      if (response.data.success && response.data.recipe) {
+        setSelectedRecipeDetails(response.data.recipe);
+      } else if (response.data.recipe) {
+        // Handle case where backend doesn't wrap in success object
+        setSelectedRecipeDetails(response.data.recipe);
+      } else {
+        throw new Error('Recipe not found');
+      }
       setError('');
     } catch (err) {
       console.error('Error fetching recipe by ID:', err);
       setError('Failed to fetch recipe details.');
+      setSelectedRecipeDetails(null);
     } finally {
       setLoading(false);
     }
@@ -82,23 +96,16 @@ const AdminRecipeListPage = () => {
     setDeleting(true);
 
     try {
-      const response = await api.post(`/admin/recipes/${selectedRecipeId}/delete`);
+      await api.post(`/admin/recipes/${selectedRecipeId}/delete`);
+      setSuccess('Recipe deleted successfully!');
+      // Refresh the list and clear selection
       await fetchRecipes();
       setSelectedRecipeDetails(null);
       setSelectedRecipeId('');
-      setSuccess('Recipe deleted successfully!');
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
       console.error('Error deleting recipe:', err);
-      if (err.response?.data?.err && err.response.data.err.includes('no such file or directory')) {
-        await fetchRecipes();
-        setSelectedRecipeDetails(null);
-        setSelectedRecipeId('');
-        setSuccess('Recipe record deleted successfully (image file was already removed)');
-        setTimeout(() => setSuccess(''), 4000);
-      } else {
-        setError('Failed to delete recipe.');
-      }
+      setError(err.response?.data?.error || 'Failed to delete recipe.');
     } finally {
       setDeleting(false);
     }
@@ -112,7 +119,7 @@ const AdminRecipeListPage = () => {
     <div className="admin-recipes-container">
       {success && (
         <div className="recipe-success-message-container">
-          <div className="recipe-success-message">
+          <div className="recipe-success-message2">
             <span>{success}</span>
           </div>
         </div>
@@ -126,10 +133,15 @@ const AdminRecipeListPage = () => {
               value: recipe.id,
               label: recipe.name,
             }))}
+            value={selectedRecipeId ? { 
+              value: selectedRecipeId, 
+              label: recipes.find(r => r.id === selectedRecipeId)?.name || '' 
+            } : null}
             placeholder="Select a Recipe"
             onChange={handleDropdownChange}
             className="recipe-custom-dropdown"
             isSearchable
+            isClearable
           />
           <Button
             className="recipe-btn-create"
@@ -145,18 +157,26 @@ const AdminRecipeListPage = () => {
         {selectedRecipeDetails ? (
           <div className="recipe-card">
             <div className="recipe-image-container">
-              {selectedRecipeDetails.image_url && (
+              {selectedRecipeDetails.ImageURL || selectedRecipeDetails.image_url ? (
                 <img
-                  src={`https://nutriediet-go.onrender.com${selectedRecipeDetails.image_url}`}
-                  alt={selectedRecipeDetails.name}
+                  src={`https://nutriediet-go.onrender.com${
+                    selectedRecipeDetails.ImageURL || selectedRecipeDetails.image_url
+                  }`}
+                  alt={selectedRecipeDetails.Name || selectedRecipeDetails.name}
                   className="recipe-image-thumbnail"
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = '/placeholder-recipe.jpg';
                   }}
                 />
+              ) : (
+                <div className="recipe-image-placeholder">
+                  <span>No Image Available</span>
+                </div>
               )}
-              <h3 className="selected-recipe-title">{selectedRecipeDetails.name}</h3>
+              <h3 className="selected-recipe-title">
+                {selectedRecipeDetails.Name || selectedRecipeDetails.name}
+              </h3>
             </div>
 
             <div className="recipe-action-buttons">
@@ -188,7 +208,7 @@ const AdminRecipeListPage = () => {
           <div className="recipe-delete-modal">
             <h3>Confirm Deletion</h3>
             <p>Are you sure you want to delete this recipe?</p>
-            <p>Recipe: {selectedRecipeDetails?.name}</p>
+            <p>Recipe: {selectedRecipeDetails?.Name || selectedRecipeDetails?.name}</p>
             <div className="recipe-modal-buttons">
               <button 
                 className="recipe-modal-button recipe-modal-cancel"
