@@ -130,9 +130,9 @@ select.input-field {
 .forgot-password-link {
   color: #004D40;
   font-size: 14px;
-  text-align: left;
+  text-align: right;
   margin-top: -10px;
-  margin-bottom: 10px;
+  margin-bottom: -5px;
   cursor: pointer;
   text-decoration: underline;
   width: 100%;
