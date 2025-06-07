@@ -33,7 +33,8 @@ const DietHistoryTable = ({
         templateName: diet.name || 'Custom Template',
         feedback: diet.feedback || '-'
       }))
-      .sort((a, b) => b.week - a.week); 
+      .sort((a, b) => b.week - a.week)
+      .slice(0, 4);
   };
 
   const formattedHistory = formatHistoryData(dietHistory);

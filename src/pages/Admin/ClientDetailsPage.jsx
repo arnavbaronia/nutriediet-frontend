@@ -508,7 +508,7 @@ const ClientDetailsPage = () => {
           Update Weight and Feedback
         </button>
 
-        {weightUpdateSuccess && <div className="success-message">{weightUpdateSuccess}</div>}
+        {weightUpdateSuccess && <div className="success-message4">{weightUpdateSuccess}</div>}
       </div>
 
         <div className="form-background">
