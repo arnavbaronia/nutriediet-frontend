@@ -196,12 +196,12 @@ const CreateDietPage = () => {
       ...(selectedTemplate && { diet_template_id: parseInt(selectedTemplate) }),
       ...(editMode && selectedHistory && { diet_id: selectedHistory.id })
     };
-  
+
     try {
       const endpoint = editMode 
         ? `https://nutriediet-go.onrender.com/admin/${client_id}/edit_diet`
         : `https://nutriediet-go.onrender.com/admin/${client_id}/diet`;
-  
+
       const response = await axios.post(
         endpoint,
         requestData,
@@ -212,31 +212,22 @@ const CreateDietPage = () => {
           },
         }
       );
-  
-      setSuccessMessage(editMode ? "Diet updated successfully!" : "Diet saved successfully!");
-      setTimeout(() => setSuccessMessage(null), 3000);
-  
-      const updatedDiet = {
-        id: editMode ? selectedHistory.id : response.data.diet_id,
-        week_number: editMode ? selectedHistory.week_number : (dietHistory[0]?.week_number || 0) + 1,
-        date: new Date().toISOString(),
-        diet_string: diet,
-        name: selectedTemplate ? dietTemplates.find(t => t.ID === parseInt(selectedTemplate))?.Name : 'Custom Diet',
-        feedback: ''
-      };
-  
-      if (editMode) {
-        setDietHistory(prev => prev.map(d => 
-          d.id === selectedHistory.id ? updatedDiet : d
-        ));
+
+      if (response.data.message === "Diet information saved successfully") {
+        setSuccessMessage(editMode ? "Diet updated successfully!" : "Diet saved successfully!");
+        setTimeout(() => setSuccessMessage(null), 3000);
+        
+        // Fetch fresh history from server
+        await fetchDietHistory();
+        
+        // Reset form
+        setEditMode(false);
+        setDiet("");
+        setSelectedTemplate("");
+        setSelectedHistory(null);
       } else {
-        setDietHistory(prev => [updatedDiet, ...prev]);
+        throw new Error("Unexpected response from server");
       }
-  
-      setEditMode(false);
-      setDiet("");
-      setSelectedTemplate("");
-      setSelectedHistory(null);
       
     } catch (err) {
       console.error("Error saving diet:", err);
