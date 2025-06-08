@@ -44,7 +44,7 @@ const Login = () => {
     setCredentials((prev) => ({ ...prev, [name]: value }));
   };
 
-    const getFriendlyErrorMessage = (error) => {
+  const getFriendlyErrorMessage = (error) => {
     if (error.includes("hashedPassword is not the hash of the given password")) {
       return "Incorrect password. Please try again.";
     }
@@ -121,11 +121,11 @@ const Login = () => {
     setResetError("");
     
     try {
-      await axios.post("https://nutriediet-go.onrender.com/password-reset/initiate", {
+      await axios.post("https://nutriediet-go.onrender.com/auth/forgot-password", {
         email: resetEmail
       });
       setResetStep(2);
-      setResetSuccess("OTP sent to your email");
+      setResetSuccess("OTP sent to your email. Please check your inbox.");
     } catch (err) {
       setResetError(err.response?.data?.error || "Failed to send OTP. Please try again.");
     } finally {
@@ -139,17 +139,17 @@ const Login = () => {
     setResetError("");
     
     try {
-      await axios.post("https://nutriediet-go.onrender.com/password-reset/complete", {
+      await axios.post("https://nutriediet-go.onrender.com/auth/reset-password", {
         email: resetEmail,
-        otp,
+        otp: otp,
         new_password: newPassword
       });
-      setResetSuccess("Password updated successfully!");
+      setResetSuccess("Password reset successfully! You can now login with your new password.");
       setTimeout(() => {
         setForgotPasswordModal(false);
       }, 2000);
     } catch (err) {
-      setResetError(err.response?.data?.error || "Failed to reset password. Please try again.");
+      setResetError(err.response?.data?.error || "Failed to reset password. Please check the OTP and try again.");
     } finally {
       setLoading(false);
     }
@@ -256,11 +256,11 @@ const Login = () => {
               <TextField
                 fullWidth
                 margin="normal"
-                label="OTP"
+                label="OTP (6 digits)"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
                 required
-                inputProps={{ maxLength: 4 }}
+                inputProps={{ maxLength: 6 }}
               />
               <TextField
                 fullWidth
@@ -270,6 +270,7 @@ const Login = () => {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
+                helperText="Minimum 6 characters"
               />
               {resetError && <Typography color="error">{resetError}</Typography>}
               {resetSuccess && <Typography color="success">{resetSuccess}</Typography>}
