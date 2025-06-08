@@ -162,3 +162,76 @@ select.input-field {
 .MuiButton-contained:hover {
   background-color: #357ab8;
 }
+
+.MuiModal-root {
+  backdrop-filter: blur(5px);
+}
+
+.MuiBox-root {
+  outline: none;
+  margin: 16px !important;
+  max-width: calc(100vw - 32px) !important;
+  max-height: calc(100vh - 32px) !important;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .MuiBox-root {
+    margin: 8px !important;
+    max-width: calc(100vw - 16px) !important;
+    padding: 20px !important;
+    border-radius: 12px !important;
+  }
+  
+  .MuiTextField-root {
+    margin-bottom: 16px;
+  }
+  
+  .MuiTextField-root .MuiInputBase-root {
+    font-size: 16px !important;
+  }
+  
+  .MuiButton-contained {
+    background-color: #004D40;
+    padding: 12px 24px !important;
+    font-size: 16px !important;
+  }
+  
+  .MuiButton-contained:hover {
+    background-color: #357ab8;
+  }
+  
+  .MuiTypography-h6 {
+    font-size: 1.1rem !important;
+    margin-bottom: 16px !important;
+  }
+  
+  .MuiFormControl-root {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .MuiBox-root {
+    margin: 4px !important;
+    max-width: calc(100vw - 10px) !important;
+    padding: 16px !important;
+    border-radius: 8px !important;
+  }
+  
+  .MuiTextField-root .MuiInputBase-root {
+    padding: 12px 14px !important;
+  }
+  
+  .MuiButton-contained {
+    padding: 14px 24px !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .MuiBox-root {
+    max-height: calc(100vh - 16px) !important;
+    margin: 8px !important;
+  }
+}
