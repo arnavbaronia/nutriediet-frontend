@@ -275,11 +275,11 @@ const Login = () => {
               {resetError && <Typography color="error">{resetError}</Typography>}
               {resetSuccess && <Typography color="success">{resetSuccess}</Typography>}
               <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
-                <Button 
+                {/* <Button 
                   onClick={() => setResetStep(1)}
                 >
                   Back
-                </Button>
+                </Button> */}
                 <Box>
                   <Button 
                     onClick={() => setForgotPasswordModal(false)}

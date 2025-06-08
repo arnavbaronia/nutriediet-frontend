@@ -175,30 +175,72 @@ select.input-field {
   overflow-y: auto;
 }
 
+.MuiModal-root {
+  backdrop-filter: blur(5px);
+}
+
+.MuiBox-root {
+  outline: none;
+  margin: 16px !important;
+  max-width: 350px !important;
+  width: 90% !important;
+  max-height: calc(100vh - 32px) !important;
+  overflow-y: auto;
+}
+
 @media (max-width: 768px) {
   .MuiBox-root {
     margin: 8px !important;
-    max-width: calc(100vw - 16px) !important;
+    max-width: 320px !important;
+    width: 85% !important;
     padding: 20px !important;
     border-radius: 12px !important;
   }
   
   .MuiTextField-root {
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
   
   .MuiTextField-root .MuiInputBase-root {
-    font-size: 16px !important;
+    font-size: 16px !important; 
+    padding: 8px 12px !important; 
+    min-height: auto !important;
   }
   
-  .MuiButton-contained {
+  .MuiTextField-root .MuiInputBase-input {
+    padding: 8px 0 !important; 
+  }
+  
+  .MuiDialogActions-root,
+  .MuiBox-root > div:last-child {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    margin-top: 16px !important;
+  }
+  
+  .MuiButton-contained,
+  .MuiButton-outlined {
     background-color: #004D40;
-    padding: 12px 24px !important;
-    font-size: 16px !important;
+    padding: 8px 16px !important;
+    font-size: 14px !important;
+    min-width: 80px !important;
+    max-width: 100px !important;
   }
   
   .MuiButton-contained:hover {
     background-color: #357ab8;
+  }
+  
+  .MuiButton-outlined {
+    background-color: transparent !important;
+    border-color: #004D40 !important;
+    color: #004D40 !important;
+  }
+  
+  .MuiButton-outlined:hover {
+    background-color: rgba(0, 77, 64, 0.1) !important;
+    border-color: #357ab8 !important;
   }
   
   .MuiTypography-h6 {
@@ -214,18 +256,26 @@ select.input-field {
 @media (max-width: 480px) {
   .MuiBox-root {
     margin: 4px !important;
-    max-width: calc(100vw - 10px) !important;
+    max-width: 280px !important;
+    width: 80% !important;
     padding: 16px !important;
     border-radius: 8px !important;
   }
   
   .MuiTextField-root .MuiInputBase-root {
-    padding: 12px 14px !important;
+    padding: 6px 10px !important;
   }
   
-  .MuiButton-contained {
-    padding: 14px 24px !important;
-    width: 100% !important;
+  .MuiTextField-root .MuiInputBase-input {
+    padding: 6px 0 !important;
+  }
+  
+  .MuiButton-contained,
+  .MuiButton-outlined {
+    padding: 6px 14px !important;
+    font-size: 13px !important;
+    min-width: 70px !important;
+    max-width: 90px !important;
   }
 }
 
@@ -233,5 +283,6 @@ select.input-field {
   .MuiBox-root {
     max-height: calc(100vh - 16px) !important;
     margin: 8px !important;
+    max-width: 300px !important;
   }
 }
