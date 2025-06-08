@@ -50,6 +50,7 @@ const ClientDetailsPage = () => {
   const [originalValues, setOriginalValues] = useState({});
   const [selectedWeekNumber, setSelectedWeekNumber] = useState("");
   const [availableWeeks, setAvailableWeeks] = useState([]);
+  const [weightUpdateTrigger, setWeightUpdateTrigger] = useState(0);
   // const [dietHistory, setDietHistory] = useState([]);
 
   const navigate = useNavigate();
@@ -179,6 +180,8 @@ const ClientDetailsPage = () => {
         setSelectedWeekNumber(availableWeeks.length > 0 ? availableWeeks[0] : "");
 
         setTimeout(() => setWeightUpdateSuccess(null), 3000);
+
+        setWeightUpdateTrigger(prev => prev + 1);
 
         const dietHistoryResponse = await axios.get(
           `https://nutriediet-go.onrender.com/admin/client/${client_id}/diet_history`,
@@ -475,8 +478,8 @@ const ClientDetailsPage = () => {
           />
         </div>
       </div>
-      <CreateDietPage />
-
+      <CreateDietPage weightUpdateTrigger={weightUpdateTrigger} />
+      
       <h2>Weight History</h2>
       {weightHistory.length > 0 ? (
         <div className="weight-history-graph">

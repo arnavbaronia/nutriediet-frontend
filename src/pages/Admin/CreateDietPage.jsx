@@ -7,7 +7,7 @@ import 'react-quill/dist/quill.snow.css';
 import DietHistoryTable from "./DietHistoryTable";
 import "../../styles/CreateDietPage.css";
 
-const CreateDietPage = () => {
+const CreateDietPage = ({ weightUpdateTrigger = 0 }) => {
   const { client_id } = useParams();
   const [diet, setDiet] = useState("");
   const [error, setError] = useState(null);
@@ -38,7 +38,7 @@ const CreateDietPage = () => {
   useEffect(() => {
     fetchDietTemplates();
     fetchDietHistory();
-  }, [client_id, refreshTrigger]);
+  }, [client_id, refreshTrigger, weightUpdateTrigger]);
 
   const fetchDietTemplates = async () => {
     try {
@@ -217,10 +217,8 @@ const CreateDietPage = () => {
         setSuccessMessage(editMode ? "Diet updated successfully!" : "Diet saved successfully!");
         setTimeout(() => setSuccessMessage(null), 3000);
         
-        // Fetch fresh history from server
         await fetchDietHistory();
         
-        // Reset form
         setEditMode(false);
         setDiet("");
         setSelectedTemplate("");
@@ -264,7 +262,8 @@ const CreateDietPage = () => {
         clientId={client_id}
         dietHistory={dietHistory} 
         handleDietAction={handleHistorySelect} 
-        handleDelete={handleDelete} 
+        handleDelete={handleDelete}
+        weightUpdateTrigger={weightUpdateTrigger} 
       />      
       
       <div className="diet-section">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../styles/ClientDetailsPage.css';
 
@@ -6,11 +6,42 @@ const DietHistoryTable = ({
   clientId, 
   dietHistory = [], 
   handleDietAction, 
-  handleDelete 
+  handleDelete,
+  weightUpdateTrigger = 0
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [dietToDelete, setDietToDelete] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [localDietHistory, setLocalDietHistory] = useState(dietHistory);
+
+  useEffect(() => {
+    if (weightUpdateTrigger > 0) {
+      fetchLatestDietHistory();
+    }
+  }, [weightUpdateTrigger]);
+
+  useEffect(() => {
+    setLocalDietHistory(dietHistory);
+  }, [dietHistory]);
+
+  const fetchLatestDietHistory = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        `https://nutriediet-go.onrender.com/admin/client/${clientId}/diet_history`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const regularHistory = response.data.diet_history_regular || [];
+      const sortedRegular = regularHistory.sort((a, b) => b.week_number - a.week_number);
+      
+      setLocalDietHistory(sortedRegular);
+    } catch (error) {
+      console.error("Error fetching updated diet history:", error);
+    }
+  };
 
   const formatDate = (dateString) => {
     if (!dateString) return '-';
@@ -37,7 +68,7 @@ const DietHistoryTable = ({
       .slice(0, 4);
   };
 
-  const formattedHistory = formatHistoryData(dietHistory);
+  const formattedHistory = formatHistoryData(localDietHistory);
 
   const latestDietId = formattedHistory.length > 0 
     ? formattedHistory[0].id 
@@ -56,6 +87,7 @@ const DietHistoryTable = ({
     try {
       await handleDelete(dietToDelete);
       setShowDeleteModal(false);
+      setLocalDietHistory(prev => prev.filter(d => d.id !== dietToDelete));
     } catch (error) {
       console.error("Error deleting diet:", error);
     } finally {
