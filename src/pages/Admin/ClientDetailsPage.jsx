@@ -48,6 +48,8 @@ const ClientDetailsPage = () => {
   const [feedback, setFeedback] = useState("");
   const [weightUpdateSuccess, setWeightUpdateSuccess] = useState(null);
   const [originalValues, setOriginalValues] = useState({});
+  const [selectedWeekNumber, setSelectedWeekNumber] = useState("");
+  const [availableWeeks, setAvailableWeeks] = useState([]);
   // const [dietHistory, setDietHistory] = useState([]);
 
   const navigate = useNavigate();
@@ -111,6 +113,17 @@ const ClientDetailsPage = () => {
       })
       .then((response) => {
         const dietHistory = response.data.diet_history_regular || [];
+
+              const sortedWeeks = dietHistory
+        .map(entry => entry.week_number)
+        .sort((a, b) => b - a);
+      
+        const recentWeeks = [...new Set(sortedWeeks)].slice(0, 2); 
+        setAvailableWeeks(recentWeeks);
+        
+        if (recentWeeks.length > 0) {
+          setSelectedWeekNumber(recentWeeks[0]);
+        }
         
         const weightDataFromDiet = dietHistory
           .filter(entry => entry && entry.weight) 
@@ -132,17 +145,23 @@ const ClientDetailsPage = () => {
 
   const handleWeightUpdate = async () => {
     const token = localStorage.getItem("token");
-  
+
     if (!updatedWeight) {
       setError("Please enter a valid weight.");
       return;
     }
-  
+
+    if (!selectedWeekNumber) {
+      setError("Please select a week number.");
+      return;
+    }
+
     try {
       const response = await axios.post(
         `https://nutriediet-go.onrender.com/admin/${client_id}/weight_update`,
         {
           weight: parseFloat(updatedWeight),
+          week_number: parseInt(selectedWeekNumber),
           feedback: feedback,
         },
         {
@@ -152,23 +171,15 @@ const ClientDetailsPage = () => {
           },
         }
       );
-  
+
       if (response.status === 200) {
-        const today = new Date();
-        const newWeightEntry = {
-          date: today,
-          weight: parseFloat(updatedWeight)
-        };
-        
-        const updatedWeightHistory = [...weightHistory, newWeightEntry].sort((a, b) => a.date - b.date);
-        
-        setWeightHistory(updatedWeightHistory);
         setWeightUpdateSuccess("Weight and feedback updated successfully!");
         setUpdatedWeight("");
         setFeedback("");
-  
+        setSelectedWeekNumber(availableWeeks.length > 0 ? availableWeeks[0] : "");
+
         setTimeout(() => setWeightUpdateSuccess(null), 3000);
-  
+
         const dietHistoryResponse = await axios.get(
           `https://nutriediet-go.onrender.com/admin/client/${client_id}/diet_history`,
           { headers: { Authorization: `Bearer ${token}` } }
@@ -184,11 +195,7 @@ const ClientDetailsPage = () => {
           }))
           .sort((a, b) => a.date - b.date);
         
-        const combinedWeightHistory = [...weightDataFromDiet];
-        
-        if (combinedWeightHistory.length !== weightHistory.length) {
-          setWeightHistory(combinedWeightHistory);
-        }
+        setWeightHistory(weightDataFromDiet);
       }
     } catch (error) {
       console.error("Error updating weight and feedback:", error);
@@ -491,6 +498,22 @@ const ClientDetailsPage = () => {
           onChange={(e) => setUpdatedWeight(e.target.value)}
           placeholder="Enter weight"
         />
+
+        {/* Week Number Dropdown */}
+        <label htmlFor="week_number" style={{ marginTop: '10px' }}>Select Week Number</label>
+        <select
+          id="week_number"
+          name="week_number"
+          value={selectedWeekNumber}
+          className="client-input select-input"
+          style={{ marginTop: '-10px', width: '21%' }}
+          onChange={(e) => setSelectedWeekNumber(e.target.value)}
+        >
+          <option value="">Select Week</option>
+          {availableWeeks.map(week => (
+            <option key={week} value={week}>Week {week}</option>
+          ))}
+        </select>
 
         {/* Add feedback input field */}
         <label htmlFor="feedback" style={{ marginTop: '10px' }}>Feedback</label>
