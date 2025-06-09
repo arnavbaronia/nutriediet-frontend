@@ -33,6 +33,7 @@ const CreateProfilePage = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
+  const [backendError, setBackendError] = useState(null);
 
   useEffect(() => {
     const firstName = localStorage.getItem("firstName");
@@ -63,6 +64,9 @@ const CreateProfilePage = () => {
 
     if (fieldErrors[name]) {
       setFieldErrors(prev => ({ ...prev, [name]: '' }));
+    }
+    if (backendError) {
+      setBackendError(null);
     }
   };
 
@@ -110,12 +114,35 @@ const CreateProfilePage = () => {
 
       setSuccess(true);
       setError(null);
+      setBackendError(null);
       console.log("Profile created successfully:", response.data);
 
       navigate("/account-activation", { state: { token } });
     } catch (err) {
       setSuccess(false);
-      setError(err.response?.data?.error || "An error occurred.");
+      
+      if (err.response) {
+        const { data, status } = err.response;
+        
+        if (status === 400) {
+          if (data.error === "email does not match") {
+            setBackendError("Email in the form doesn't match the registered email");
+          } else {
+            setBackendError("Invalid form data. Please check your inputs.");
+          }
+        } else if (status === 403) {
+          setBackendError("User needs to sign up before creating a profile");
+        } else if (status === 404) {
+          setBackendError("User record not found");
+        } else if (status === 500) {
+          setBackendError("Server error. Please try again later.");
+        } else {
+          setBackendError(data.error || "An unexpected error occurred");
+        }
+      } else {
+        setBackendError("Network error. Please check your connection.");
+      }
+      
       console.error("Error creating profile:", err.response?.data || err.message);
     }
   };

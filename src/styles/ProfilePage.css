@@ -243,3 +243,37 @@ body {
 .client-textarea:invalid {
   border-color: #d32f2f;
 }
+
+.backend-error-message {
+  background-color: #fde7e9;
+  border-left: 4px solid #d32f2f;
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  color: #d32f2f;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.backend-error-message p {
+  margin: 0;
+  padding: 0;
+}
+
+.error-message {
+  color: #d32f2f;
+  background-color: #fde7e9;
+  border: 1px solid #d32f2f;
+  padding: 12px;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+  font-weight: 600;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto 20px;
+  justify-content: center;
+}
