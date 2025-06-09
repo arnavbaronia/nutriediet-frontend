@@ -144,6 +144,32 @@ const ClientDetailsPage = () => {
       });
   }, [client_id]);
 
+  const refreshAvailableWeeks = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get(
+        `https://nutriediet-go.onrender.com/admin/client/${client_id}/diet_history`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      
+      const dietHistory = response.data.diet_history_regular || [];
+      const sortedWeeks = dietHistory
+        .map(entry => entry.week_number)
+        .sort((a, b) => b - a);
+      
+      const recentWeeks = [...new Set(sortedWeeks)].slice(0, 2); 
+      setAvailableWeeks(recentWeeks);
+      
+      if (recentWeeks.length > 0 && !selectedWeekNumber) {
+        setSelectedWeekNumber(recentWeeks[0]);
+      }
+    } catch (error) {
+      console.error("Error refreshing available weeks:", error);
+    }
+  };
+
   const handleWeightUpdate = async () => {
     const token = localStorage.getItem("token");
 
@@ -478,7 +504,10 @@ const ClientDetailsPage = () => {
           />
         </div>
       </div>
-      <CreateDietPage weightUpdateTrigger={weightUpdateTrigger} />
+      <CreateDietPage 
+        weightUpdateTrigger={weightUpdateTrigger} 
+        onDietSent={refreshAvailableWeeks}
+      />      
       
       <h2>Weight History</h2>
       {weightHistory.length > 0 ? (

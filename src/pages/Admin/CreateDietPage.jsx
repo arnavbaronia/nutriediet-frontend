@@ -7,7 +7,7 @@ import 'react-quill/dist/quill.snow.css';
 import DietHistoryTable from "./DietHistoryTable";
 import "../../styles/CreateDietPage.css";
 
-const CreateDietPage = ({ weightUpdateTrigger = 0 }) => {
+const CreateDietPage = ({ weightUpdateTrigger = 0, onDietSent }) => {
   const { client_id } = useParams();
   const [diet, setDiet] = useState("");
   const [error, setError] = useState(null);
@@ -218,6 +218,10 @@ const CreateDietPage = ({ weightUpdateTrigger = 0 }) => {
         setTimeout(() => setSuccessMessage(null), 3000);
         
         await fetchDietHistory();
+
+        if (onDietSent && !editMode) {
+          onDietSent();
+        }
         
         setEditMode(false);
         setDiet("");
