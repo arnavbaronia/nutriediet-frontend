@@ -251,14 +251,18 @@ const ProfilePage = () => {
           </div>
           <div className="form-group inline-input-wide">
             <label htmlFor="dietaryPreference">Dietary Preference</label>
-            <input
-              type="text"
+            <select
               id="dietaryPreference"
               name="dietaryPreference"
               value={profile.dietaryPreference}
               onChange={handleChange}
               className="profile-input"
-            />
+            >
+              <option value="">Select an option</option>
+              <option value="veg">Vegetarian</option>
+              <option value="non-veg">Non-Vegetarian</option>
+              <option value="eggetarian">Eggetarian</option>
+            </select>
           </div>
         </div>
 
@@ -284,7 +288,7 @@ const ProfilePage = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="stay">Stay</label>
+          <label htmlFor="stay">Stay (Home, PG, Hostel)</label>
           <textarea
             id="stay"
             name="stay"
