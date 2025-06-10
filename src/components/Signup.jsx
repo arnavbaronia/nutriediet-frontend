@@ -86,6 +86,9 @@ const Signup = () => {
           className="input-field"
           required
         />
+        <div className="login-redirect">
+          Already have an account? <span onClick={() => navigate('/login')}>Log in</span>
+        </div>
         <button type="submit" className="submit-buttonk">
           Sign Up
         </button>

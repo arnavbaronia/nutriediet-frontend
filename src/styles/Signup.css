@@ -116,3 +116,21 @@ select.input-field {
     transform: scale(0.8);
   }
 }
+
+.login-redirect {
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+  margin-top: -10px;
+}
+
+.login-redirect span {
+  color: #004D40;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.login-redirect span:hover {
+  color: #357ab8;
+}
