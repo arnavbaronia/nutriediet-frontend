@@ -195,3 +195,23 @@ body {
     height: 200px;
   }
 }
+
+@media (max-width: 768px) {
+  .recipe-popup {
+    padding: 15px;
+  }
+
+  .recipe-image {
+    max-height: 50vh; 
+    margin-top: 10px; 
+    margin-bottom: 10px;
+    margin-left: 25px;
+    margin-right: 25px;
+    width: 95%;
+  }
+
+  .recipe-image-placeholder {
+    height: 180px;
+    max-width: 350px;
+  }
+}
