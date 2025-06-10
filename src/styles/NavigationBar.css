@@ -169,3 +169,20 @@ body {
 .cancel-button1:hover {
   background-color: #c7c7c7;
 }
+
+@media (max-width: 768px) {
+  .modal-content1 {
+    padding: 20px;
+    width: 280px; 
+  }
+  
+  .modal-buttons1 {
+    margin-top: 15px;
+  }
+  
+  .confirm-button1,
+  .cancel-button1 {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}

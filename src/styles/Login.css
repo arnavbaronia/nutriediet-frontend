@@ -286,3 +286,47 @@ select.input-field {
     max-width: 300px !important;
   }
 }
+
+@media (max-width: 768px) {
+  .login-form {
+    max-width: 320px;
+    padding: 24px;
+    border-radius: 12px;
+    gap: 16px;
+  }
+
+  .login-form h1 {
+    font-size: 20px;
+  }
+
+  .input-field {
+    font-size: 13px;
+  }
+
+  .submit-buttonnn {
+    font-size: 14px;
+    padding: 10px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-form {
+    max-width: 256px; 
+    padding: 20px;
+    border-radius: 10px;
+    gap: 14px;
+  }
+
+  .login-form h1 {
+    font-size: 18px;
+  }
+
+  .input-field {
+    font-size: 12px;
+  }
+
+  .submit-buttonnn {
+    font-size: 13px;
+    padding: 8px 0;
+  }
+}
