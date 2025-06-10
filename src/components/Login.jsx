@@ -207,6 +207,9 @@ const Login = () => {
         <div className="forgot-password-link" onClick={handleForgotPassword}>
           Forgot Password?
         </div>
+        <div className="signup-redirect">
+          Don't have an account? <span onClick={() => navigate('/signup')}>Sign up</span>
+        </div>
         <button type="submit" className="submit-buttonnn">
           Login
         </button>

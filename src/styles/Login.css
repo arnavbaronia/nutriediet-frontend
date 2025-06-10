@@ -330,3 +330,21 @@ select.input-field {
     padding: 8px 0;
   }
 }
+
+.signup-redirect {
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+  margin-top: -10px;
+}
+
+.signup-redirect span {
+  color: #004D40;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.signup-redirect span:hover {
+  color: #357ab8;
+}
