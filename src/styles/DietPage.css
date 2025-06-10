@@ -225,3 +225,34 @@ body {
     font-size: 0.85rem;
   }
 }
+
+@media (max-width: 600px) {
+  .weight-update-page {
+    padding: 20px 0;
+    width: 90%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0 auto;
+  }
+  .weight-container {
+    width: 90%;
+    margin: 0 auto;
+  }
+  .diet-page {
+    padding: 20px 10px;
+    overflow-x: hidden;
+    width: 90%;
+    box-sizing: border-box;
+    margin: 0 auto;
+  }
+  .segmented-control {
+    width: 95%;
+  }
+  .diet-container {
+    width: 90%;
+    margin: 20px auto;
+  }
+  .diet-type-selector select {
+    width: 50%;
+  }
+}
