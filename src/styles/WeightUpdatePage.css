@@ -135,3 +135,9 @@ body {
   box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
 }
+
+@media (max-width: 600px) {
+  .weight-update-page {
+    padding-left: -50px;
+  }
+}
