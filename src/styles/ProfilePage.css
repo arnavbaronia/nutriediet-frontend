@@ -278,3 +278,10 @@ body {
   margin: 0 auto 20px;
   justify-content: center;
 }
+
+@media (max-width: 600px) {
+  .client-input,
+  .client-textarea {
+    width: 94% !important;
+  }
+}

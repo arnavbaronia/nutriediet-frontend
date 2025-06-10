@@ -110,3 +110,9 @@ select.input-field {
 .submit-buttonk:active {
   transform: scale(0.98);
 }
+
+@media (max-width: 480px) {
+  .signup-form {
+    transform: scale(0.8);
+  }
+}
