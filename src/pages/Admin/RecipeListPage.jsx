@@ -52,14 +52,33 @@ const AdminRecipeListPage = () => {
     
     setLoading(true);
     try {
-      const response = await api.get(`/admin/recipes/${recipeId}`);
-      if (response.data.success && response.data.recipe) {
-        setSelectedRecipeDetails(response.data.recipe);
-      } else if (response.data.recipe) {
-        setSelectedRecipeDetails(response.data.recipe);
-      } else {
-        throw new Error('Recipe not found');
-      }
+      // First get recipe details (JSON response)
+      const detailsResponse = await api.get(`/admin/recipes/${recipeId}`, {
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      // Then get the image separately
+      const imageResponse = await api.get(`/admin/recipes/${recipeId}`, {
+        responseType: 'arraybuffer',
+        headers: {
+          'Accept': 'image/*'
+        }
+      });
+      
+      const imageType = imageResponse.headers['content-type'];
+      const imageData = imageResponse.data;
+      const blob = new Blob([imageData], { type: imageType });
+      const imageUrl = URL.createObjectURL(blob);
+      
+      // Combine recipe details with image
+      const recipeData = detailsResponse.data.recipe || detailsResponse.data;
+      setSelectedRecipeDetails({
+        ...recipeData,
+        imageUrl: imageUrl
+      });
+      
       setError('');
     } catch (err) {
       console.error('Error fetching recipe by ID:', err);
@@ -69,7 +88,6 @@ const AdminRecipeListPage = () => {
       setLoading(false);
     }
   };
-
   const handleDropdownChange = (selectedOption) => {
     if (selectedOption) {
       setSelectedRecipeId(selectedOption.value);
@@ -155,11 +173,9 @@ const AdminRecipeListPage = () => {
         {selectedRecipeDetails ? (
           <div className="recipe-card">
             <div className="recipe-image-container">
-              {selectedRecipeDetails.ImageURL || selectedRecipeDetails.image_url ? (
+              {selectedRecipeDetails.imageUrl ? (
                 <img
-                  src={`https://nutriediet-go.onrender.com${
-                    selectedRecipeDetails.ImageURL || selectedRecipeDetails.image_url
-                  }`}
+                  src={selectedRecipeDetails.imageUrl}
                   alt={selectedRecipeDetails.Name || selectedRecipeDetails.name}
                   className="recipe-image-thumbnail"
                   onError={(e) => {

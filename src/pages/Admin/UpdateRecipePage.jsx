@@ -26,14 +26,35 @@ const UpdateRecipePage = () => {
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const response = await api.get(`/admin/recipes/${recipe_id}`);
-        const recipeData = response.data.recipe || response.data;
+        // First get recipe details (JSON response)  
+        const detailsResponse = await api.get(`/admin/recipes/${recipe_id}`, {
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+        
+        const recipeData = detailsResponse.data.recipe || detailsResponse.data;
         
         if (recipeData) {
           setName(recipeData.Name || recipeData.name || "");
-          const imageUrl = recipeData.ImageURL || recipeData.image_url;
-          if (imageUrl) {
-            setCurrentImageUrl(`https://nutriediet-go.onrender.com${imageUrl}`);
+          
+          // Then get the image separately
+          try {
+            const imageResponse = await api.get(`/admin/recipes/${recipe_id}`, {
+              responseType: 'arraybuffer',
+              headers: {
+                'Accept': 'image/*'
+              }
+            });
+            
+            const imageType = imageResponse.headers['content-type'];
+            const imageData = imageResponse.data;
+            const blob = new Blob([imageData], { type: imageType });
+            const imageUrl = URL.createObjectURL(blob);
+            setCurrentImageUrl(imageUrl);
+          } catch (imageErr) {
+            console.error('Error fetching image:', imageErr);
+            setCurrentImageUrl('');
           }
         } else {
           throw new Error('Recipe data not found');
