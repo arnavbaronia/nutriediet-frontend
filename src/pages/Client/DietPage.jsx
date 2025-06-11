@@ -15,9 +15,9 @@ const DIET_TYPES = {
 const DietPage = () => {
   const { client_id } = useParams();
   const [diets, setDiets] = useState({
-    regular_diet: '',
-    detox_diet: '',
-    detox_water: ''
+    regular_diet: null,
+    detox_diet: null,
+    detox_water: null
   });
   const [dietType, setDietType] = useState(DIET_TYPES.REGULAR);
   const [isActive, setIsActive] = useState(true);
@@ -89,9 +89,9 @@ const DietPage = () => {
       } else {
         setIsActive(true);
         setDiets({
-          regular_diet: response.data.regular_diet || '',
-          detox_diet: response.data.detox_diet || '',
-          detox_water: response.data.detox_water || ''
+          regular_diet: response.data.regular_diet || null,
+          detox_diet: response.data.detox_diet || null,
+          detox_water: response.data.detox_water || null
         });
       }
     } catch (error) {
@@ -110,15 +110,40 @@ const DietPage = () => {
       [DIET_TYPES.REGULAR]: diets.regular_diet,
       [DIET_TYPES.DETOX]: diets.detox_diet,
       [DIET_TYPES.DETOX_WATER]: diets.detox_water
-    }[dietType] || '';
+    }[dietType] || null;
   };
 
-  // Function to safely render HTML content
-  const renderDietContent = (htmlString) => {
+  const getDietDate = () => {
+    const diet = getCurrentDiet();
+    if (!diet || !diet.date) return null;
+    
+    const date = new Date(diet.date);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  const getDietTitle = () => {
+    switch(dietType) {
+      case DIET_TYPES.REGULAR: return 'Regular Diet';
+      case DIET_TYPES.DETOX: return 'Detox Diet';
+      case DIET_TYPES.DETOX_WATER: return 'Detox Water';
+      default: return 'Diet Plan';
+    }
+  };
+
+  const renderDietContent = () => {
+    const diet = getCurrentDiet();
+    if (!diet || !diet.diet_string) return "No diet data available.";
+    
     return (
       <div 
         className="diet-html-content"
-        dangerouslySetInnerHTML={{ __html: htmlString }}
+        dangerouslySetInnerHTML={{ __html: diet.diet_string }}
       />
     );
   };
@@ -139,8 +164,11 @@ const DietPage = () => {
           )}
         </div>
         <h1 className="diet-title">
-          <FaClipboardList /> Your Diet Plan
+          <FaClipboardList /> {getDietTitle()}
         </h1>
+        {getDietDate() && (
+          <p className="diet-date">Last updated: {getDietDate()}</p>
+        )}
         {error && (
           <div
             className="error-message4"
@@ -184,7 +212,7 @@ const DietPage = () => {
         </div>
       ) : (
         <div className="diet-container">
-          {renderDietContent(getCurrentDiet()) || "No diet data available."}
+          {renderDietContent()}
         </div>
       )}
       <WeightUpdatePage client_id={client_id} />
