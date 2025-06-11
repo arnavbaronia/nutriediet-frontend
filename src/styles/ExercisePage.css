@@ -237,11 +237,14 @@
     gap: 10px;
     width: 100%;
     align-items: center;
+    justify-content: center;
   }
 
   .search-container3 {
     width: 90%;
-    max-width: 200px;
-    margin: 0 auto !important;
+    max-width: 300px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
   }
 }
