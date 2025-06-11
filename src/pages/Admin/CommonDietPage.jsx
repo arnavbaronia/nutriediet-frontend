@@ -71,33 +71,35 @@ const CommonDietPage = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-  
+
       const detoxHistory = (response.data.diet_history_detox_diet || [])
         .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, 4) 
         .map((diet, index, array) => ({
           ...diet,
           id: diet.id,
-          week: array.length - index, 
+          week: diet.week_number, 
           date: formatDate(diet.date),
           dietString: diet.diet_string,
           templateId: diet.diet_template_id,
           dietType: 2,
           name: diet.name || (diet.diet_template_id ? 'Untitled' : 'Custom Diet')
         }));
-  
+
       const detoxWaterHistory = (response.data.diet_history_detox_water || [])
         .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, 4) 
         .map((diet, index, array) => ({
           ...diet,
           id: diet.id,
-          week: array.length - index, 
+          week: diet.week_number, 
           date: formatDate(diet.date),
           dietString: diet.diet_string,
           templateId: diet.diet_template_id,
           dietType: 3,
           name: diet.name || (diet.diet_template_id ? 'Untitled' : 'Custom Diet')
         }));
-  
+
       setDietHistory({
         detox: detoxHistory,
         detoxWater: detoxWaterHistory
