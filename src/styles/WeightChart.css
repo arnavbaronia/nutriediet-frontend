@@ -1,0 +1,18 @@
+.weight-chart-container {
+  width: 90%;
+  max-width: 600px;
+  height: 300px;
+  margin: 30px auto;
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 600px) {
+  .weight-chart-container {
+    width: 95%;
+    height: 250px;
+    padding: 15px;
+  }
+}

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FaClipboardList, FaQuoteLeft, FaQuoteRight } from 'react-icons/fa';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import { Alert, Spinner } from 'react-bootstrap';
 import WeightUpdatePage from './WeightUpdatePage';
+import WeightChart from './WeightChart';
 import '../../styles/DietPage.css';
 
 const DIET_TYPES = {
@@ -215,6 +217,10 @@ const DietPage = () => {
           {renderDietContent()}
         </div>
       )}
+      <h1 className="diet-title">
+        <TrendingDownIcon /> Your Weight Progress
+      </h1>
+      <WeightChart clientId={client_id} />
       <WeightUpdatePage client_id={client_id} />
     </div>
   );

@@ -53,6 +53,7 @@ body {
   overflow-y: auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid #8BC34A;
+  margin-bottom: 60px;
 }
 
 .diet-container::-webkit-scrollbar {
@@ -251,10 +252,19 @@ body {
   .diet-container {
     width: 90%;
     margin: 20px auto;
+    margin-bottom: 60px;
   }
   .diet-type-selector select {
     width: 50%;
   }
+}
+
+.diet-date {
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: -10px;
+  margin-bottom: 20px;
+  font-style: italic;
 }
 
 /* .diet-content {
