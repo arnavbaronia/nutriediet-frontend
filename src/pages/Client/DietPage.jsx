@@ -41,7 +41,7 @@ const DietPage = () => {
       setLoadingMotivations(false);
       return;
     }
-  
+
     try {
       const response = await axios.get(
         `https://nutriediet-go.onrender.com/clients/${client_id}/motivation`,
@@ -49,7 +49,7 @@ const DietPage = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-  
+
       if (response.data.isActive && response.data.motivations?.length > 0) {
         setMotivations(response.data.motivations);
         const randomIndex = Math.floor(Math.random() * response.data.motivations.length);
@@ -106,16 +106,21 @@ const DietPage = () => {
   };
 
   const getCurrentDiet = () => {
-    const dietContent = {
+    return {
       [DIET_TYPES.REGULAR]: diets.regular_diet,
       [DIET_TYPES.DETOX]: diets.detox_diet,
       [DIET_TYPES.DETOX_WATER]: diets.detox_water
     }[dietType] || '';
-  
-    return dietContent
-      .replace(/<[^>]*>/g, '') 
-      .replace(/\n{3,}/g, '\n\n') 
-      .trim();
+  };
+
+  // Function to safely render HTML content
+  const renderDietContent = (htmlString) => {
+    return (
+      <div 
+        className="diet-html-content"
+        dangerouslySetInnerHTML={{ __html: htmlString }}
+      />
+    );
   };
 
   return (
@@ -146,7 +151,6 @@ const DietPage = () => {
         )}
       </div>
 
-      {/* {error && <Alert variant="danger">{error}</Alert>} */}
       {!isActive && <Alert variant="warning">Your diet plan is not active.</Alert>}
 
       <div className="diet-toggle-container">
@@ -180,7 +184,7 @@ const DietPage = () => {
         </div>
       ) : (
         <div className="diet-container">
-          <p className="diet-content">{getCurrentDiet() || "No diet data available."}</p>
+          {renderDietContent(getCurrentDiet()) || "No diet data available."}
         </div>
       )}
       <WeightUpdatePage client_id={client_id} />

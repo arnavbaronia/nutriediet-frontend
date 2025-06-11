@@ -256,3 +256,34 @@ body {
     width: 50%;
   }
 }
+
+/* .diet-content {
+  white-space: pre-line;
+  text-align: left;
+  padding: 0 20px;
+} */
+
+.diet-html-content {
+  text-align: left;
+  padding: 15px;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.diet-html-content p {
+  margin-bottom: 1em;
+}
+
+.diet-html-content strong {
+  font-weight: bold;
+}
+
+.diet-html-content em {
+  font-style: italic;
+}
+
+.diet-html-content u {
+  text-decoration: underline;
+}
