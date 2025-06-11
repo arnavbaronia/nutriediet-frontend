@@ -24,7 +24,7 @@ ChartJS.register(
   Legend
 );
 
-const WeightChart = ({ clientId }) => {
+const WeightChart = ({ clientId, refreshTrigger }) => {
   const [weightData, setWeightData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -50,7 +50,7 @@ const WeightChart = ({ clientId }) => {
     };
 
     fetchWeightHistory();
-  }, [clientId]);
+  }, [clientId, refreshTrigger]);
 
   if (loading) return <Spinner animation="border" />;
   if (error) return <Alert variant="danger">{error}</Alert>;

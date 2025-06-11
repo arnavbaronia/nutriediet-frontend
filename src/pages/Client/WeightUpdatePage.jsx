@@ -4,8 +4,8 @@ import { useParams } from "react-router-dom";
 import { FaWeight } from "react-icons/fa";
 import "../../styles/WeightUpdatePage.css";
 
-const WeightUpdatePage = () => {
-  const { client_id } = useParams();
+const WeightUpdatePage = ({ client_id, onWeightUpdate }) => {
+  // const { client_id } = useParams();
   const [weight, setWeight] = useState("");
   const [feedback, setFeedback] = useState("");
   const [isAllowed, setIsAllowed] = useState(false);
@@ -90,6 +90,7 @@ const WeightUpdatePage = () => {
       setWeight("");
       setFeedback("");
       checkWeightUpdateStatus();
+      onWeightUpdate();
     } catch (error) {
       console.error("Error updating weight:", error);
       setErrorMessage("❌ Failed to update weight. Try again later.");

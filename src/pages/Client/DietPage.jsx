@@ -28,13 +28,14 @@ const DietPage = () => {
   const [motivations, setMotivations] = useState([]);
   const [currentQuote, setCurrentQuote] = useState('Stay motivated on your health journey!');
   const [loadingMotivations, setLoadingMotivations] = useState(false);
+  const [weightUpdateTrigger, setWeightUpdateTrigger] = useState(0);
   
   const clientName = JSON.parse(localStorage.getItem('user'))?.name || 'there';
 
   useEffect(() => {
     fetchAllDiets();
     fetchMotivations();
-  }, [client_id]);
+  }, [client_id], weightUpdateTrigger);
 
   const fetchMotivations = async () => {
     setLoadingMotivations(true);
@@ -220,8 +221,14 @@ const DietPage = () => {
       <h1 className="diet-title">
         <TrendingDownIcon /> Your Weight Progress
       </h1>
-      <WeightChart clientId={client_id} />
-      <WeightUpdatePage client_id={client_id} />
+      <WeightChart 
+        clientId={client_id} 
+        refreshTrigger={weightUpdateTrigger}
+      />
+      <WeightUpdatePage 
+        client_id={client_id} 
+        onWeightUpdate={() => setWeightUpdateTrigger(prev => prev + 1)} 
+      />
     </div>
   );
 };
