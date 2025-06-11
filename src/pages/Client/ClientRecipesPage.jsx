@@ -17,7 +17,6 @@ const ClientRecipeListPage = () => {
       setLoading(true);
       try {
         const token = localStorage.getItem("token");
-        const clientEmail = localStorage.getItem("email") || "";
         const clientID = localStorage.getItem("client_id") || "";
 
         if (!token || !clientID) {
@@ -66,6 +65,16 @@ const ClientRecipeListPage = () => {
       );
       setFilteredRecipes(filtered);
     }
+  };
+
+  const getImageSrc = (recipe) => {
+    if (recipe?.imageUrl) {
+      return `https://nutriediet-go.onrender.com${recipe.imageUrl}`;
+    }
+    if (recipe?.imageData) {
+      return recipe.imageData;
+    }
+    return "/placeholder-recipe.jpg";
   };
 
   if (loading) {
@@ -129,24 +138,17 @@ const ClientRecipeListPage = () => {
                 ✖
               </button>
               <h2>{selectedRecipe?.name || "Unnamed Recipe"}</h2>
-              
-              {/* Updated to show only the image */}
+
               <div className="recipe-image-container">
-                {selectedRecipe.imageUrl ? (
-                  <img
-                    src={`https://nutriediet-go.onrender.com${selectedRecipe.imageUrl}`}
-                    alt={selectedRecipe.name}
-                    className="recipe-image"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = "/placeholder-recipe.jpg";
-                    }}
-                  />
-                ) : (
-                  <div className="recipe-image-placeholder">
-                    <p>No image available</p>
-                  </div>
-                )}
+                <img
+                  src={getImageSrc(selectedRecipe)}
+                  alt={selectedRecipe.name}
+                  className="recipe-image"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "/placeholder-recipe.jpg";
+                  }}
+                />
               </div>
             </div>
           </div>
