@@ -233,26 +233,35 @@ const ClientDetailsPage = () => {
   };
 
   const weightData = {
-    labels: weightHistory.map((entry) =>
-      entry.date.toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-      })
-    ),
+    labels: [
+      'Starting Weight', 
+      ...weightHistory.map((entry) =>
+        entry.date.toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+        })
+      )
+    ],
     datasets: [
       {
         label: "Weight (kg)",
-        data: weightHistory.map((entry) => entry.weight),
+        data: [
+          parseFloat(client.starting_weight || 0),
+          ...weightHistory.map((entry) => entry.weight)
+        ],
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         borderWidth: 2,
         pointRadius: 5,
-        pointBackgroundColor: weightHistory.map((entry, index) => {
-          if (index > 0) {
-            return entry.weight > weightHistory[index - 1].weight ? "red" : "green";
-          }
-          return "blue";
-        }),
+        pointBackgroundColor: [
+          "blue",
+          ...weightHistory.map((entry, index) => {
+            if (index > 0) {
+              return entry.weight > weightHistory[index - 1].weight ? "red" : "green";
+            }
+            return entry.weight > parseFloat(client.starting_weight || 0) ? "red" : "green";
+          })
+        ],
         tension: 0.4,
       },
     ],
