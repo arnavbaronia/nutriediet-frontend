@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap";
 import { FaTrashAlt, FaPlusCircle, FaSave, FaEdit } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import api from '../../api/axiosInstance';
 import "../../styles/DietTemplatesPage.css";
 
 const DietTemplatesPage = () => {
@@ -16,13 +17,6 @@ const DietTemplatesPage = () => {
   const [deleting, setDeleting] = useState(false);
 
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-
-  const api = axios.create({
-    baseURL: "https://nutriediet-go.onrender.com",
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
   useEffect(() => {
     const fetchDietTemplates = async () => {
       try {

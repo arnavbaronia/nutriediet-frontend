@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../api/axiosInstance';
 import '../../styles/ClientDetailsPage.css';
+import logger from '../../utils/logger';
 
 const DietHistoryTable = ({ 
   clientId, 
@@ -27,11 +28,7 @@ const DietHistoryTable = ({
   const fetchLatestDietHistory = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        `https://nutriediet-go.onrender.com/admin/client/${clientId}/diet_history`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+      const response = await api.get(`/admin/client/${clientId}/diet_history`
       );
 
       const regularHistory = response.data.diet_history_regular || [];
@@ -39,7 +36,7 @@ const DietHistoryTable = ({
       
       setLocalDietHistory(sortedRegular);
     } catch (error) {
-      console.error("Error fetching updated diet history:", error);
+      logger.error("Error fetching updated diet history", error);
     }
   };
 
@@ -89,7 +86,7 @@ const DietHistoryTable = ({
       setShowDeleteModal(false);
       setLocalDietHistory(prev => prev.filter(d => d.id !== dietToDelete));
     } catch (error) {
-      console.error("Error deleting diet:", error);
+      logger.error("Error deleting diet", error);
     } finally {
       setDeleting(false);
       setDietToDelete(null);

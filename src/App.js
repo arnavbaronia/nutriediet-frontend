@@ -38,6 +38,7 @@ import Login from './components/Login';
 import AdminLogin from './components/AdminLogin';
 import BackButton from './components/BackButton';
 import ProtectedRoute from './auth/ProtectedRoute';
+import ErrorBoundary from './components/ErrorBoundary';
 import './App.css';
 
 function AppContent() {
@@ -238,9 +239,11 @@ function AppContent() {
 
 function App() {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <AppContent />
+      </Router>
+    </ErrorBoundary>
   );
 }
 

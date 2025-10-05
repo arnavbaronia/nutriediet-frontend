@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api/axiosInstance';
 import { FaTimes } from 'react-icons/fa';
 import "../../styles/EditExercisePage.css";
+import logger from '../../utils/logger';
 
 const EditExercisePage = () => {
   const { id } = useParams();
@@ -10,21 +11,12 @@ const EditExercisePage = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
-
-  const token = localStorage.getItem('token');
-  const api = axios.create({
-    baseURL: 'https://nutriediet-go.onrender.com',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
   const fetchExerciseById = async () => {
     try {
       const response = await api.get(`/admin/exercise/${id}`);
       setEditExercise(response.data.exercise);
     } catch (err) {
-      console.error('Error fetching exercise details:', err);
+      logger.error('Error fetching exercise details', err);
       setError('Failed to fetch exercise details.');
     }
   };
@@ -37,7 +29,7 @@ const EditExercisePage = () => {
       setError('');
       setTimeout(() => navigate('/admin/exercises'), 1500);
     } catch (err) {
-      console.error('Error updating exercise:', err);
+      logger.error('Error updating exercise', err);
       setError('Failed to update exercise. Please try again.');
       setSuccess('');
     }

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import api from '../../api/axiosInstance';
 import "../../styles/ExercisePage.css";
 import { getToken } from "../../auth/token";
 import { FaRunning, FaSearch, FaStar, FaRegStar } from "react-icons/fa";
+import logger from '../../utils/logger';
 
 const ExercisePage = () => {
   const [exercises, setExercises] = useState([]);
@@ -21,18 +23,13 @@ const ExercisePage = () => {
     const clientId = localStorage.getItem("client_id");
 
     if (!token || !clientId) {
-      console.error("Missing authentication details.");
+      logger.error("Missing authentication details");
       setLoading(false);
       return;
     }
 
     try {
-      const response = await axios.get(
-        `https://nutriediet-go.onrender.com/clients/${clientId}/exercise`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true,
-        }
+      const response = await api.get(`/clients/${clientId}/exercise`
       );
 
       if (response.data && response.data.exercises) {
@@ -54,7 +51,7 @@ const ExercisePage = () => {
         setFilteredExercises(formattedExercises);
       }
     } catch (error) {
-      console.error("Error fetching exercises:", error);
+      logger.error("Error fetching exercises", error);
     } finally {
       setLoading(false);
     }
@@ -90,8 +87,8 @@ const ExercisePage = () => {
     const clientId = localStorage.getItem("client_id");
 
     try {
-      await axios.post(
-        `https://nutriediet-go.onrender.com/clients/${clientId}/exercise/favorite`,
+      await api.post(
+        `/clients/${clientId}/exercise/favorite`,
         {
           exercise_id: exerciseId,
           is_favorite: !isCurrentlyFavorite,
@@ -102,7 +99,7 @@ const ExercisePage = () => {
         }
       );
     } catch (error) {
-      console.error("Error toggling favorite:", error);
+      logger.error("Error toggling favorite", error);
       // Revert on error
       const revertedExercises = exercises.map((exercise) => {
         if (exercise.id === exerciseId) {

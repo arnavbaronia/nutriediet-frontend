@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import api from '../../api/axiosInstance';
 import { useParams } from "react-router-dom";
 import { FaWeight } from "react-icons/fa";
 import "../../styles/WeightUpdatePage.css";
+import logger from '../../utils/logger';
 
 const WeightUpdatePage = ({ client_id, onWeightUpdate }) => {
   // const { client_id } = useParams();
@@ -25,13 +27,7 @@ const WeightUpdatePage = ({ client_id, onWeightUpdate }) => {
         return;
       }
 
-      const response = await axios.get(
-        `https://nutriediet-go.onrender.com/clients/${client_id}/weight_update`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      const response = await api.get(`/clients/${client_id}/weight_update`
       );
 
       if (response.status === 200 && response.data.isActive) {
@@ -40,7 +36,7 @@ const WeightUpdatePage = ({ client_id, onWeightUpdate }) => {
         setIsAllowed(false);
       }
     } catch (error) {
-      console.error("Error fetching weight update status:", error);
+      logger.error("Error fetching weight update status:", error);
       setErrorMessage(
         "⚠️ Unable to fetch weight update status. Please try again later."
       );
@@ -73,10 +69,10 @@ const WeightUpdatePage = ({ client_id, onWeightUpdate }) => {
         feedback: feedback.trim(),
       };
 
-      console.log("Sending request data:", requestData);
+      logger.info("Sending request data:", requestData);
 
-      await axios.post(
-        `https://nutriediet-go.onrender.com/clients/${client_id}/weight_update`,
+      await api.post(
+        `/clients/${client_id}/weight_update`,
         requestData,
         {
           headers: {
@@ -92,7 +88,7 @@ const WeightUpdatePage = ({ client_id, onWeightUpdate }) => {
       checkWeightUpdateStatus();
       onWeightUpdate();
     } catch (error) {
-      console.error("Error updating weight:", error);
+      logger.error("Error updating weight:", error);
       setErrorMessage("❌ Failed to update weight. Try again later.");
     } finally {
       setLoading(false);

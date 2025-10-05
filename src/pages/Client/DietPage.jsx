@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api/axiosInstance';
 import { FaClipboardList, FaQuoteLeft, FaQuoteRight } from 'react-icons/fa';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import { Alert, Spinner } from 'react-bootstrap';
 import WeightUpdatePage from './WeightUpdatePage';
 import WeightChart from './WeightChart';
 import '../../styles/DietPage.css';
+import logger from '../../utils/logger';
 
 const DIET_TYPES = {
   REGULAR: '1',
@@ -46,11 +47,7 @@ const DietPage = () => {
     }
 
     try {
-      const response = await axios.get(
-        `https://nutriediet-go.onrender.com/clients/${client_id}/motivation`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+      const response = await api.get(`/clients/${client_id}/motivation`
       );
 
       if (response.data.isActive && response.data.motivations?.length > 0) {
@@ -61,7 +58,7 @@ const DietPage = () => {
         setCurrentQuote('Stay motivated on your health journey!');
       }
     } catch (error) {
-      console.error('Failed to fetch motivations:', error);
+      logger.error('Failed to fetch motivations', error);
       setCurrentQuote('Stay positive and keep working towards your goals!');
     } finally {
       setLoadingMotivations(false);
@@ -80,11 +77,7 @@ const DietPage = () => {
     }
 
     try {
-      const response = await axios.get(
-        `https://nutriediet-go.onrender.com/clients/${client_id}/diet`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+      const response = await api.get(`/clients/${client_id}/diet`
       );
 
       if (response.data.isActive === false) {

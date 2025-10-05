@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import api from '../api/axiosInstance';
 import "../styles/Login.css";
 import { useNavigate } from "react-router-dom";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
@@ -34,7 +35,7 @@ const AdminLogin = () => {
     setError(null);
 
     try {
-      const response = await axios.post("https://nutriediet-go.onrender.com/login", credentials);
+      const response = await api.post("/login", credentials);
       const { token, refreshToken, user_type, email } = response.data || {};
 
       if (user_type !== "ADMIN") {
@@ -47,7 +48,6 @@ const AdminLogin = () => {
       localStorage.setItem("user_type", user_type);
       localStorage.setItem("email", email);
 
-      console.log("Admin login successful. Navigating to admin dashboard...");
       setTimeout(() => navigate("/admin/dashboard"), 10);
     } catch (err) {
       const status = err.response?.status;

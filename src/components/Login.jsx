@@ -10,12 +10,14 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
+import { API_BASE_URL, API_ENDPOINTS, STORAGE_KEYS, USER_TYPES, VALIDATION } from "../utils/constants";
+import { validatePasswordStrength, validateOTP } from "../utils/passwordValidator";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
-    user_type: "CLIENT",
+    user_type: USER_TYPES.CLIENT,
   });
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
@@ -30,11 +32,11 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userType = localStorage.getItem("user_type");
-    const clientId = localStorage.getItem("client_id");
-    if (userType === "CLIENT" && clientId) {
+    const userType = localStorage.getItem(STORAGE_KEYS.USER_TYPE);
+    const clientId = localStorage.getItem(STORAGE_KEYS.CLIENT_ID);
+    if (userType === USER_TYPES.CLIENT && clientId) {
       navigate(`/clients/${clientId}/diet`);
-    } else if (userType === "ADMIN") {
+    } else if (userType === USER_TYPES.ADMIN) {
       navigate("/admin/dashboard");
     }
   }, [navigate]);
@@ -74,32 +76,29 @@ const Login = () => {
     setError(null);
 
     try {
-      const response = await axios.post("https://nutriediet-go.onrender.com/login", credentials);
+      const response = await axios.post(`${API_BASE_URL}${API_ENDPOINTS.LOGIN}`, credentials);
       const { token, refreshToken, user_type, id, email, is_active, client_id } = response.data || {};
 
-      if (user_type === "ADMIN") {
+      if (user_type === USER_TYPES.ADMIN) {
         setError("Admin login is not allowed here.");
         return;
       }
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("refreshToken", refreshToken);
-      localStorage.setItem("user_type", user_type);
-      localStorage.setItem("clientId", id);
-      localStorage.setItem("email", email);
-      localStorage.setItem("is_active", is_active);
-      localStorage.setItem("client_id", client_id);
-      localStorage.setItem("user", JSON.stringify(response.data));
+      localStorage.setItem(STORAGE_KEYS.TOKEN, token);
+      localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
+      localStorage.setItem(STORAGE_KEYS.USER_TYPE, user_type);
+      localStorage.setItem("clientId", id); // Keep for backward compatibility
+      localStorage.setItem(STORAGE_KEYS.EMAIL, email);
+      localStorage.setItem(STORAGE_KEYS.IS_ACTIVE, is_active);
+      localStorage.setItem(STORAGE_KEYS.CLIENT_ID, client_id);
+      localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(response.data));
 
       if (is_active) {
-        console.log("Client is active. Navigating to diet page...");
         setTimeout(() => navigate(`/clients/${client_id}/diet`), 10);
       } else {
-        console.log("Client is inactive. Navigating to account activation page...");
         setTimeout(() => navigate("/account-activation", { state: { token } }), 10);
       }
     } catch (err) {
-      console.error("Error during login:", err);
       const backendError = err.response?.data?.err || "Login failed. Please try again.";
       setError(getFriendlyErrorMessage(backendError));
     }
@@ -121,7 +120,7 @@ const Login = () => {
     setResetError("");
     
     try {
-      await axios.post("https://nutriediet-go.onrender.com/auth/forgot-password", {
+      await axios.post(`${API_BASE_URL}${API_ENDPOINTS.FORGOT_PASSWORD}`, {
         email: resetEmail
       });
       setResetStep(2);
@@ -138,8 +137,24 @@ const Login = () => {
     setLoading(true);
     setResetError("");
     
+    // Validate OTP
+    const otpValidation = validateOTP(otp);
+    if (!otpValidation.isValid) {
+      setResetError(otpValidation.error);
+      setLoading(false);
+      return;
+    }
+
+    // Validate new password
+    const passwordValidation = validatePasswordStrength(newPassword);
+    if (!passwordValidation.isValid) {
+      setResetError(passwordValidation.errors.join('. '));
+      setLoading(false);
+      return;
+    }
+
     try {
-      await axios.post("https://nutriediet-go.onrender.com/auth/reset-password", {
+      await axios.post(`${API_BASE_URL}${API_ENDPOINTS.RESET_PASSWORD}`, {
         email: resetEmail,
         otp: otp,
         new_password: newPassword
@@ -261,9 +276,10 @@ const Login = () => {
                 margin="normal"
                 label="OTP (6 digits)"
                 value={otp}
-                onChange={(e) => setOtp(e.target.value)}
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
                 required
-                inputProps={{ maxLength: 6 }}
+                inputProps={{ maxLength: VALIDATION.OTP_LENGTH }}
+                helperText={`Enter the ${VALIDATION.OTP_LENGTH}-digit code sent to your email`}
               />
               <TextField
                 fullWidth
@@ -273,7 +289,7 @@ const Login = () => {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
-                helperText="Minimum 6 characters"
+                helperText={`At least ${VALIDATION.MIN_PASSWORD_LENGTH} characters with uppercase, lowercase, number, and special character`}
               />
               {resetError && <Typography color="error">{resetError}</Typography>}
               {resetSuccess && <Typography color="success">{resetSuccess}</Typography>}

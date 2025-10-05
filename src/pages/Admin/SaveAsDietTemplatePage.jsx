@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
+import api from '../../api/axiosInstance';
 import "../../styles/SaveAsDietTemplatePage.css";
 import { FaCheckCircle } from 'react-icons/fa';
 
 const SaveAsDietTemplatePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-
   const { originalName, dietDetails } = location.state || {
     originalName: "",
     dietDetails: "",
@@ -21,11 +19,6 @@ const SaveAsDietTemplatePage = () => {
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
-  const api = axios.create({
-    baseURL: "https://nutriediet-go.onrender.com",
-    headers: { Authorization: `Bearer ${token}` },
-  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

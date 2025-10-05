@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import axios from "axios";
+import api from '../../api/axiosInstance';
 import "../../styles/CommonDietPage.css";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import logger from '../../utils/logger';
 
 const CommonDietPage = () => {
   const [dietType, setDietType] = useState(2);
@@ -53,9 +55,7 @@ const CommonDietPage = () => {
   const fetchDietTemplates = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("https://nutriediet-go.onrender.com/admin/diet_templates", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.get("/admin/diet_templates");
       setDietTemplates(response.data.list || []);
     } catch (err) {
       setError("Failed to load diet templates.");
@@ -65,11 +65,7 @@ const CommonDietPage = () => {
   const fetchDietHistory = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        `https://nutriediet-go.onrender.com/admin/common_diet/${selectedGroup}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+      const response = await api.get(`/admin/common_diet/${selectedGroup}`
       );
 
       const detoxHistory = (response.data.diet_history_detox_diet || [])
@@ -105,7 +101,7 @@ const CommonDietPage = () => {
         detoxWater: detoxWaterHistory
       });
     } catch (err) {
-      console.error("Error loading diet history:", err);
+      logger.error("Error loading diet history:", err);
       setError("Failed to load diet history. Please try again.");
     }
   };
@@ -125,9 +121,7 @@ const CommonDietPage = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`https://nutriediet-go.onrender.com/admin/diet_templates/${dietTemplateId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.get(`/admin/diet_templates/${dietTemplateId}`);
 
       if (response.data?.template) {
         setDietFunction(response.data.template);
@@ -191,10 +185,10 @@ const CommonDietPage = () => {
         ...(selectedTemplate && { diet_template_id: parseInt(selectedTemplate) })
       };
   
-      const response = await axios.post(
+      const response = await api.post(
         editingDietId 
-          ? `https://nutriediet-go.onrender.com/admin/common_diet/${selectedGroup}/update`
-          : "https://nutriediet-go.onrender.com/admin/common_diet",
+          ? `/admin/common_diet/${selectedGroup}/update`
+          : "/admin/common_diet",
         editingDietId 
           ? { ...requestData, diet_id: editingDietId }
           : requestData,
@@ -219,7 +213,7 @@ const CommonDietPage = () => {
         throw new Error(response.data?.error || "Failed to save diet");
       }
     } catch (err) {
-      console.error("Error saving diet:", {
+      logger.error("Error saving diet:", {
         message: err.message,
         response: err.response?.data,
         status: err.response?.status
@@ -284,8 +278,8 @@ const CommonDietPage = () => {
   
       const dietId = Number(dietToDelete);
       
-      const response = await axios.post(
-        `https://nutriediet-go.onrender.com/admin/common_diet/${selectedGroup}/delete_diet`,
+      const response = await api.post(
+        `/admin/common_diet/${selectedGroup}/delete_diet`,
         dietId, 
         {
           headers: { 
@@ -303,7 +297,7 @@ const CommonDietPage = () => {
         throw new Error(response.data?.error || "Failed to delete diet");
       }
     } catch (error) {
-      console.error("Error deleting diet:", {
+      logger.error("Error deleting diet:", {
         error: error.message,
         response: error.response?.data
       });

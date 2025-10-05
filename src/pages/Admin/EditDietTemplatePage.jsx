@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import api from '../../api/axiosInstance';
 import { FaCheckCircle } from "react-icons/fa";
 import "../../styles/EditDietTemplatePage.css";
 
@@ -13,14 +14,6 @@ const EditDietTemplatePage = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const token = localStorage.getItem("token");
-
-  const api = axios.create({
-    baseURL: "https://nutriediet-go.onrender.com",
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
   useEffect(() => {
     fetchDietTemplate();
   }, []);

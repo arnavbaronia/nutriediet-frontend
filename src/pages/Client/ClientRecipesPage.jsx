@@ -1,8 +1,48 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/ClientRecipesPage.css";
+import logger from "../../utils/logger";
 import NavigationBar from "../../components/NavigationBar";
 import { FaMortarPestle } from "react-icons/fa";
-import axios from "axios";
+import api from '../../api/axiosInstance';
+import { API_BASE_URL } from '../../utils/constants';
+
+// Separate component to prevent re-render loops
+const RecipeImage = React.memo(({ recipe }) => {
+  const [hasError, setHasError] = useState(false);
+
+  const imageUrl = recipe?.imageUrl || recipe?.image_url || recipe?.Image;
+
+  if (!imageUrl || hasError) {
+    return (
+      <div className="recipe-image-container">
+        <div className="recipe-image-placeholder">
+          <FaMortarPestle size={80} />
+          <p>{hasError ? 'Failed to load image' : 'No image available'}</p>
+        </div>
+      </div>
+    );
+  }
+
+  const fullUrl = imageUrl.startsWith('http') 
+    ? imageUrl 
+    : `${API_BASE_URL}${imageUrl}`;
+
+  return (
+    <div className="recipe-image-container">
+      <img
+        src={fullUrl}
+        alt={recipe?.name || 'Recipe image'}
+        className="recipe-image"
+        onError={(e) => {
+          e.target.onerror = null; // Critical: prevent loop
+          setHasError(true);
+        }}
+      />
+    </div>
+  );
+});
+
+RecipeImage.displayName = 'RecipeImage';
 
 const ClientRecipeListPage = () => {
   const [recipes, setRecipes] = useState([]);
@@ -26,13 +66,7 @@ const ClientRecipeListPage = () => {
           return;
         }
 
-        const response = await axios.get(
-          `https://nutriediet-go.onrender.com/clients/${clientID}/recipe`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+        const response = await api.get(`/clients/${clientID}/recipe`
         );
 
         if (!response.data.isActive) {
@@ -41,10 +75,11 @@ const ClientRecipeListPage = () => {
           return;
         }
 
-        setRecipes(response.data.recipes || []);
-        setFilteredRecipes(response.data.recipes || []);
+        const recipes = response.data.recipes || [];
+        setRecipes(recipes);
+        setFilteredRecipes(recipes);
       } catch (err) {
-        console.error("Error fetching recipes:", err);
+        logger.error("Error fetching recipes", err);
         setError(err.response?.data?.error || "Failed to fetch recipes. Please try again.");
       } finally {
         setLoading(false);
@@ -130,24 +165,8 @@ const ClientRecipeListPage = () => {
               </button>
               <h2>{selectedRecipe?.name || "Unnamed Recipe"}</h2>
               
-              {/* Updated to show only the image */}
-              <div className="recipe-image-container">
-                {selectedRecipe.imageUrl ? (
-                  <img
-                    src={`https://nutriediet-go.onrender.com${selectedRecipe.imageUrl}`}
-                    alt={selectedRecipe.name}
-                    className="recipe-image"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = "/placeholder-recipe.jpg";
-                    }}
-                  />
-                ) : (
-                  <div className="recipe-image-placeholder">
-                    <p>No image available</p>
-                  </div>
-                )}
-              </div>
+              {/* Recipe image */}
+              <RecipeImage recipe={selectedRecipe} />
             </div>
           </div>
         )}

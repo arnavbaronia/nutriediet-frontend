@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import api from '../../api/axiosInstance';
 import "../../styles/CreateDietTemplatePage.css";
 import { FaCheckCircle, FaTimes } from 'react-icons/fa';
 
@@ -10,13 +11,6 @@ const CreateDietTemplatePage = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-
-  const api = axios.create({
-    baseURL: "https://nutriediet-go.onrender.com",
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
   const handleCreateTemplate = async (e) => {
     e.preventDefault();
     try {

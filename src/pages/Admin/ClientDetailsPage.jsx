@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api/axiosInstance';
 import { useParams } from 'react-router-dom';
 import 'chart.js/auto';
 import { Line } from 'react-chartjs-2';
 import CreateDietPage from "./CreateDietPage";
 import '../../styles/ClientDetailsPage.css';
+import logger from '../../utils/logger';
 
 const ClientDetailsPage = () => {
   const { client_id } = useParams();
@@ -54,7 +55,6 @@ const ClientDetailsPage = () => {
   // const [dietHistory, setDietHistory] = useState([]);
 
   const navigate = useNavigate();
-  console.log('Client ID:', client_id);
 
   const formatDateForInput = (date) => {
     if (!date) return '';
@@ -70,12 +70,11 @@ const ClientDetailsPage = () => {
     const token = localStorage.getItem("token");
   
     axios
-      .get(`https://nutriediet-go.onrender.com/admin/client/${client_id}`, {
+      .get(`/admin/client/${client_id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
         const clientData = response.data.client;
-        console.log("Client details response:", response);
   
         const name =
           clientData.name?.trim() ||
@@ -105,11 +104,7 @@ const ClientDetailsPage = () => {
         setDiets(response.data.diets);
         setIsActive(clientData.is_active);
   
-        return axios.get(
-          `https://nutriediet-go.onrender.com/admin/client/${client_id}/diet_history`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+        return api.get(`/admin/client/${client_id}/diet_history`
         );
       })
       .then((response) => {
@@ -138,7 +133,7 @@ const ClientDetailsPage = () => {
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching client details:", error);
+        logger.error("Error fetching client details", error);
         setError("Error fetching client details. Please try again later.");
         setLoading(false);
       });
@@ -147,11 +142,7 @@ const ClientDetailsPage = () => {
   const refreshAvailableWeeks = async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await axios.get(
-        `https://nutriediet-go.onrender.com/admin/client/${client_id}/diet_history`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+      const response = await api.get(`/admin/client/${client_id}/diet_history`
       );
       
       const dietHistory = response.data.diet_history_regular || [];
@@ -166,7 +157,7 @@ const ClientDetailsPage = () => {
         setSelectedWeekNumber(recentWeeks[0]);
       }
     } catch (error) {
-      console.error("Error refreshing available weeks:", error);
+      logger.error("Error refreshing available weeks", error);
     }
   };
 
@@ -184,8 +175,8 @@ const ClientDetailsPage = () => {
     }
 
     try {
-      const response = await axios.post(
-        `https://nutriediet-go.onrender.com/admin/${client_id}/weight_update`,
+      const response = await api.post(
+        `/admin/${client_id}/weight_update`,
         {
           weight: parseFloat(updatedWeight),
           week_number: parseInt(selectedWeekNumber),
@@ -209,9 +200,7 @@ const ClientDetailsPage = () => {
 
         setWeightUpdateTrigger(prev => prev + 1);
 
-        const dietHistoryResponse = await axios.get(
-          `https://nutriediet-go.onrender.com/admin/client/${client_id}/diet_history`,
-          { headers: { Authorization: `Bearer ${token}` } }
+        const dietHistoryResponse = await api.get(`/admin/client/${client_id}/diet_history`
         );
         
         const dietHistory = dietHistoryResponse.data.diet_history_regular || [];
@@ -227,7 +216,7 @@ const ClientDetailsPage = () => {
         setWeightHistory(weightDataFromDiet);
       }
     } catch (error) {
-      console.error("Error updating weight and feedback:", error);
+      logger.error("Error updating weight and feedback", error);
       setError("Failed to update weight and feedback. Please try again.");
     }
   };
@@ -268,7 +257,6 @@ const ClientDetailsPage = () => {
   };
 
   const calculateNextPaymentDate = (lastPaymentDate, packageDuration) => {
-    console.log(`Calculating Next Payment Date: Last Payment Date = ${lastPaymentDate}, Package = ${packageDuration}`);
   
     if (!lastPaymentDate || !packageDuration) return '';
   
@@ -285,28 +273,25 @@ const ClientDetailsPage = () => {
   
     const weeksToAdd = durationMap[normalizedPackage] || 0;
     if (weeksToAdd === 0) {
-      console.warn(`Unknown package duration: ${packageDuration}`);
+      logger.warn(`Unknown package duration: ${packageDuration}`);
       return '';
     }
   
     const lastDate = new Date(lastPaymentDate);
     if (isNaN(lastDate.getTime())) {
-      console.error(`Invalid date format: ${lastPaymentDate}`);
+      logger.error(`Invalid date format: ${lastPaymentDate}`);
       return '';
     }
   
     lastDate.setDate(lastDate.getDate() + (weeksToAdd * 7));
   
     const formattedDate = lastDate.toISOString().split('T')[0];
-    console.log(`Final Next Payment Date: ${formattedDate}`);
   
     return formattedDate;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
-    console.log(`Updated Field: ${name}, Value: ${value}`);
   
     setClient((prevClient) => {
       const updatedClient = { ...prevClient, [name]: value };
@@ -317,7 +302,6 @@ const ClientDetailsPage = () => {
             updatedClient.last_payment_date,
             updatedClient.package
           );
-          console.log(`Calculated Next Payment Date: ${nextPaymentDate}`);
           updatedClient.next_payment_date = nextPaymentDate;
         }
       }
@@ -335,26 +319,20 @@ const ClientDetailsPage = () => {
   const handleActivateDeactivate = async () => {
     const token = localStorage.getItem('token');
     try {
-      console.log(`Sending POST request to: /admin/client/${client_id}/activation`);
-      console.log('Authorization Token:', token);
 
-      const response = await axios.post(
-        `https://nutriediet-go.onrender.com/admin/client/${client_id}/activation`,
+      const response = await api.post(
+        `/admin/client/${client_id}/activation`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      console.log('Response from server:', response);
-
       if (response.data.success) {
         setIsActive((prevState) => !prevState);
         setError(null);
       } else {
         setError(response.data.message || 'Failed to activate/deactivate the client.');
       }
-      console.log('Updated activation status:', !isActive);
     } catch (error) {
-      console.error('Error activating/deactivating client:', error);
+      logger.error('Error activating/deactivating client', error);
       setError('Error activating/deactivating client. Please try again later.');
     }
   };
@@ -365,7 +343,7 @@ const ClientDetailsPage = () => {
   // };
 
   // const handleDietAction = (action, dietId) => {
-  //   console.log(`${action} diet with ID ${dietId}`);
+  //   Handle diet actions
   // };
 
   const handleSubmit = (e) => {
@@ -410,10 +388,8 @@ const ClientDetailsPage = () => {
       return;
     }
   
-    console.log("Sending payload to server:", payload);
-  
     axios
-      .post(`https://nutriediet-go.onrender.com/admin/client/${client_id}`, payload, {
+      .post(`/admin/client/${client_id}`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -447,7 +423,7 @@ const ClientDetailsPage = () => {
         setTimeout(() => setSuccessMessage(null), 3000);
       })
       .catch((error) => {
-        console.error('Error updating client info:', error);
+        logger.error('Error updating client info', error);
         setError('Error updating client info.');
       });
   };

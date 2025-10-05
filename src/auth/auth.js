@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { setToken, setUserId, setuser_type } from './token'; 
-
-const BASE_URL = 'https://nutriediet-go.onrender.com';
+import { setToken, setUserId, setuser_type } from './token';
+import { API_BASE_URL, API_ENDPOINTS } from '../utils/constants';
+import logger from '../utils/logger';
 
 /**
  * Handles user signup
@@ -11,7 +11,7 @@ const BASE_URL = 'https://nutriediet-go.onrender.com';
  */
 export const signup = async (formData) => {
   try {
-    const response = await axios.post(`${BASE_URL}/signup`, formData);
+    const response = await axios.post(`${API_BASE_URL}${API_ENDPOINTS.SIGNUP}`, formData);
 
     const { created } = response.data || {};
     const token = created?.token;
@@ -29,7 +29,7 @@ export const signup = async (formData) => {
     return { token, clientId, user_type };
   } catch (error) {
     const serverError = error.response?.data?.err || error.message || 'Signup failed.';
-    console.error('Signup error:', serverError);
+    logger.error('Signup error', error);
     throw new Error(serverError);
   }
 };
@@ -42,7 +42,7 @@ export const signup = async (formData) => {
  */
 export const login = async (credentials) => {
   try {
-    const response = await axios.post(`${BASE_URL}/login`, credentials);
+    const response = await axios.post(`${API_BASE_URL}${API_ENDPOINTS.LOGIN}`, credentials);
 
     const { token, id: clientId, user_type } = response.data || {};
 
@@ -57,7 +57,7 @@ export const login = async (credentials) => {
     return { token, clientId, user_type };
   } catch (error) {
     const serverError = error.response?.data?.err || error.message || 'Login failed.';
-    console.error('Login error:', serverError);
+    logger.error('Login error', error);
     throw new Error(serverError);
   }
 };

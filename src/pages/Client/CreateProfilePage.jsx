@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from "axios";
+import api from '../../api/axiosInstance';
 import "../../styles/ProfilePage.css";
+import logger from "../../utils/logger";
 
 const CreateProfilePage = () => {
   const { email } = useParams();
@@ -97,7 +99,7 @@ const CreateProfilePage = () => {
     }
 
     try {
-      const url = `https://nutriediet-go.onrender.com/create_profile/${email}`;
+      const url = `/create_profile/${email}`;
 
       const processedFormData = {
         ...formData,
@@ -106,7 +108,7 @@ const CreateProfilePage = () => {
         starting_weight: Number(formData.starting_weight),
       };
 
-      const response = await axios.post(url, processedFormData, {
+      const response = await api.post(url, processedFormData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -115,7 +117,6 @@ const CreateProfilePage = () => {
       setSuccess(true);
       setError(null);
       setBackendError(null);
-      console.log("Profile created successfully:", response.data);
 
       navigate("/account-activation", { state: { token } });
     } catch (err) {
@@ -143,7 +144,7 @@ const CreateProfilePage = () => {
         setBackendError("Network error. Please check your connection.");
       }
       
-      console.error("Error creating profile:", err.response?.data || err.message);
+      logger.error("Error creating profile", err);
     }
   };
 

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api/axiosInstance';
 import { FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
 import '../../styles/CreateRecipePage.css';
+import logger from '../../utils/logger';
+import { API_BASE_URL } from '../../utils/constants';
 
 const UpdateRecipePage = () => {
   const { recipe_id } = useParams();
@@ -16,13 +18,6 @@ const UpdateRecipePage = () => {
   const [fetchingRecipe, setFetchingRecipe] = useState(true);
   
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
-
-  const api = axios.create({
-    baseURL: 'https://nutriediet-go.onrender.com',
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
@@ -33,13 +28,13 @@ const UpdateRecipePage = () => {
           setName(recipeData.Name || recipeData.name || "");
           const imageUrl = recipeData.ImageURL || recipeData.image_url;
           if (imageUrl) {
-            setCurrentImageUrl(`https://nutriediet-go.onrender.com${imageUrl}`);
+            setCurrentImageUrl(`${imageUrl}`);
           }
         } else {
           throw new Error('Recipe data not found');
         }
       } catch (err) {
-        console.error('Error fetching recipe:', err);
+        logger.error('Error fetching recipe', err);
         setErrorMessage(
           err.response?.data?.error || 
           err.response?.data?.err || 
@@ -94,7 +89,7 @@ const UpdateRecipePage = () => {
         navigate('/admin/recipes');
       }, 1500);
     } catch (err) {
-      console.error('Error updating recipe:', err);
+      logger.error('Error updating recipe', err);
       setErrorMessage(
         err.response?.data?.error || 
         err.response?.data?.err || 
@@ -158,12 +153,12 @@ const UpdateRecipePage = () => {
             <div className="image-preview-container">
               <p>Current Image:</p>
               <img 
-                src={currentImageUrl} 
+                src={currentImageUrl.startsWith('http') ? currentImageUrl : `${API_BASE_URL}${currentImageUrl}`}
                 alt={name} 
                 className="image-preview" 
                 onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = '/placeholder-recipe.jpg';
+                  e.target.onerror = null; // Critical: prevent infinite loop
+                  e.target.style.display = 'none'; // Hide broken image
                 }}
               />
             </div>

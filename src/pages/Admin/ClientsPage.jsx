@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import api from "../../api/axiosInstance";
 import "../../styles/ClientsPage.css";
+import logger from "../../utils/logger";
 
 const ClientsPage = () => {
   const [clients, setClients] = useState([]);
@@ -25,13 +26,9 @@ const ClientsPage = () => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
     const fetchClients = async () => {
       try {
-        const response = await axios.get("https://nutriediet-go.onrender.com/admin/clients", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await api.get("/admin/clients");
 
         const allClients = [
           ...(response.data.active_clients || []),
@@ -41,7 +38,7 @@ const ClientsPage = () => {
         setClients(allClients);
         setFilteredClients(response.data.active_clients || []);
       } catch (error) {
-        console.error("Error fetching clients:", error);
+        logger.error("Error fetching clients", error);
         setError(error.response?.data?.err || "An error occurred. Please try again.");
       }
     };

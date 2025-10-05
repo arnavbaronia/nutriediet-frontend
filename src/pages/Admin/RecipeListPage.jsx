@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api/axiosInstance';
 import Select from "react-select";
 import { Button } from "react-bootstrap";
 import { FaPlusCircle } from "react-icons/fa";
 import '../../styles/AdminRecipeListPage.css';
+import logger from '../../utils/logger';
+import { API_BASE_URL } from '../../utils/constants';
 
 const AdminRecipeListPage = () => {
   const [recipes, setRecipes] = useState([]);
@@ -17,14 +19,6 @@ const AdminRecipeListPage = () => {
   const [success, setSuccess] = useState('');
 
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
-  const api = axios.create({
-    baseURL: 'https://nutriediet-go.onrender.com',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
   const fetchRecipes = async () => {
     setLoading(true);
     try {
@@ -40,7 +34,7 @@ const AdminRecipeListPage = () => {
         throw new Error('Invalid response format');
       }
     } catch (err) {
-      console.error('Error fetching recipes:', err);
+      logger.error('Error fetching recipes:', err);
       setError('Failed to fetch recipes. Please try again.');
     } finally {
       setLoading(false);
@@ -62,7 +56,7 @@ const AdminRecipeListPage = () => {
       }
       setError('');
     } catch (err) {
-      console.error('Error fetching recipe by ID:', err);
+      logger.error('Error fetching recipe by ID:', err);
       setError('Failed to fetch recipe details.');
       setSelectedRecipeDetails(null);
     } finally {
@@ -102,7 +96,7 @@ const AdminRecipeListPage = () => {
       setSelectedRecipeId('');
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
-      console.error('Error deleting recipe:', err);
+      logger.error('Error deleting recipe:', err);
       setError(err.response?.data?.error || 'Failed to delete recipe.');
     } finally {
       setDeleting(false);
@@ -155,23 +149,34 @@ const AdminRecipeListPage = () => {
         {selectedRecipeDetails ? (
           <div className="recipe-card">
             <div className="recipe-image-container">
-              {selectedRecipeDetails.ImageURL || selectedRecipeDetails.image_url ? (
-                <img
-                  src={`https://nutriediet-go.onrender.com${
-                    selectedRecipeDetails.ImageURL || selectedRecipeDetails.image_url
-                  }`}
-                  alt={selectedRecipeDetails.Name || selectedRecipeDetails.name}
-                  className="recipe-image-thumbnail"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = '/placeholder-recipe.jpg';
-                  }}
-                />
-              ) : (
-                <div className="recipe-image-placeholder">
-                  <span>No Image Available</span>
-                </div>
-              )}
+              {(() => {
+                const imageUrl = selectedRecipeDetails.ImageURL || selectedRecipeDetails.image_url;
+                
+                if (!imageUrl) {
+                  return (
+                    <div className="recipe-image-placeholder">
+                      <span>No Image Available</span>
+                    </div>
+                  );
+                }
+
+                // Build full URL with API_BASE_URL if needed
+                const fullUrl = imageUrl.startsWith('http') 
+                  ? imageUrl 
+                  : `${API_BASE_URL}${imageUrl}`;
+
+                return (
+                  <img
+                    src={fullUrl}
+                    alt={selectedRecipeDetails.Name || selectedRecipeDetails.name}
+                    className="recipe-image-thumbnail"
+                    onError={(e) => {
+                      e.target.onerror = null; // Critical: prevent infinite loop
+                      e.target.style.display = 'none'; // Hide broken image
+                    }}
+                  />
+                );
+              })()}
 
               <h3 className="selected-recipe-title">
                 {selectedRecipeDetails.Name || selectedRecipeDetails.name}

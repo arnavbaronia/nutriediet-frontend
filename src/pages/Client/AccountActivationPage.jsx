@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../../api/axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/AccountActivationPage.css';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
@@ -26,12 +26,7 @@ const AccountActivationPage = () => {
         return;
       }
 
-      const response = await axios.get(
-        `https://nutriediet-go.onrender.com/clients/${clientId}/profile_created`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          timeout: 10000
-        }
+      const response = await api.get(`/clients/${clientId}/profile_created`
       );
 
       setStatus({

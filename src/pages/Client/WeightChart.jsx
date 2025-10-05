@@ -10,7 +10,7 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
-import axios from 'axios';
+import api from '../../api/axiosInstance';
 import { Alert, Spinner } from 'react-bootstrap';
 import '../../styles/WeightChart.css';
 
@@ -35,11 +35,7 @@ const WeightChart = ({ clientId, refreshTrigger }) => {
       const token = localStorage.getItem('token');
 
       try {
-        const response = await axios.get(
-          `https://nutriediet-go.onrender.com/clients/${clientId}/weight-history`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+        const response = await api.get(`/clients/${clientId}/weight-history`
         );
         setWeightData(response.data.weight_history);
       } catch (err) {

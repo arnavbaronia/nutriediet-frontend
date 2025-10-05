@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../../api/axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import { FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
 import '../../styles/CreateRecipePage.css';
+import logger from '../../utils/logger';
 
 const CreateRecipePage = () => {
   const [name, setName] = useState("");
@@ -12,13 +13,6 @@ const CreateRecipePage = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
-
-  const api = axios.create({
-    baseURL: 'https://nutriediet-go.onrender.com',
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (!selectedFile) return;
@@ -69,7 +63,7 @@ const CreateRecipePage = () => {
         navigate('/admin/recipes');
       }, 1500);
     } catch (err) {
-      console.error('Error creating recipe:', err);
+      logger.error('Error creating recipe', err);
       setErrorMessage(
         err.response?.data?.error || 
         "Failed to create recipe. Please try again."

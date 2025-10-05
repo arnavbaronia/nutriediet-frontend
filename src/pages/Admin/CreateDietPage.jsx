@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import api from '../../api/axiosInstance';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import DietHistoryTable from "./DietHistoryTable";
 import "../../styles/CreateDietPage.css";
+import logger from '../../utils/logger';
 
 const CreateDietPage = ({ weightUpdateTrigger = 0, onDietSent }) => {
   const { client_id } = useParams();
@@ -43,9 +45,7 @@ const CreateDietPage = ({ weightUpdateTrigger = 0, onDietSent }) => {
   const fetchDietTemplates = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("https://nutriediet-go.onrender.com/admin/diet_templates", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.get("/admin/diet_templates");
       setDietTemplates(response.data.list || []);
     } catch (err) {
       setError(formatError(err, "Failed to load diet templates."));
@@ -57,9 +57,7 @@ const CreateDietPage = ({ weightUpdateTrigger = 0, onDietSent }) => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`https://nutriediet-go.onrender.com/admin/diet_templates/${dietTemplateId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.get(`/admin/diet_templates/${dietTemplateId}`);
 
       if (response.data?.template) {
         setDietFunction(response.data.template);
@@ -72,16 +70,14 @@ const CreateDietPage = ({ weightUpdateTrigger = 0, onDietSent }) => {
   const fetchDietHistory = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`https://nutriediet-go.onrender.com/admin/client/${client_id}/diet_history`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.get(`/admin/client/${client_id}/diet_history`);
   
       const regularHistory = response.data.diet_history_regular || [];
       const sortedRegular = regularHistory.sort((a, b) => b.week_number - a.week_number);
   
       setDietHistory(sortedRegular);
     } catch (err) {
-      console.error("Error fetching diet history:", err);
+      logger.error("Error fetching diet history:", err);
       setError(formatError(err, "Failed to load diet history."));
     }
   };
@@ -132,8 +128,8 @@ const CreateDietPage = ({ weightUpdateTrigger = 0, onDietSent }) => {
     const token = localStorage.getItem("token");
   
     try {
-      await axios.post(
-        `https://nutriediet-go.onrender.com/admin/${client_id}/delete_diet`, 
+      await api.post(
+        `/admin/${client_id}/delete_diet`, 
         dietId,
         {
           headers: { 
@@ -148,7 +144,7 @@ const CreateDietPage = ({ weightUpdateTrigger = 0, onDietSent }) => {
       setDietHistory(prev => prev.filter(d => d.id !== dietId));
       setRefreshTrigger(prev => prev + 1);
     } catch (err) {
-      console.error("Error deleting diet:", err);
+      logger.error("Error deleting diet:", err);
       setError(formatError(err, "Failed to delete diet."));
     }
   };
@@ -199,10 +195,10 @@ const CreateDietPage = ({ weightUpdateTrigger = 0, onDietSent }) => {
 
     try {
       const endpoint = editMode 
-        ? `https://nutriediet-go.onrender.com/admin/${client_id}/edit_diet`
-        : `https://nutriediet-go.onrender.com/admin/${client_id}/diet`;
+        ? `/admin/${client_id}/edit_diet`
+        : `/admin/${client_id}/diet`;
 
-      const response = await axios.post(
+      const response = await api.post(
         endpoint,
         requestData,
         {
@@ -232,7 +228,7 @@ const CreateDietPage = ({ weightUpdateTrigger = 0, onDietSent }) => {
       }
       
     } catch (err) {
-      console.error("Error saving diet:", err);
+      logger.error("Error saving diet:", err);
       setError(formatError(err, "Failed to save diet."));
     } finally {
       setSubmitting(false);

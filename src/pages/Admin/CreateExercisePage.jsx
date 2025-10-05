@@ -1,23 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api/axiosInstance';
 import '../../styles/CreateExercisePage.css';
 import { FaTimes } from 'react-icons/fa';
+import logger from '../../utils/logger';
 
 const CreateExercisePage = () => {
   const [exercise, setExercise] = useState({ name: '', description: '', link: '' });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
-
-  const token = localStorage.getItem('token');
-  const api = axios.create({
-    baseURL: 'https://nutriediet-go.onrender.com',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
   const handleCreateExercise = async (e) => {
     e.preventDefault();
     try {
@@ -26,7 +18,7 @@ const CreateExercisePage = () => {
       setError('');
       setTimeout(() => navigate('/admin/exercises'), 1500);
     } catch (err) {
-      console.error('Error creating exercise:', err);
+      logger.error('Error creating exercise', err);
       setError('Failed to create exercise. Please try again.');
       setSuccess('');
     }

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
+import api from '../../api/axiosInstance';
 import { getToken } from "../../auth/token";
 import { FaCheck } from "react-icons/fa";
 import "../../styles/CreateMotivationPage.css";
+import logger from "../../utils/logger";
 
 const CreateMotivationPage = () => {
   const [text, setText] = useState("");
@@ -23,8 +25,8 @@ const CreateMotivationPage = () => {
     }
 
     try {
-      await axios.post(
-        "https://nutriediet-go.onrender.com/admin/motivations/new",
+      await api.post(
+        "/admin/motivations/new",
         { text, posting_active: postingActive },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -37,8 +39,8 @@ const CreateMotivationPage = () => {
         setShowSuccess(false);
       }, 3000);
     } catch (error) {
+      logger.error('Error creating motivation', error);
       alert(error.response?.data?.error || "Error creating motivation.");
-      console.error("Error:", error);
     } finally {
       setLoading(false);
     }

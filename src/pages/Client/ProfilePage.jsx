@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import api from '../../api/axiosInstance';
 import { getToken } from "../../auth/token";
 import { useNavigate } from "react-router-dom";
 import { FaUser, FaCheckCircle, FaTimes } from "react-icons/fa";
@@ -43,7 +44,7 @@ const ProfilePage = () => {
     }
 
     axios
-      .get(`https://nutriediet-go.onrender.com/clients/${clientId}/my_profile`, {
+      .get(`/clients/${clientId}/my_profile`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       })
@@ -105,8 +106,8 @@ const ProfilePage = () => {
     };
 
     try {
-      await axios.post(
-        `https://nutriediet-go.onrender.com/clients/${clientId}/my_profile`,
+      await api.post(
+        `/clients/${clientId}/my_profile`,
         updatedProfile,
         {
           headers: { Authorization: `Bearer ${token}` },

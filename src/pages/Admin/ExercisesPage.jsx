@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api/axiosInstance';
 import Select from "react-select";
 import { Button } from "react-bootstrap";
 import { FaPlusCircle } from "react-icons/fa";
 import '../../styles/AdminExercisesPage.css';
+import logger from '../../utils/logger';
 
 const ExercisesPage = () => {
   const [exercises, setExercises] = useState([]);
@@ -17,14 +18,6 @@ const ExercisesPage = () => {
   const [success, setSuccess] = useState('');
 
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
-  const api = axios.create({
-    baseURL: 'https://nutriediet-go.onrender.com',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
   const fetchExercises = async () => {
     setLoading(true);
     try {
@@ -36,7 +29,7 @@ const ExercisesPage = () => {
       setExercises(formattedExercises);
       setError('');
     } catch (err) {
-      console.error('Error fetching exercises:', err);
+      logger.error('Error fetching exercises:', err);
       setError('Failed to fetch exercises.');
     } finally {
       setLoading(false);
@@ -50,7 +43,7 @@ const ExercisesPage = () => {
       setSelectedExerciseDetails(response.data.exercise);
       setError('');
     } catch (err) {
-      console.error('Error fetching exercise by ID:', err);
+      logger.error('Error fetching exercise by ID:', err);
       setError('Failed to fetch exercise details.');
     } finally {
       setLoading(false);
@@ -93,7 +86,7 @@ const ExercisesPage = () => {
         setError('Failed to delete exercise.');
       }
     } catch (err) {
-      console.error('Error deleting exercise:', err);
+      logger.error('Error deleting exercise:', err);
       setError('Failed to delete exercise.');
     } finally {
       setDeleting(false);

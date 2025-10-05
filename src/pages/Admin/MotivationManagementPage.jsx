@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import api from '../../api/axiosInstance';
 import { getToken } from "../../auth/token";
 import { FaPlusCircle, FaSearch, FaTimes, FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -27,9 +28,7 @@ const MotivationManagementPage = () => {
   const fetchMotivations = async () => {
     try {
       const token = getToken();
-      const response = await axios.get(
-        "https://nutriediet-go.onrender.com/admin/motivation",
-        { headers: { Authorization: `Bearer ${token}` } }
+      const response = await api.get("/admin/motivation"
       );
       setMotivations(response.data.motivation);
       setLoading(false);
@@ -45,8 +44,8 @@ const MotivationManagementPage = () => {
     try {
       const token = getToken();
       const endpoint = currentStatus ? "unpost" : "post";
-      await axios.post(
-        `https://nutriediet-go.onrender.com/admin/motivation/${id}/${endpoint}`,
+      await api.post(
+        `/admin/motivation/${id}/${endpoint}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
