@@ -69,7 +69,7 @@ const ClientDetailsPage = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
   
-    axios
+    api
       .get(`/admin/client/${client_id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -388,7 +388,7 @@ const ClientDetailsPage = () => {
       return;
     }
   
-    axios
+    api
       .post(`/admin/client/${client_id}`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       })
