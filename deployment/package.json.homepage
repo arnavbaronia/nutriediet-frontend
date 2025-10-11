@@ -1,0 +1,9 @@
+{
+  "homepage": "/new"
+}
+
+# Add this line to your package.json:
+# "homepage": "/new",
+
+# This ensures all asset paths use /new as base path
+
