@@ -9,12 +9,11 @@ import plan3 from "../assets/plan3.svg";
 import plan4 from "../assets/plan4.svg";
 import "../styles/HomePage.css";
 import HomeNavBar from "../components/HomeNavBar";
-import SaveAsIcon from "@mui/icons-material/SaveAs";
-import SendIcon from "@mui/icons-material/Send";
-import MenuBookIcon from "@mui/icons-material/MenuBook";
-import RestaurantIcon from "@mui/icons-material/Restaurant";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import TestimonialsPageUpdated from "./TestimonialsPageUpdated";
+import LaptopMacIcon from '@mui/icons-material/LaptopMac';
+import PermPhoneMsgIcon from '@mui/icons-material/PermPhoneMsg';
+import RamenDiningRoundedIcon from '@mui/icons-material/RamenDiningRounded';
+import Face3RoundedIcon from '@mui/icons-material/Face3Rounded';
 
 const HomePage = () => {
   useEffect(() => {
@@ -38,15 +37,14 @@ const HomePage = () => {
       <HomeNavBar />
       <div className="homepage-container">
         <div className="text-section">
-          <h1 className="title">Diet. Nutrition.</h1>
+          <h1 className="title">Diet. Nutrition. Mindfulness.</h1>
           <h2 className="subtitle">And Complete Wellness.</h2>
           <p className="description">
-            Dieting is not about eating less. It is about eating right.
-            There is no such thing as a “perfect diet plan” until and unless it is personalized.
-            Discover what is best for you with Indian Nutritionist. 
-            We help you establish the perfect diet with our personalized online dietitian consultation and nutrition coaching in India.
-            Get comprehensive meal plans and lifestyle management guidelines for health conditions like PCOS, thyroid, diabetes and many other conditions. 
-            Embark on a safe and effective journey to complete wellness.
+          Dieting is not about eating less - It’s about eating right. 
+          There is no one-size-fits-all  “perfect diet plan”.  The best diet is the one personalized for you. At Nutriediet, we design customized diet plans through expert in-person or online consultations & nutritional coaching. 
+          Wellness in not just about what you eat - it’s also about how do you feel. At Nutriediet, we consider your emotional and mental well-being as part of your jealth journey, offering mindful counceling to help you find balance inside & out.
+          Get comprehensive meal plans & lifestyle guidance for conditions like Obesity, PCOS, Diabetes, Hypertension,Thyroid, Kidney & Liver Disease.
+          Begin your Journey to safe, sustainable & complete wellness today.
           </p>
         </div>
 
@@ -65,36 +63,111 @@ const HomePage = () => {
         <div className="about-text-box">
           <h2 className="about-heading">About Us</h2>  
             <p className="about-text">
-              Established by highly reputed professional nutritionist <strong>Shweta Sharma</strong>, 
-              Indian Nutritionist is a fully web-based platform offering online health coaching and consultant nutritionist services. 
-              Our focus is to bring our expert-led wellness plans closer to people, especially those who cannot visit a clinic due to mobility issues.
+              Welcome to Nutriediet, where nutrition meets care.
             </p>
-
             <p className="about-text">
-              Based in Chandigarh, we work with registered dietitians and consultant nutritionists and cater to individuals and groups all over India with dedicated support. 
-              While providing one-to-one diet & nutritionist consultation online for fully customized meal plans, we extend our approach to gain total body and mind wellness for our clients. 
-              Each plan is designed according to your medical conditions and unique dietary needs.
+              We are a passionate team of dedicated professionals committed to helping you achieve lasting health through personalized and sustainable dietary solutions.
             </p>
-
             <p className="about-text">
-              We specialize in **PCOS/PCOD, thyroid, and diabetes management**. However, our constant endeavor is to help more and more people benefit from our all-in-one 
-              nutritionist solutions for several other conditions that can be managed with diet and nutrition.
+              Led by an experienced and qualified dietitian with over 20 years of expertise, our clinic specializes in customized nutrition plans tailored to your unique needs, preferences, and health goals.
             </p>
-
             <p className="about-text">
-              Take the first step towards a healthier you by scheduling an **online dietitian consultation** with our nutritionists today. 
-              Unlock the true potential of your fitness as you embrace a transformative journey towards a healthy life.
+              At <strong>Nutriediet</strong>, we believe that food is not just fuel—it’s medicine for the body, mind, and soul. Our approach blends scientific evidence with compassionate care, empowering you with the knowledge and guidance to take charge of your well-being.
+              Over the years, we have helped individuals across diverse backgrounds manage weight, diabetes, PCOS, hypertension, and kidney and liver conditions, transforming not just their health but their entire approach to living well.
+              Every plan we create is practical, science-backed, and deeply personalized—because your journey to wellness should be as unique as you are.
+            </p>
+            <p className="about-text">
+              Let’s work together to turn your health goals into lasting achievements.
             </p>
         </div>
       </div>
 
-      <div className="how-it-works-container">
-        <h2 className="how-it-works-heading">How Our Online Dietician & Nutrition Counselling Works?</h2>
-        <p className="how-it-works-description">
-          The conventional concept is that you must see a doctor or medical professional in person to consult about your health. On the other hand, Indian Nutritionist, an online dietician consultation service in India, customizes your meal plans to suit your needs without requiring face-to-face consultation. So before we get to the part about “how it works,” let’s just make sure that online dietitian consultation works in the first place.
+      <div className="health-plans-container">
+        <h2 className="health-plans-heading">Our Expertise</h2>
+        <p className="health-plans-description">
+          At <strong>Nutriediet</strong>, we go beyond conventional diet plans. Our work is rooted in personalized nutrition, emotional balance, and sustainable lifestyle transformation.
+          We design programs that nourish your body, calm your mind, and restore natural harmony — helping you look, feel, and live your best.
         </p>
+
+        <div className="health-plans-grid">
+          {[
+            { 
+              img: plan1, 
+              title: "Weight Management", 
+              desc: (
+                <>
+                  <p>Achieve your ideal body composition through balanced, sustainable, and customized nutrition strategies.</p>
+                  <ul>
+                    <li><strong>Weight Loss Programs</strong> – Scientifically designed plans to help you shed fat, preserve muscle, and improve metabolism.</li>
+                    <li><strong>Weight Gain Programs</strong> – Nourishing plans to promote healthy muscle and weight gain.</li>
+                    <li><strong>Maintenance Diets</strong> – Personalized diets to help you maintain your results with long-term balance.</li>
+                  </ul>
+                </>
+              )
+            },
+            { 
+              img: plan2, 
+              title: "Lifestyle Nutrition Programs", 
+              desc: (
+                <>
+                  <p>Restore hormonal balance, improve energy, and build lifelong healthy habits through tailored lifestyle programs.</p>
+                  <ul>
+                    <li><strong>PCOS / PCOD Nutrition</strong></li>
+                    <li><strong>Prenatal & Postnatal Nutrition</strong></li>
+                    <li><strong>Child & Adolescent Nutrition</strong></li>
+                  </ul>
+                </>
+              )
+            },
+            { 
+              img: plan3, 
+              title: "Therapeutic Diets", 
+              desc: (
+                <>
+                  <p>Targeted dietary interventions for medical and metabolic conditions, supporting healing and better quality of life.</p>
+                  <ul>
+                    <li><strong>Diabetes Management</strong></li>
+                    <li><strong>Hypertension & Heart Health</strong></li>
+                    <li><strong>Kidney Health Support</strong></li>
+                  </ul>
+                </>
+              )
+            },
+            { 
+              img: plan4, 
+              title: "Specialized Wellness Services", 
+              desc: (
+                <>
+                  <p>For those seeking advanced or performance-focused nutrition solutions.</p>
+                  <ul>
+                    <li><strong>Sports Nutrition</strong> – Optimize endurance, recovery, and performance.</li>
+                    <li><strong>Detox Diet Plans</strong> – Gentle, natural detoxification for renewed vitality.</li>
+                    <li><strong>Immunity-Boosting Plans</strong> – Strengthen your body's defenses with nutrient-rich, science-backed meal plans.</li>
+                  </ul>
+                </>
+              )
+            }
+          ].map((plan, index) => (
+            <div className="health-plan-box" key={index}>
+              <img src={plan.img} alt={plan.title} className="plan-image" />
+              <h3 className="plan-title">{plan.title}</h3>
+              <div className="plan-description">{plan.desc}</div>
+            </div>
+          ))}
+        </div>
+        
+        <p className="health-plans-description">
+          All our meal plans are supported by practical, easy-to-follow recipes, available in the dedicated Recipes section.
+        </p>
+        <p className="health-plans-description">
+          To complement your nutrition plan, we also provide guidance on appropriate workouts for your fitness level and goals. You can access exercise videos and routines in the Exercise section for a complete wellness experience.
+        </p>
+      </div>
+
+      <div className="how-it-works-container">
+        <h2 className="how-it-works-heading">How It All Comes Together</h2>
         <p className="how-it-works-description">
-          We collaborate with highly accredited online nutritionist Shweta Sharma and her entourage of registered dieticians, holistic nutritionists, and specialist online health coaches, each holding prestigious track records for transforming the lives of hundreds of patients. With an organized approach, we intend to bring the convenience of one-touch accessibility to professional nutritionist consultations online.
+         At Nutriediet, every consultation is a personalized journey — carefully designed to understand you before designing your plan. Whether you choose an online or in-person consultation, our process ensures a holistic, compassionate, and science-backed approach.
         </p>
 
         <div className="how-it-works-content">
@@ -104,46 +177,33 @@ const HomePage = () => {
 
           <div className="how-it-works-steps">
             {[
-              { icon: <SaveAsIcon />, title: "Getting Started", desc: "Send us your inquiry. Call us, email us, or revert via our contact form. We will arrange a free consultation with one of our consultant nutritionists over the phone." },
-              { icon: <SendIcon />, title: "Getting to Know", desc: "Following the preliminary nutritionist consultation online, we will evaluate your lifestyle, food preferences, budget, and medical conditions before recommending plans." },
-              { icon: <MenuBookIcon />, title: "Pick Your Plan", desc: "We will recommend a bunch of diet & nutrition plans tailored to your needs. This is the first step to pushing you towards better health and comfort. You get to choose it as you please." },
-              { icon: <RestaurantIcon />, title: "Start Dieting", desc: "Once you are ready, our dietician consultants provide weekly meal plans and then gradually progress with more food and lifestyle interventions as you start showing improvements." },
-              { icon: <FavoriteIcon />, title: "Keep Going", desc: "Continue your healthy eating endeavor with your online health coach on a close call. We monitor and track your progress via web-based technologies and direct communication." }
+              { icon: <Face3RoundedIcon />, title: "Understanding You", desc: "We begin with an in-depth consultation to understand your lifestyle, medical history, eating habits, emotional health, and goals. This helps us identify the root causes and design a plan that fits seamlessly into your daily life." },
+              { icon: <RamenDiningRoundedIcon />, title: "Personalized Nutrition Planning", desc: "Based on your assessment, we create a tailor-made nutrition plan — focusing on balance, sustainability, and variety. Your plan is not just about food; it also includes guidance on hydration, activity, sleep, and mindfulness." },
+              { icon: <PermPhoneMsgIcon />, title: "Regular Follow-ups & Adjustments", desc: "We stay connected through regular reviews to track progress, review & update your plan based on progress, and keep you motivated. This dynamic approach ensures that your program evolves with your needs." },
+              { 
+                icon: <LaptopMacIcon />, 
+                title: "Flexible Consultation Options", 
+                desc: (
+                  <>
+                    <p>Choose the format that suits you best:</p>
+                    <ul>
+                      <li><strong>Online Consultations</strong> – Connect from anywhere for complete diet and wellness guidance.</li>
+                      <li><strong>In-Person Consultations</strong> – Visit our clinic for detailed assessments and personalized counseling sessions.</li>
+                    </ul>
+                    <p>Every interaction at Nutriediet is built on trust, empathy, and expertise — ensuring your path to wellness is as rewarding as your results.</p>
+                  </>
+                )
+              },
             ].map((step, index) => (
               <div className="step" key={index}>
                 <div className="step-header">
                   {step.icon}
                   <h3 className="step-title">{step.title}</h3>
                 </div>
-                <p className="step-description">{step.desc}</p>
+                <div className="step-description">{step.desc}</div>
               </div>
             ))}
           </div>
-        </div>
-      </div>
-
-      <div className="health-plans-container">
-        <h2 className="health-plans-heading">Comprehensive Health Plans You Get From Our Online Dietitian</h2>
-        <p className="health-plans-description">
-          We started off providing online dietitian consultations primarily for thyroid, diabetes, and PCOS/PCOD patients. Over time, we have also ventured into other conditions where our online health coaches have proven effective for many people to achieve a complete lifestyle transformation.
-        </p>
-        <p className="health-plans-description">
-          Now we also address conditions like post-pregnancy weight gain, high blood pressure, stress management and many others. Our dietician consultants work in the areas of regulating blood sugar levels, lipid profiles, hormonal balance, and many other parameters to improve your well-being more holistically.
-        </p>
-
-        <div className="health-plans-grid">
-          {[
-            { img: plan1, title: "Weight Gain Plan", desc: "Are you underweight? Do you always lose your appetite? If you are looking to build body mass and strength, our nutrition counselor can help you with a personalized diet plan to gain a healthy weight. Get tailored nutrition guidance and build a stronger, more confident you." },
-            { img: plan2, title: "Lifestyle Management Plan", desc: "Good food habits inspire a good life. But it doesn’t fix all your health needs. Let your online diet counsellor offer guidelines for food, exercise, sleep, relaxation, and recreational needs—tailored strategies to embrace positive changes and enhance your overall lifestyle." },
-            { img: plan3, title: "Post Pregnancy Plan", desc: "Postpartum fatigue, hormonal fluctuations, disturbed sleep and many other elements cause weight gain, stress, and lifestyle changes after childbirth. With a consultant nutritionist available on demand, you can get comprehensive wellness plans and enjoy motherhood." },
-            { img: plan4, title: "PCOS/PCOD Plan", desc: "Personalized plans for the DASH diet and low-blood pressure management is offered by registered dietitians and holistic nutritionists for different age groups. We will collaborate with your doctors and offer strategic foods compatible with your medications and wellness goals ." }
-          ].map((plan, index) => (
-            <div className="health-plan-box" key={index}>
-              <img src={plan.img} alt={plan.title} className="plan-image" />
-              <h3 className="plan-title">{plan.title}</h3>
-              <p className="plan-description">{plan.desc}</p>
-            </div>
-          ))}
         </div>
       </div>
 

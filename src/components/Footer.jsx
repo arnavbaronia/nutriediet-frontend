@@ -8,14 +8,9 @@ const Footer = () => {
     <footer className="footer">
       {/* Left Section - Logo & About */}
       <div className="footer-left">
-        <img src={logo} alt="Indian Nutritionist Logo" className="footer-logo" />
-        <p className="footer-description">
-          We, at Indian Nutritionist, are dedicated to empowering individuals with the expertise of our experienced nutritionists. 
-          Our personalized diet plans and expert nutritional counseling are designed to support you every step of the way. 
-          Experience the transformative power of personalized nutrition today.
-        </p>
-        <p className="footer-founder"><strong>Founder & Head Nutritionist:</strong> Shweta Sharma</p>
-        <p className="footer-copyright">© 2024 Indian Nutritionist. All rights reserved.</p>
+        <img src={logo} alt="Nutriediet Logo" className="footer-logo" />
+        <p className="footer-founder"><strong>Founder & Head Nutritionist:</strong> Ankita Gupta</p>
+        <p className="footer-copyright">© 2025 Nutriediet. All rights reserved.</p>
       </div>
 
       {/* Middle Section - Services & About */}

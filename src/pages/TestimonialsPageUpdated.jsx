@@ -60,7 +60,10 @@ const TestimonialsPageUpdated = () => {
       <div className="testimonials-content-wrapper">
         <h2 className="testimonials-heading">What Our Clients Say</h2>
         <p className="testimonials-description">
-          Our clients have experienced incredible transformations with Nutriediet! From weight loss and muscle gain to improved energy and healthier eating habits, their stories highlight the power of a well-structured diet plan. Read their experiences and see how Nutriediet can help you too!
+          At Nutriediet, we take pride in guiding individuals toward lasting health and wellness. But don’t just take our word for it — hear from the clients whose lives have been transformed through our personalized nutrition programs.
+        </p>
+        <p className="testimonials-description">
+          Each story reflects not only improved health but also renewed confidence, balance, and vitality — the essence of what we aim to achieve with every plan.
         </p>
         <div className="testimonials-slider">
           <motion.div
