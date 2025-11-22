@@ -602,3 +602,71 @@ p {
     opacity: 0;
   }
 }
+
+.title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.12rem;
+  margin: 0;
+  line-height: 1;
+}
+
+.word {
+  display: inline-block;
+  line-height: 1.05;
+  word-break: keep-all;
+}
+
+.word-diet {
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-weight: 800;
+  color: #111;
+}
+
+.word-nutrition {
+  font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+  font-weight: 700;
+  color: #333;
+}
+
+.word-mindfulness {
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
+  font-weight: 600;
+  color: #444;
+  white-space: nowrap; 
+  overflow: visible;
+}
+
+.subtitle {
+  margin-top: 0.4rem;
+  font-size: clamp(1rem, 3.2vw, 1.5rem);
+  font-weight: 600;
+  color: #666;
+  text-align: left;
+}
+
+@media (max-width: 480px) {
+  .title {
+    align-items: center;
+    text-align: center;
+  }
+
+  .word-diet {
+    font-size: clamp(5.5rem, 10.1vw, 6.3rem);
+  }
+
+  .word-nutrition {
+    font-size: clamp(4.5rem, 8.5vw, 5.1rem);
+  }
+
+  .word-mindfulness {
+    font-size: clamp(3.1rem, 7.5vw, 4.6rem);
+    white-space: nowrap; 
+    letter-spacing: -0.5px; 
+  }
+
+  .subtitle {
+    text-align: center;
+  }
+}

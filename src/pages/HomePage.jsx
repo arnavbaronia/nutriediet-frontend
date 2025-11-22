@@ -37,7 +37,11 @@ const HomePage = () => {
       <HomeNavBar />
       <div className="homepage-container">
         <div className="text-section">
-          <h1 className="title">Diet. Nutrition. Mindfulness.</h1>
+          <h1 className="title">
+            <span className="word word-diet">Diet.</span>
+            <span className="word word-nutrition">Nutrition.</span>
+            <span className="word word-mindfulness">Mindfulness.</span>
+          </h1>
           <h2 className="subtitle">And Complete Wellness.</h2>
           <p className="description">
           Dieting is not about eating less - It’s about eating right. 
