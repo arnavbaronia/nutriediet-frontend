@@ -42,7 +42,7 @@ const HomePage = () => {
           <p className="description">
           Dieting is not about eating less - It’s about eating right. 
           There is no one-size-fits-all  “perfect diet plan”.  The best diet is the one personalized for you. At Nutriediet, we design customized diet plans through expert in-person or online consultations & nutritional coaching. 
-          Wellness in not just about what you eat - it’s also about how do you feel. At Nutriediet, we consider your emotional and mental well-being as part of your jealth journey, offering mindful counceling to help you find balance inside & out.
+          Wellness in not just about what you eat - it’s also about how do you feel. At Nutriediet, we consider your emotional and mental well-being as part of your health journey, offering mindful counceling to help you find balance inside & out.
           Get comprehensive meal plans & lifestyle guidance for conditions like Obesity, PCOS, Diabetes, Hypertension,Thyroid, Kidney & Liver Disease.
           Begin your Journey to safe, sustainable & complete wellness today.
           </p>
