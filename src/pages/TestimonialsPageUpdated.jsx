@@ -3,7 +3,7 @@ import "../styles/TestimonialsPageUpdated.css";
 
 const reviews = [
   {
-    name: "Harika",
+    name: "Jyothisuma Harika",
     plan: "Weight Loss Plan",
     content: `I am happy to share that am part of Ankita Gupta's diet program and reduced 9 kgs in 4 months. Special thanks to Vibha who guided me throughout the journey and suggested me very good diet plans. here the recipes are very simple and all the items are very much available in our kitchen. All the diet plans kept me full throughout the day without having any cravings. My Thyroid levels are also down and am very happy about it.
 I strongly recommend to join Ankita Gupta's Nutri Diet program for healthy weight loss.`
@@ -102,7 +102,7 @@ const TestimonialsPageUpdated = () => {
                       aria-expanded={isExpanded}
                       aria-controls={`testimonial-${i}`}
                     >
-                      {isExpanded ? "Read less" : "Read more"}
+                      {isExpanded ? "Read less" : "Read more..."}
                     </button>
                   )}
                 </div>

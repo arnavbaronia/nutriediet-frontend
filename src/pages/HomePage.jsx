@@ -1,4 +1,4 @@
-import { React, useEffect} from "react";
+import { React, useEffect, useState } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import dietimage from "../assets/dietimage.jpg";
 import aboutus from "../assets/aboutus.jpg";
@@ -19,17 +19,31 @@ const HomePage = () => {
   useEffect(() => {
     const createLeaves = () => {
       const leafContainer = document.querySelector(".falling-leaves");
-      for (let i = 0; i < 5; i++) { 
+      for (let i = 0; i < 5; i++) {
         let leaf = document.createElement("div");
         leaf.classList.add("leaf");
         leaf.style.left = `${Math.random() * 100}vw`;
         leaf.style.animationDuration = `${Math.random() * 5 + 5}s`;
-        leaf.style.animationDelay = `${Math.random() * 5}s`; 
+        leaf.style.animationDelay = `${Math.random() * 5}s`;
         leafContainer.appendChild(leaf);
       }
     };
     createLeaves();
   }, []);
+
+  const [descExpanded, setDescExpanded] = useState(false);
+  const TRUNCATE_LENGTH = 260; 
+
+  const fullDescription = `Dieting is not about eating less - It’s about eating right. 
+There is no one-size-fits-all  “perfect diet plan”.  The best diet is the one personalized for you. At Nutriediet, we design customized diet plans through expert in-person or online consultations & nutritional coaching. 
+Wellness in not just about what you eat - it’s also about how do you feel. At Nutriediet, we consider your emotional and mental well-being as part of your health journey, offering mindful counceling to help you find balance inside & out.
+Get comprehensive meal plans & lifestyle guidance for conditions like Obesity, PCOS, Diabetes, Hypertension,Thyroid, Kidney & Liver Disease.
+Begin your Journey to safe, sustainable & complete wellness today.`;
+
+  const needsTruncate = fullDescription.length > TRUNCATE_LENGTH;
+  const previewText = needsTruncate ? fullDescription.slice(0, TRUNCATE_LENGTH).trim() + "..." : fullDescription;
+
+  const handleToggleDesc = () => setDescExpanded(prev => !prev);
 
   return (
     <>
@@ -43,13 +57,23 @@ const HomePage = () => {
             <span className="word word-mindfulness">Mindfulness.</span>
           </h1>
           <h2 className="subtitle">And Complete Wellness.</h2>
-          <p className="description">
-          Dieting is not about eating less - It’s about eating right. 
-          There is no one-size-fits-all  “perfect diet plan”.  The best diet is the one personalized for you. At Nutriediet, we design customized diet plans through expert in-person or online consultations & nutritional coaching. 
-          Wellness in not just about what you eat - it’s also about how do you feel. At Nutriediet, we consider your emotional and mental well-being as part of your health journey, offering mindful counceling to help you find balance inside & out.
-          Get comprehensive meal plans & lifestyle guidance for conditions like Obesity, PCOS, Diabetes, Hypertension,Thyroid, Kidney & Liver Disease.
-          Begin your Journey to safe, sustainable & complete wellness today.
-          </p>
+
+          <div className="description-wrapper">
+            <p className="description" style={{ whiteSpace: "pre-wrap" }}>
+              {descExpanded || !needsTruncate ? fullDescription : previewText}
+            </p>
+
+            {needsTruncate && (
+              <button
+                className="read-more-hero"
+                onClick={handleToggleDesc}
+                aria-expanded={descExpanded}
+                aria-label={descExpanded ? "Show less description" : "Read more about Nutriediet"}
+              >
+                {descExpanded ? "Read less" : "Read more..."}
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="image-section">
@@ -65,24 +89,24 @@ const HomePage = () => {
         </div>
 
         <div className="about-text-box">
-          <h2 className="about-heading">About Us</h2>  
-            <p className="about-text">
-              Welcome to Nutriediet, where nutrition meets care.
-            </p>
-            <p className="about-text">
-              We are a passionate team of dedicated professionals committed to helping you achieve lasting health through personalized and sustainable dietary solutions.
-            </p>
-            <p className="about-text">
-              Led by an experienced and qualified dietitian with over 20 years of expertise, our clinic specializes in customized nutrition plans tailored to your unique needs, preferences, and health goals.
-            </p>
-            <p className="about-text">
-              At <strong>Nutriediet</strong>, we believe that food is not just fuel—it’s medicine for the body, mind, and soul. Our approach blends scientific evidence with compassionate care, empowering you with the knowledge and guidance to take charge of your well-being.
-              Over the years, we have helped individuals across diverse backgrounds manage weight, diabetes, PCOS, hypertension, and kidney and liver conditions, transforming not just their health but their entire approach to living well.
-              Every plan we create is practical, science-backed, and deeply personalized—because your journey to wellness should be as unique as you are.
-            </p>
-            <p className="about-text">
-              Let’s work together to turn your health goals into lasting achievements.
-            </p>
+          <h2 className="about-heading">About Us</h2>
+          <p className="about-text">
+            Welcome to Nutriediet, where nutrition meets care.
+          </p>
+          <p className="about-text">
+            We are a passionate team of dedicated professionals committed to helping you achieve lasting health through personalized and sustainable dietary solutions.
+          </p>
+          <p className="about-text">
+            Led by an experienced and qualified dietitian with over 20 years of expertise, our clinic specializes in customized nutrition plans tailored to your unique needs, preferences, and health goals.
+          </p>
+          <p className="about-text">
+            At <strong>Nutriediet</strong>, we believe that food is not just fuel—it’s medicine for the body, mind, and soul. Our approach blends scientific evidence with compassionate care, empowering you with the knowledge and guidance to take charge of your well-being.
+            Over the years, we have helped individuals across diverse backgrounds manage weight, diabetes, PCOS, hypertension, and kidney and liver conditions, transforming not just their health but their entire approach to living well.
+            Every plan we create is practical, science-backed, and deeply personalized—because your journey to wellness should be as unique as you are.
+          </p>
+          <p className="about-text">
+            Let’s work together to turn your health goals into lasting achievements.
+          </p>
         </div>
       </div>
 
@@ -95,9 +119,9 @@ const HomePage = () => {
 
         <div className="health-plans-grid">
           {[
-            { 
-              img: plan1, 
-              title: "Weight Management", 
+            {
+              img: plan1,
+              title: "Weight Management",
               desc: (
                 <>
                   <p>Achieve your ideal body composition through balanced, sustainable, and customized nutrition strategies.</p>
@@ -109,9 +133,9 @@ const HomePage = () => {
                 </>
               )
             },
-            { 
-              img: plan2, 
-              title: "Lifestyle Nutrition Programs", 
+            {
+              img: plan2,
+              title: "Lifestyle Nutrition Programs",
               desc: (
                 <>
                   <p>Restore hormonal balance, improve energy, and build lifelong healthy habits through tailored lifestyle programs.</p>
@@ -123,9 +147,9 @@ const HomePage = () => {
                 </>
               )
             },
-            { 
-              img: plan3, 
-              title: "Therapeutic Diets", 
+            {
+              img: plan3,
+              title: "Therapeutic Diets",
               desc: (
                 <>
                   <p>Targeted dietary interventions for medical and metabolic conditions, supporting healing and better quality of life.</p>
@@ -137,9 +161,9 @@ const HomePage = () => {
                 </>
               )
             },
-            { 
-              img: plan4, 
-              title: "Specialized Wellness Services", 
+            {
+              img: plan4,
+              title: "Specialized Wellness Services",
               desc: (
                 <>
                   <p>For those seeking advanced or performance-focused nutrition solutions.</p>
@@ -159,7 +183,7 @@ const HomePage = () => {
             </div>
           ))}
         </div>
-        
+
         <p className="health-plans-description">
           All our meal plans are supported by practical, easy-to-follow recipes, available in the dedicated Recipes section.
         </p>
@@ -184,9 +208,9 @@ const HomePage = () => {
               { icon: <Face3RoundedIcon />, title: "Understanding You", desc: "We begin with an in-depth consultation to understand your lifestyle, medical history, eating habits, emotional health, and goals. This helps us identify the root causes and design a plan that fits seamlessly into your daily life." },
               { icon: <RamenDiningRoundedIcon />, title: "Personalized Nutrition Planning", desc: "Based on your assessment, we create a tailor-made nutrition plan — focusing on balance, sustainability, and variety. Your plan is not just about food; it also includes guidance on hydration, activity, sleep, and mindfulness." },
               { icon: <PermPhoneMsgIcon />, title: "Regular Follow-ups & Adjustments", desc: "We stay connected through regular reviews to track progress, review & update your plan based on progress, and keep you motivated. This dynamic approach ensures that your program evolves with your needs." },
-              { 
-                icon: <LaptopMacIcon />, 
-                title: "Flexible Consultation Options", 
+              {
+                icon: <LaptopMacIcon />,
+                title: "Flexible Consultation Options",
                 desc: (
                   <>
                     <p>Choose the format that suits you best:</p>

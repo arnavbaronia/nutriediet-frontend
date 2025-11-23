@@ -672,3 +672,30 @@ p {
     font-size: clamp(1.8rem, 5.1vw, 3.1rem);
   }
 }
+
+.description-wrapper {
+  display: block;
+  max-width: 100%;
+}
+
+.read-more-hero {
+  display: inline-block;
+  margin-top: 10px;
+  background: transparent;
+  border: none;
+  color: #004D40;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.95rem;
+}
+
+.read-more-hero:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .description {
+    line-height: 1.5;
+  }
+}
