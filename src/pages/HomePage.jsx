@@ -32,7 +32,7 @@ const HomePage = () => {
   }, []);
 
   const [descExpanded, setDescExpanded] = useState(false);
-  const TRUNCATE_LENGTH = 260; 
+  const TRUNCATE_LENGTH = 281; 
 
   const fullDescription = `Dieting is not about eating less - It’s about eating right. 
 There is no one-size-fits-all  “perfect diet plan”.  The best diet is the one personalized for you. At Nutriediet, we design customized diet plans through expert in-person or online consultations & nutritional coaching. 
