@@ -147,15 +147,27 @@
   border: none;
 }
 
+.btn-edit svg {
+  margin-top: -3px;
+}
+
 .btn-delete {
   background: #dc3545 !important;
   color: white;
+}
+
+.btn-delete svg {
+  margin-top: -3px;
 }
 
 .btn-save {
   background: #FF9800 !important; 
   color: white;
   border: none;
+}
+
+.btn-save svg {
+  margin-top: -2px;
 }
 
 .btn-create:hover {

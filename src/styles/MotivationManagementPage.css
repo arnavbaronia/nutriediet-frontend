@@ -428,6 +428,10 @@ input:checked + .toggle-slider:before {
 }
 
 .btn-createeee {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;          
+  justify-content: center;
   padding: 10px 15px;
   font-size: 16px;
   font-weight: 600;
@@ -435,14 +439,19 @@ input:checked + .toggle-slider:before {
   cursor: pointer;
   transition: all 0.3s ease;
   margin-bottom: -20px;
-}
-
-.btn-createeee {
-  background: #004D40 !important; 
+  background: #004D40 !important;
   color: white;
   border: none;
+  height: 40px;       
+}
+
+.btn-createeee svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  margin-top: -5px;
 }
 
 .btn-createeee:hover {
-  background: #2E7D32; 
+  background: #2E7D32;
 }
