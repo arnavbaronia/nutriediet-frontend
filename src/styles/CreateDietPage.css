@@ -28,7 +28,7 @@
     justify-content: center; 
   }
 
-  .history-dropdown-group .styled-dropdown {
+  .history-dropdown-group .styled-dropdownnn {
     width: 92%;
     max-width: 307px;
   }
@@ -51,12 +51,14 @@
     gap: 20px; 
   }
   
-  .styled-dropdown {
+  .styled-dropdownnn {
     flex: 1;
     padding: 10px;
     border-radius: 12px;
     border: 1px solid #ccc;
     font-size: 16px;
+    min-width: 307px;
+    width: 92%;
   }
   
   .diet-input {

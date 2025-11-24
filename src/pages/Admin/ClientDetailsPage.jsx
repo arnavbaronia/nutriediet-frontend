@@ -500,7 +500,7 @@ const ClientDetailsPage = () => {
           <Line data={weightData} />
         </div>
       ) : (
-        <p>No weight history available.</p>
+        <p className="no-history">No weight history available!</p>
       )}
 
       <div className="form-group weight-update-container">
@@ -523,7 +523,7 @@ const ClientDetailsPage = () => {
           name="week_number"
           value={selectedWeekNumber}
           className="client-input select-input"
-          style={{ marginTop: '-10px', width: '21%' }}
+          style={{ marginTop: '-10px', width: '20%' }}
           onChange={(e) => setSelectedWeekNumber(e.target.value)}
         >
           <option value="">Select Week</option>

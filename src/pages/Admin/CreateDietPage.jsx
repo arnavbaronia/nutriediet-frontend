@@ -275,7 +275,7 @@ const CreateDietPage = ({ weightUpdateTrigger = 0, onDietSent }) => {
               as="select"
               value={selectedTemplate}
               onChange={handleTemplateSelect}
-              className="styled-dropdown"
+              className="styled-dropdownnn"
             >
               <option value="">Select Template</option>
               {dietTemplates.map((template) => (
@@ -324,7 +324,7 @@ const CreateDietPage = ({ weightUpdateTrigger = 0, onDietSent }) => {
               as="select"
               value={selectedPastTemplate}
               onChange={handlePastTemplateSelect}
-              className="styled-dropdown small-dropdown"
+              className="styled-dropdownnn small-dropdown"
             >
               <option value="">Select Template</option>
               {dietTemplates.map((template) => (
