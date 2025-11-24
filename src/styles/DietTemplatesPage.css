@@ -107,6 +107,24 @@
   gap: 20px;
 }
 
+.btn-create,
+.btn-edit,
+.btn-delete,
+.btn-save {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; 
+  justify-content: center;
+}
+
+.btn-create svg,
+.btn-edit svg,
+.btn-delete svg,
+.btn-save svg {
+  width: 16px;
+  height: 16px;
+}
+
 .btn-create, .btn-edit, .btn-delete, .btn-save {
   padding: 10px 15px;
   font-size: 16px;
@@ -120,6 +138,7 @@
   background: #388E3C !important; 
   color: white;
   border: none;
+  width: 150px;
 }
 
 .btn-edit {
