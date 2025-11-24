@@ -17,6 +17,10 @@ body {
   color: #333;
   margin-bottom: 20px;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 .diet-type-selector {

@@ -141,3 +141,13 @@ body {
     padding-left: -50px;
   }
 }
+
+.weight-title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}

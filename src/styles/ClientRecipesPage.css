@@ -12,6 +12,10 @@ body {
   font-size: 32px;
   font-weight: bold;
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 .recipe-search {
@@ -158,6 +162,16 @@ body {
   padding: 10px;
   border-radius: 4px;
   margin-bottom: 20px;
+  text-align: center;
+}
+
+.no-recipes {
+  text-align: center;
+  width: 100%;
+  grid-column: 1 / -1;
+  font-size: 18px;
+  color: #666;
+  margin-top: 20px;
 }
 
 .recipe-image-container {
