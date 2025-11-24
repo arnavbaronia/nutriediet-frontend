@@ -329,7 +329,7 @@ const CommonDietPage = () => {
       )}
 
       {/* Group Selection Dropdown */}
-      <div className="dropdown-group" style={{ marginBottom: '30px' }}>
+      <div className="group-dropdown-container">
         <Form.Control
           as="select"
           value={selectedGroup}
@@ -338,6 +338,7 @@ const CommonDietPage = () => {
             setEditingDietId(null); 
           }}
           className="styled-dropdown"
+          style={{ maxWidth: '300px' }}
         >
           <option value="">Select Group</option>
           {groups.map((group) => (
@@ -346,8 +347,13 @@ const CommonDietPage = () => {
             </option>
           ))}
         </Form.Control>
+        {!selectedGroup && (
+          <div className="group-error-message">
+            Please select a group!
+          </div>
+        )}
       </div>
-      
+
       {/* History Section */}
       {selectedGroup && (
         <div className="history-section">
@@ -467,7 +473,7 @@ const CommonDietPage = () => {
                 as="select"
                 value={selectedTemplate}
                 onChange={handleTemplateSelect}
-                className="styled-dropdown"
+                className="styled-dropdown template-dropdown"
               >
                 <option value="">Select Template</option>
                 {dietTemplates.map((template) => (
