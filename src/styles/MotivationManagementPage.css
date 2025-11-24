@@ -439,7 +439,7 @@ input:checked + .toggle-slider:before {
   cursor: pointer;
   transition: all 0.3s ease;
   margin-bottom: -20px;
-  background: #004D40 !important;
+  background: #2E7D32 !important;
   color: white;
   border: none;
   height: 40px;       

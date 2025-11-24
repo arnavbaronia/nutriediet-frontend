@@ -126,7 +126,7 @@ const ExercisesPage = () => {
             isSearchable
           />
           <Button
-            className="btn-create"
+            className="btn-create12"
             onClick={() => navigate('/admin/exercises/new')}
           >
             <FaPlusCircle /> New Exercise
