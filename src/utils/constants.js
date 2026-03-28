@@ -4,7 +4,7 @@
  */
 
 // API Configuration
-export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://staging.nutriediet.com';
 
 // Environment
 export const IS_PRODUCTION = process.env.REACT_APP_ENV === 'production';
