@@ -226,12 +226,6 @@ const ClientsPage = () => {
             <option value="2">Dietitian ID: 2</option>
             <option value="3">Dietitian ID: 3</option>
             <option value="4">Dietitian ID: 4</option>
-            <option value="5">Dietitian ID: 5</option>
-            <option value="6">Dietitian ID: 6</option>
-            <option value="7">Dietitian ID: 7</option>
-            <option value="8">Dietitian ID: 8</option>
-            <option value="9">Dietitian ID: 9</option>
-            <option value="10">Dietitian ID: 10</option>
           </select>
 
           <select 

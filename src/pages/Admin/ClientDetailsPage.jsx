@@ -671,7 +671,7 @@ const ClientDetailsPage = () => {
                 onChange={handleChange}
               >
                 <option value="">Select Dietitian</option>
-                {[...Array(10)].map((_, i) => (
+                {[...Array(4)].map((_, i) => (
                   <option key={i+1} value={i+1}>Dietitian {i+1}</option>
                 ))}
               </select>
