@@ -112,3 +112,59 @@ export const VALIDATION = {
   ],
 };
 
+// Package duration in days (matches backend PackageDayMap)
+export const PACKAGE_DURATION_DAYS = {
+  '4 weeks': 28,
+  '8 weeks': 56,
+  '12 weeks': 84,
+  '24 weeks': 168,
+};
+
+export const getPackageDurationDays = (packageName) => {
+  if (!packageName) return null;
+  const normalized = packageName.toLowerCase().replace(/\s+/g, ' ').trim();
+  return PACKAGE_DURATION_DAYS[normalized] ?? null;
+};
+
+export const parseInputDate = (dateStr) => {
+  if (!dateStr) return null;
+  const [year, month, day] = dateStr.split('-').map(Number);
+  if (!year || !month || !day) return null;
+  return new Date(year, month - 1, day);
+};
+
+export const formatLocalDate = (date) => {
+  if (!date) return '';
+  const d = date instanceof Date ? date : new Date(date);
+  if (Number.isNaN(d.getTime())) return '';
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+/** Package start date: last payment date, or date of joining as fallback. */
+export const getPackageStartDate = (client) =>
+  client?.last_payment_date || client?.date_of_joining || '';
+
+export const calculateNextPaymentDate = (packageStartDate, packageName) => {
+  const days = getPackageDurationDays(packageName);
+  const start =
+    typeof packageStartDate === 'string'
+      ? parseInputDate(packageStartDate)
+      : packageStartDate;
+  if (!days || !start || Number.isNaN(start.getTime())) return '';
+  const next = new Date(start);
+  next.setDate(next.getDate() + days);
+  return formatLocalDate(next);
+};
+
+export const withCalculatedNextPaymentDate = (client) => {
+  const startDate = getPackageStartDate(client);
+  if (!startDate || !client?.package) return client;
+  return {
+    ...client,
+    next_payment_date: calculateNextPaymentDate(startDate, client.package),
+  };
+};
+

@@ -7,6 +7,11 @@ import { Line } from 'react-chartjs-2';
 import CreateDietPage from "./CreateDietPage";
 import '../../styles/ClientDetailsPage.css';
 import logger from '../../utils/logger';
+import {
+  formatLocalDate,
+  parseInputDate,
+  withCalculatedNextPaymentDate,
+} from '../../utils/constants';
 
 const ClientDetailsPage = () => {
   const { client_id } = useParams();
@@ -56,14 +61,18 @@ const ClientDetailsPage = () => {
 
   const navigate = useNavigate();
 
-  const formatDateForInput = (date) => {
-    if (!date) return '';
-    return new Date(date).toISOString().split('T')[0];
-  };
+  const formatDateForInput = (date) => formatLocalDate(date);
 
   const formatDateForPayload = (date) => {
     if (!date) return null;
-    return new Date(date).toISOString();
+    const parsed =
+      typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)
+        ? parseInputDate(date)
+        : new Date(date);
+    if (!parsed || Number.isNaN(parsed.getTime())) return null;
+    return new Date(
+      Date.UTC(parsed.getFullYear(), parsed.getMonth(), parsed.getDate())
+    ).toISOString();
   };
 
   useEffect(() => {
@@ -83,7 +92,7 @@ const ClientDetailsPage = () => {
           }`.trim() ||
           "N/A";
   
-        const formattedClient = {
+        const formattedClient = withCalculatedNextPaymentDate({
           ...clientData,
           name,
           amount_paid: clientData.amount_paid?.toString() || "",
@@ -91,7 +100,7 @@ const ClientDetailsPage = () => {
           last_payment_date: formatDateForInput(clientData.last_payment_date),
           date_of_joining: formatDateForInput(clientData.date_of_joining),
           created_at: formatDateForInput(clientData.created_at),
-        };
+        });
   
         setClient(formattedClient);
         
@@ -256,54 +265,14 @@ const ClientDetailsPage = () => {
     ],
   };
 
-  const calculateNextPaymentDate = (lastPaymentDate, packageDuration) => {
-  
-    if (!lastPaymentDate || !packageDuration) return '';
-  
-    const normalizedPackage = packageDuration.toLowerCase().replace(/\s+/g, ' ');
-  
-    const durationMap = {
-      "4 weeks": 4,
-      "8 weeks": 8,
-      "12 weeks": 12,
-      "4 week": 4,
-      "8 week": 8,
-      "12 week": 12,
-    };
-  
-    const weeksToAdd = durationMap[normalizedPackage] || 0;
-    if (weeksToAdd === 0) {
-      logger.warn(`Unknown package duration: ${packageDuration}`);
-      return '';
-    }
-  
-    const lastDate = new Date(lastPaymentDate);
-    if (isNaN(lastDate.getTime())) {
-      logger.error(`Invalid date format: ${lastPaymentDate}`);
-      return '';
-    }
-  
-    lastDate.setDate(lastDate.getDate() + (weeksToAdd * 7));
-  
-    const formattedDate = lastDate.toISOString().split('T')[0];
-  
-    return formattedDate;
-  };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
   
     setClient((prevClient) => {
-      const updatedClient = { ...prevClient, [name]: value };
+      let updatedClient = { ...prevClient, [name]: value };
   
-      if (name === "package" || name === "last_payment_date") {
-        if (updatedClient.package && updatedClient.last_payment_date) {
-          const nextPaymentDate = calculateNextPaymentDate(
-            updatedClient.last_payment_date,
-            updatedClient.package
-          );
-          updatedClient.next_payment_date = nextPaymentDate;
-        }
+      if (name === "package" || name === "last_payment_date" || name === "date_of_joining") {
+        updatedClient = withCalculatedNextPaymentDate(updatedClient);
       }
   
       if (name === "total_amount" || name === "amount_paid") {
@@ -404,14 +373,16 @@ const ClientDetailsPage = () => {
           created_at: updatedClient.created_at,
         };
   
-        setClient(prev => ({
-          ...prev,
-          ...updatedValues,
-          next_payment_date: formatDateForInput(updatedValues.next_payment_date),
-          last_payment_date: formatDateForInput(updatedValues.last_payment_date),
-          date_of_joining: formatDateForInput(updatedValues.date_of_joining),
-          created_at: formatDateForInput(updatedValues.created_at),
-        }));
+        setClient(prev =>
+          withCalculatedNextPaymentDate({
+            ...prev,
+            ...updatedValues,
+            next_payment_date: formatDateForInput(updatedValues.next_payment_date),
+            last_payment_date: formatDateForInput(updatedValues.last_payment_date),
+            date_of_joining: formatDateForInput(updatedValues.date_of_joining),
+            created_at: formatDateForInput(updatedValues.created_at),
+          })
+        );
   
         setOriginalValues(prev => ({
           ...prev,
@@ -750,6 +721,7 @@ const ClientDetailsPage = () => {
                 <option value="4 Weeks">4 Weeks</option>
                 <option value="8 Weeks">8 Weeks</option>
                 <option value="12 Weeks">12 Weeks</option>
+                <option value="24 Weeks">24 Weeks</option>
               </select>
             </div>
             <div className="form-group">
