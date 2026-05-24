@@ -4,6 +4,7 @@ import { FaTrashAlt, FaPlusCircle, FaSave, FaEdit } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import api from '../../api/axiosInstance';
+import { sortDietTemplatesByName } from '../../utils/constants';
 import "../../styles/DietTemplatesPage.css";
 
 const DietTemplatesPage = () => {
@@ -21,10 +22,7 @@ const DietTemplatesPage = () => {
     const fetchDietTemplates = async () => {
       try {
         const response = await api.get("/admin/diet_templates");
-        const sortedTemplates = (response.data.list || []).sort((a, b) =>
-          a.Name.localeCompare(b.Name)
-        );
-        setDietTemplates(sortedTemplates);
+        setDietTemplates(sortDietTemplatesByName(response.data.list));
         setError(null);
       } catch (err) {
         setError("Failed to fetch diet templates. Please try again.");

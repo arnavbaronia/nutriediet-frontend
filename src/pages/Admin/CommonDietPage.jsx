@@ -6,6 +6,7 @@ import "../../styles/CommonDietPage.css";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import logger from '../../utils/logger';
+import { sortDietTemplatesByName } from '../../utils/constants';
 
 const CommonDietPage = () => {
   const [dietType, setDietType] = useState(2);
@@ -56,7 +57,7 @@ const CommonDietPage = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await api.get("/admin/diet_templates");
-      setDietTemplates(response.data.list || []);
+      setDietTemplates(sortDietTemplatesByName(response.data.list));
     } catch (err) {
       setError("Failed to load diet templates.");
     }

@@ -8,6 +8,7 @@ import 'react-quill/dist/quill.snow.css';
 import DietHistoryTable from "./DietHistoryTable";
 import "../../styles/CreateDietPage.css";
 import logger from '../../utils/logger';
+import { sortDietTemplatesByName } from '../../utils/constants';
 
 const CreateDietPage = ({ weightUpdateTrigger = 0, onDietSent }) => {
   const { client_id } = useParams();
@@ -46,7 +47,7 @@ const CreateDietPage = ({ weightUpdateTrigger = 0, onDietSent }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await api.get("/admin/diet_templates");
-      setDietTemplates(response.data.list || []);
+      setDietTemplates(sortDietTemplatesByName(response.data.list));
     } catch (err) {
       setError(formatError(err, "Failed to load diet templates."));
     }

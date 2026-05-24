@@ -159,6 +159,11 @@ export const calculateNextPaymentDate = (packageStartDate, packageName) => {
   return formatLocalDate(next);
 };
 
+export const sortDietTemplatesByName = (templates) =>
+  [...(templates || [])].sort((a, b) =>
+    (a.Name || '').localeCompare(b.Name || '', undefined, { sensitivity: 'base' })
+  );
+
 export const withCalculatedNextPaymentDate = (client) => {
   const startDate = getPackageStartDate(client);
   if (!startDate || !client?.package) return client;
