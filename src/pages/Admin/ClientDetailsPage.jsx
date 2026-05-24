@@ -36,6 +36,7 @@ const ClientDetailsPage = () => {
     total_amount: '',
     amount_due: '',
     remarks: '',
+    comments: '',
     next_payment_date: '',
     last_payment_date: '',
     created_at: '',
@@ -324,7 +325,7 @@ const ClientDetailsPage = () => {
       'name', 'age', 'email', 'city', 'phone_number', 'height', 
       'starting_weight', 'dietary_preference', 'medical_history', 
       'allergies', 'locality', 'diet_recall', 'exercise', 'package', 
-      'amount_paid', 'total_amount', 'amount_due', 'remarks', 
+      'amount_paid', 'total_amount', 'amount_due', 'remarks', 'comments',
       'next_payment_date', 'last_payment_date', 'date_of_joining', 'dietitian_id', 'group_id', 'stay'
     ];
   
@@ -813,7 +814,17 @@ const ClientDetailsPage = () => {
                 onChange={handleChange}
               />
             </div>
-          {/* Diet Recall and Remarks */}
+          {/* Comments, Diet Recall and Remarks */}
+          <div className="form-group">
+            <label htmlFor="comments">Comments</label>
+            <textarea
+              id="comments"
+              name="comments"
+              value={client.comments}
+              onChange={handleChange}
+              className="client-textarea client-textarea-large"
+            />
+          </div>
           <div className="form-group">
             <label htmlFor="diet_recall">Diet Recall</label>
             <textarea
