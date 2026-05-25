@@ -5,6 +5,7 @@ import "../styles/Login.css";
 import { useNavigate } from "react-router-dom";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import { ROUTES } from "../utils/constants";
 
 const AdminLogin = () => {
   const [credentials, setCredentials] = useState({
@@ -19,7 +20,7 @@ const AdminLogin = () => {
   useEffect(() => {
     const userType = localStorage.getItem("user_type");
     if (userType === "ADMIN") {
-      navigate("/admin/dashboard");
+      navigate(ROUTES.ADMIN_CLIENTS);
     } else if (userType === "CLIENT") {
       navigate("/clients");
     }
@@ -48,7 +49,7 @@ const AdminLogin = () => {
       localStorage.setItem("user_type", user_type);
       localStorage.setItem("email", email);
 
-      setTimeout(() => navigate("/admin/dashboard"), 10);
+      setTimeout(() => navigate(ROUTES.ADMIN_CLIENTS), 10);
     } catch (err) {
       const status = err.response?.status;
       const serverMessage = err.response?.data?.err || "";

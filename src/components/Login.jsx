@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
-import { API_BASE_URL, API_ENDPOINTS, STORAGE_KEYS, USER_TYPES, VALIDATION } from "../utils/constants";
+import { API_BASE_URL, API_ENDPOINTS, STORAGE_KEYS, USER_TYPES, VALIDATION, ROUTES } from "../utils/constants";
 import { validatePasswordStrength, validateOTP } from "../utils/passwordValidator";
 
 const Login = () => {
@@ -37,7 +37,7 @@ const Login = () => {
     if (userType === USER_TYPES.CLIENT && clientId) {
       navigate(`/clients/${clientId}/diet`);
     } else if (userType === USER_TYPES.ADMIN) {
-      navigate("/admin/dashboard");
+      navigate(ROUTES.ADMIN_CLIENTS);
     }
   }, [navigate]);
 

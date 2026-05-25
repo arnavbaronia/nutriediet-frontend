@@ -5,7 +5,6 @@ import AboutPage from './pages/AboutPage';
 import ServicesPage from './pages/ServicesPage';
 import TestimonialsPageUpdated from './pages/TestimonialsPageUpdated';
 import ClientPage from './pages/Client/ClientPage';
-import AdminDashboard from './pages/Admin/AdminDashboard';
 import DietPage from './pages/Client/DietPage';
 import ExercisePage from './pages/Client/ExercisePage';
 import ProfilePage from './pages/Client/ProfilePage';
@@ -109,14 +108,8 @@ function AppContent() {
           } />
 
           {/* Admin routes */}
-          <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
-          <Route path="/admin/dashboard" element={
-            <ProtectedRoute requireduser_type="ADMIN">
-              <AdminRouteWrapper>
-                <AdminDashboard />
-              </AdminRouteWrapper>
-            </ProtectedRoute>
-          } />
+          <Route path="/admin" element={<Navigate to="/admin/clients" replace />} />
+          <Route path="/admin/dashboard" element={<Navigate to="/admin/clients" replace />} />
           <Route path="/admin/clients" element={
             <ProtectedRoute requireduser_type="ADMIN">
               <AdminRouteWrapper>

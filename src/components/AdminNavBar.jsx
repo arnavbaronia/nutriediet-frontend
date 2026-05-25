@@ -10,6 +10,7 @@ import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import BentoIcon from "@mui/icons-material/Bento";
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import TipsAndUpdatesSharpIcon from '@mui/icons-material/TipsAndUpdatesSharp';
+import { ROUTES } from '../utils/constants';
 
 const AdminNavBar = () => {
   const location = useLocation();
@@ -28,7 +29,7 @@ const AdminNavBar = () => {
     <>
       <nav className="navigation-bar">
         <div className="nav-logo">
-          <Link to="/">
+          <Link to={ROUTES.ADMIN_CLIENTS}>
             <img src={logo} alt="Nutriediet Logo" className="nav-logo-img" />
           </Link>
         </div>

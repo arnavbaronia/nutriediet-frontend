@@ -3,8 +3,13 @@
  * Centralized configuration and constant values
  */
 
-// API Configuration
-export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://staging.nutriediet.com';
+// API Configuration — Go routes are under /api (see main.go router.Group("/api"))
+function normalizeApiBaseUrl(url) {
+  const base = (url || 'http://localhost:8080').replace(/\/$/, '');
+  return base.endsWith('/api') ? base : `${base}/api`;
+}
+
+export const API_BASE_URL = normalizeApiBaseUrl(process.env.REACT_APP_API_BASE_URL);
 
 // Environment
 export const IS_PRODUCTION = process.env.REACT_APP_ENV === 'production';
@@ -70,7 +75,8 @@ export const ROUTES = {
   LOGIN: '/login',
   SIGNUP: '/signup',
   ADMIN_LOGIN: '/admin/login',
-  ADMIN_DASHBOARD: '/admin/dashboard',
+  ADMIN_CLIENTS: '/admin/clients',
+  ADMIN_DASHBOARD: '/admin/clients',
   CLIENT_DASHBOARD: (clientId) => `/clients/${clientId}/diet`,
   ACCOUNT_ACTIVATION: '/account-activation',
 };
