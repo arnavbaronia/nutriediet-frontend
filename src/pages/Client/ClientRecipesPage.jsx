@@ -4,7 +4,7 @@ import logger from "../../utils/logger";
 import NavigationBar from "../../components/NavigationBar";
 import { FaMortarPestle } from "react-icons/fa";
 import api from '../../api/axiosInstance';
-import { API_BASE_URL } from '../../utils/constants';
+import { API_BASE_URL, getFullImageUrl } from '../../utils/constants';
 
 // Separate component to prevent re-render loops
 const RecipeImage = React.memo(({ recipe }) => {
@@ -23,9 +23,7 @@ const RecipeImage = React.memo(({ recipe }) => {
     );
   }
 
-  const fullUrl = imageUrl.startsWith('http') 
-    ? imageUrl 
-    : `${API_BASE_URL}${imageUrl}`;
+  const fullUrl = getFullImageUrl(imageUrl);
 
   return (
     <div className="recipe-image-container">
