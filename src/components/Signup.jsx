@@ -3,8 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/Signup.css";
 import { API_BASE_URL, API_ENDPOINTS, STORAGE_KEYS, USER_TYPES } from "../utils/constants";
-import { validatePasswordStrength, validateEmail } from "../utils/passwordValidator";
-import PasswordInput from "./PasswordInput";
+import { validateEmail } from "../utils/passwordValidator";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -33,13 +32,6 @@ const Signup = () => {
       return;
     }
 
-    // Validate password strength
-    const passwordValidation = validatePasswordStrength(formData.password);
-    if (!passwordValidation.isValid) {
-      setError(passwordValidation.errors[0] || "Password does not meet requirements");
-      return;
-    }
-
     const payload = {
       ...formData,
       name: `${formData.first_name.trim()} ${formData.last_name.trim()}`.trim(),
@@ -48,14 +40,15 @@ const Signup = () => {
     try {
       const response = await axios.post(`${API_BASE_URL}${API_ENDPOINTS.SIGNUP}`, payload);
 
-      const { token } = response.data || {};
+      const { token } = response.data?.created || response.data || {};
 
       localStorage.setItem(STORAGE_KEYS.FIRST_NAME, formData.first_name);
       localStorage.setItem(STORAGE_KEYS.LAST_NAME, formData.last_name);
 
       navigate(`/create_profile/${formData.email}`, { state: { token } });
     } catch (err) {
-      setError(err.response?.data?.err || "Signup failed. Please try again.");
+      const data = err.response?.data || {};
+      setError(data.err || data.error || "Signup failed. Please try again.");
     }
   };
 
@@ -92,14 +85,14 @@ const Signup = () => {
           className="input-field"
           required
         />
-        <PasswordInput
-          value={formData.password}
-          onChange={handleChange}
+        <input
+          type="password"
           name="password"
           placeholder="Password"
-          showRequirements={true}
-          showStrengthMeter={true}
-          required={true}
+          value={formData.password}
+          onChange={handleChange}
+          className="input-field"
+          required
         />
         <div className="login-redirect">
           Already have an account? <span onClick={() => navigate('/login')}>Log in</span>

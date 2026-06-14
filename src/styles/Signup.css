@@ -68,7 +68,7 @@
 }
 
 .input-field {
-  width: 92%;
+  width: 100%;
   padding: 10px 14px;
   border: none;
   border-radius: 6px;
@@ -76,6 +76,7 @@
   font-size: 14px;
   background: rgba(255, 255, 255, 0.6);
   transition: border 0.3s, background 0.3s;
+  box-sizing: border-box;
 }
 
 .input-field:focus {
@@ -111,9 +112,46 @@ select.input-field {
   transform: scale(0.98);
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
+  .signup-wrapper {
+    padding: 16px;
+    height: auto;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+
   .signup-form {
-    transform: scale(0.8);
+    max-width: 100%;
+    width: 100%;
+    padding: 24px;
+    border-radius: 12px;
+    gap: 16px;
+  }
+
+  .signup-form h1 {
+    font-size: 22px;
+  }
+
+  .input-field {
+    width: 100%;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 480px) {
+  .signup-wrapper {
+    padding: 12px;
+  }
+
+  .signup-form {
+    padding: 20px;
+    border-radius: 10px;
+    gap: 14px;
+  }
+
+  .signup-form h1 {
+    font-size: 20px;
   }
 }
 

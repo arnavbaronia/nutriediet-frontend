@@ -11,7 +11,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
 import { API_BASE_URL, API_ENDPOINTS, STORAGE_KEYS, USER_TYPES, VALIDATION, ROUTES } from "../utils/constants";
-import { validatePasswordStrength, validateOTP } from "../utils/passwordValidator";
+import { validateOTP } from "../utils/passwordValidator";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -141,14 +141,6 @@ const Login = () => {
     const otpValidation = validateOTP(otp);
     if (!otpValidation.isValid) {
       setResetError(otpValidation.error);
-      setLoading(false);
-      return;
-    }
-
-    // Validate new password
-    const passwordValidation = validatePasswordStrength(newPassword);
-    if (!passwordValidation.isValid) {
-      setResetError(passwordValidation.errors.join('. '));
       setLoading(false);
       return;
     }
@@ -289,7 +281,6 @@ const Login = () => {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
-                helperText={`At least ${VALIDATION.MIN_PASSWORD_LENGTH} characters with uppercase, lowercase, number, and special character`}
               />
               {resetError && <Typography color="error">{resetError}</Typography>}
               {resetSuccess && <Typography color="success">{resetSuccess}</Typography>}
