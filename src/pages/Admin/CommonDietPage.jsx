@@ -3,10 +3,12 @@ import { Form, Button, Alert } from "react-bootstrap";
 import axios from "axios";
 import api from '../../api/axiosInstance';
 import "../../styles/CommonDietPage.css";
+import "../../styles/DietRichText.css";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import logger from '../../utils/logger';
 import { sortDietTemplatesByName } from '../../utils/constants';
+import { quillModules, quillFormats } from '../../utils/quillConfig';
 
 const CommonDietPage = () => {
   const [dietType, setDietType] = useState(2);
@@ -29,19 +31,6 @@ const CommonDietPage = () => {
   const [deleting, setDeleting] = useState(false);
   const [editingDietId, setEditingDietId] = useState(null); 
   const groups = [1, 2, 3, 4, 5, 6];
-
-  const quillModules = {
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      ['clean']
-    ]
-  };
-  
-  const quillFormats = [
-    'bold', 'italic', 'underline', 'strike',
-    'list', 'bullet'
-  ];
 
   useEffect(() => {
     fetchDietTemplates();

@@ -1,0 +1,78 @@
+/* Text alignment (editor + client view) */
+.ql-editor .ql-align-center,
+.diet-html-content .ql-align-center {
+  text-align: center;
+}
+
+.ql-editor .ql-align-right,
+.diet-html-content .ql-align-right {
+  text-align: right;
+}
+
+.ql-editor .ql-align-justify,
+.diet-html-content .ql-align-justify {
+  text-align: justify;
+}
+
+/* Reduce left spacing for bullet/ordered lists in editors */
+.rich-editor .ql-editor,
+.view-only .ql-editor {
+  padding: 10px 12px;
+}
+
+.rich-editor .ql-editor ol,
+.rich-editor .ql-editor ul,
+.view-only .ql-editor ol,
+.view-only .ql-editor ul {
+  padding-left: 0.5em;
+  margin: 0.25em 0;
+}
+
+.rich-editor .ql-editor li,
+.view-only .ql-editor li {
+  padding-left: 1em;
+}
+
+/* Client diet view list spacing */
+.diet-html-content ol,
+.diet-html-content ul {
+  padding-left: 0.75em;
+  margin: 0.25em 0;
+}
+
+.diet-html-content li {
+  padding-left: 0.35em;
+}
+
+.diet-html-content ol {
+  list-style: none;
+}
+
+.diet-html-content li[data-list='bullet']::before {
+  content: '\2022';
+  display: inline-block;
+  width: 0.75em;
+  margin-left: -0.75em;
+  margin-right: 0.25em;
+}
+
+.diet-html-content li[data-list='ordered'] {
+  counter-increment: list-0;
+}
+
+.diet-html-content li[data-list='ordered']::before {
+  content: counter(list-0) '. ';
+  display: inline-block;
+  width: 1.25em;
+  margin-left: -1.25em;
+  margin-right: 0.15em;
+}
+
+.diet-html-content ol {
+  counter-reset: list-0;
+}
+
+.diet-html-content ul {
+  list-style-type: disc;
+  padding-left: 1em;
+}

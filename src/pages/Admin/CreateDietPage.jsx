@@ -7,8 +7,10 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import DietHistoryTable from "./DietHistoryTable";
 import "../../styles/CreateDietPage.css";
+import "../../styles/DietRichText.css";
 import logger from '../../utils/logger';
 import { sortDietTemplatesByName } from '../../utils/constants';
+import { quillModules, quillFormats } from '../../utils/quillConfig';
 
 const CreateDietPage = ({ weightUpdateTrigger = 0, onDietSent }) => {
   const { client_id } = useParams();
@@ -24,19 +26,6 @@ const CreateDietPage = ({ weightUpdateTrigger = 0, onDietSent }) => {
   const [submitting, setSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  
-  const quillModules = {
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      ['clean']
-    ]
-  };
-  
-  const quillFormats = [
-    'bold', 'italic', 'underline', 'strike',
-    'list', 'bullet'
-  ];
 
   useEffect(() => {
     fetchDietTemplates();

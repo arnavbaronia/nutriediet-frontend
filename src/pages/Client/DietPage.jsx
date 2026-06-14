@@ -7,6 +7,7 @@ import { Alert, Spinner } from 'react-bootstrap';
 import WeightUpdatePage from './WeightUpdatePage';
 import WeightChart from './WeightChart';
 import '../../styles/DietPage.css';
+import '../../styles/DietRichText.css';
 import logger from '../../utils/logger';
 
 const DIET_TYPES = {
