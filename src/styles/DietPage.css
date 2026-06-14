@@ -49,7 +49,7 @@ body {
 
 .diet-container {
   background-color: #A5D6A7;
-  padding: 20px;
+  padding: 13px;
   border-radius: 12px;
   max-width: 600px;
   margin: 20px auto;
@@ -254,7 +254,7 @@ body {
     width: 95%;
   }
   .diet-container {
-    width: 90%;
+    width: 100%;
     margin: 20px auto;
     margin-bottom: 60px;
   }
@@ -279,7 +279,7 @@ body {
 
 .diet-html-content {
   text-align: left;
-  padding: 10px 12px;
+  padding: 0;
   white-space: pre-wrap;
   line-height: 1.6;
   font-weight: 500;
