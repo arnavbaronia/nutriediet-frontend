@@ -11,6 +11,16 @@ function normalizeApiBaseUrl(url) {
 
 export const API_BASE_URL = normalizeApiBaseUrl(process.env.REACT_APP_API_BASE_URL);
 
+const API_HOST = API_BASE_URL.replace(/\/api$/, '');
+
+export const getFullImageUrl = (imageUrl) => {
+  if (!imageUrl) return "";
+  if (imageUrl.startsWith('http')) return imageUrl;
+  if (imageUrl.startsWith('/images/')) return `${API_HOST}${imageUrl}`;
+  if (imageUrl.startsWith('/api/')) return `${API_HOST}${imageUrl.replace(/^\/api/, '')}`;
+  return imageUrl.startsWith('/') ? `${API_HOST}${imageUrl}` : `${API_BASE_URL}/${imageUrl}`;
+};
+
 // Environment
 export const IS_PRODUCTION = process.env.REACT_APP_ENV === 'production';
 export const IS_DEVELOPMENT = process.env.REACT_APP_ENV === 'development';

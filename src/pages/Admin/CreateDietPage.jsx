@@ -90,6 +90,16 @@ const CreateDietPage = ({ weightUpdateTrigger = 0, onDietSent }) => {
     return defaultMessage;
   };
 
+  const resolveTemplateId = (selectedDiet) => {
+    if (!selectedDiet) return "";
+    if (selectedDiet.diet_template_id) return String(selectedDiet.diet_template_id);
+    if (selectedDiet.name) {
+      const matchedTemplate = dietTemplates.find((template) => template.Name === selectedDiet.name);
+      return matchedTemplate ? String(matchedTemplate.ID) : "";
+    }
+    return "";
+  };
+
   const handleHistorySelect = (action, dietId) => {
     if (!dietId) {
       setSelectedHistory(null);
@@ -103,18 +113,25 @@ const CreateDietPage = ({ weightUpdateTrigger = 0, onDietSent }) => {
 
     if (selectedDiet) {
       setSelectedHistory(selectedDiet);
+      const templateId = resolveTemplateId(selectedDiet);
 
       if (action === 'use') {
         setDiet(selectedDiet.diet_string || "");
-        setPastDiet(""); 
+        setSelectedTemplate(templateId);
+        setPastDiet("");
+        setSelectedPastTemplate("");
         setEditMode(false);
       } else if (action === 'view') {
-        setPastDiet(selectedDiet.diet_string || ""); 
-        setDiet(""); 
+        setPastDiet(selectedDiet.diet_string || "");
+        setSelectedPastTemplate(templateId);
+        setDiet("");
+        setSelectedTemplate("");
         setEditMode(false);
       } else if (action === 'edit') {
         setDiet(selectedDiet.diet_string || "");
-        setPastDiet(""); 
+        setSelectedTemplate(templateId);
+        setSelectedPastTemplate("");
+        setPastDiet("");
         setEditMode(true); 
       }
     }

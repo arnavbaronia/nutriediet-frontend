@@ -4,7 +4,7 @@ import api from '../../api/axiosInstance';
 import { FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
 import '../../styles/CreateRecipePage.css';
 import logger from '../../utils/logger';
-import { API_BASE_URL } from '../../utils/constants';
+import { API_BASE_URL, getFullImageUrl } from '../../utils/constants';
 
 const UpdateRecipePage = () => {
   const { recipe_id } = useParams();

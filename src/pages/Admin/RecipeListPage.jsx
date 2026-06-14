@@ -6,7 +6,7 @@ import { Button } from "react-bootstrap";
 import { FaPlusCircle } from "react-icons/fa";
 import '../../styles/AdminRecipeListPage.css';
 import logger from '../../utils/logger';
-import { API_BASE_URL } from '../../utils/constants';
+import { API_BASE_URL, getFullImageUrl } from '../../utils/constants';
 
 const AdminRecipeListPage = () => {
   const [recipes, setRecipes] = useState([]);
@@ -151,6 +151,7 @@ const AdminRecipeListPage = () => {
             <div className="recipe-image-container">
               {(() => {
                 const imageUrl = selectedRecipeDetails.ImageURL || selectedRecipeDetails.image_url;
+                const fullUrl = getFullImageUrl(imageUrl);
                 
                 if (!imageUrl) {
                   return (
@@ -161,9 +162,7 @@ const AdminRecipeListPage = () => {
                 }
 
                 // Build full URL with API_BASE_URL if needed
-                const fullUrl = imageUrl.startsWith('http') 
-                  ? imageUrl 
-                  : `${API_BASE_URL}${imageUrl}`;
+                
 
                 return (
                   <img

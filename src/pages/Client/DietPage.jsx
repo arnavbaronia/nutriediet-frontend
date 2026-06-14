@@ -136,10 +136,16 @@ const DietPage = () => {
     const diet = getCurrentDiet();
     if (!diet || !diet.diet_string) return "No diet data available.";
     
+    // Remove extra newlines from HTML to prevent double line breaks
+    const cleanedHtml = diet.diet_string
+      .replace(/>\n+</g, '><')
+      .replace(/\n+/g, ' ')
+      .trim();
+    
     return (
       <div 
         className="diet-html-content"
-        dangerouslySetInnerHTML={{ __html: diet.diet_string }}
+        dangerouslySetInnerHTML={{ __html: cleanedHtml }}
       />
     );
   };
