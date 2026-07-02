@@ -1,6 +1,18 @@
 import axios from 'axios';
 import { API_BASE_URL, STORAGE_KEYS, ROUTES } from '../utils/constants';
 
+const clearAuthSession = () => {
+  localStorage.clear();
+  if (window.location.pathname !== ROUTES.LOGIN) {
+    window.location.href = ROUTES.LOGIN;
+  }
+};
+
+const isInactiveAccountError = (data) => {
+  if (!data) return false;
+  return data.isActive === false || data.error === 'account is inactive';
+};
+
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000, // 30 seconds
@@ -25,9 +37,20 @@ api.interceptors.request.use(
 
 // Response interceptor - Handle token refresh
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (response?.data && isInactiveAccountError(response.data)) {
+      clearAuthSession();
+      return Promise.reject(new Error('account is inactive'));
+    }
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
+
+    if (error.response && isInactiveAccountError(error.response.data)) {
+      clearAuthSession();
+      return Promise.reject(error);
+    }
 
     // If error is 401 and we haven't retried yet
     if (error.response?.status === 401 && !originalRequest._retry) {
@@ -57,14 +80,12 @@ api.interceptors.response.use(
           return api(originalRequest);
         } catch (refreshError) {
           // Refresh failed - logout user
-          localStorage.clear();
-          window.location.href = ROUTES.LOGIN;
+          clearAuthSession();
           return Promise.reject(refreshError);
         }
       } else {
         // No refresh token - logout user
-        localStorage.clear();
-        window.location.href = ROUTES.LOGIN;
+        clearAuthSession();
       }
     }
 
