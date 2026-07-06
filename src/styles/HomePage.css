@@ -699,3 +699,26 @@ p {
     line-height: 1.5;
   }
 }
+
+.read-more-about {
+  display: none;
+  background: transparent;
+  border: none;
+  color: #004D40;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+  .read-more-about {
+    display: inline-block;
+  }
+}
+
+@media (min-width: 769px) {
+  .about-text {
+    white-space: normal !important;
+  }
+}

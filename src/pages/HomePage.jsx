@@ -32,13 +32,29 @@ const HomePage = () => {
   }, []);
 
   const [descExpanded, setDescExpanded] = useState(false);
+  const [aboutExpanded, setAboutExpanded] = useState(false);
   const TRUNCATE_LENGTH = 281; 
 
+  const aboutDescription = `Welcome to Nutriediet, where nutrition meets care.
+  We are a passionate team of dedicated professionals committed to helping you achieve lasting health through personalized and sustainable dietary solutions.
+  Led by an experienced and qualified dietitian with over 20 years of expertise, our clinic specializes in customized nutrition plans tailored to your unique needs, preferences, and health goals.
+  At Nutriediet, we believe that food is not just fuel—it’s medicine for the body, mind, and soul. Our approach blends scientific evidence with compassionate care, empowering you with the knowledge and guidance to take charge of your well-being.
+  Over the years, we have helped individuals across diverse backgrounds manage weight, diabetes, PCOS, hypertension, and kidney and liver conditions, transforming not just their health but their entire approach to living well.
+  Every plan we create is practical, science-backed, and deeply personalized—because your journey to wellness should be as unique as you are.
+  Let's work together to turn your health goals into lasting achievements.`;
+
+  const ABOUT_TRUNCATE = 320;
+
+  const aboutPreview =
+    aboutDescription.length > ABOUT_TRUNCATE
+      ? aboutDescription.slice(0, ABOUT_TRUNCATE).trim() + "..."
+      : aboutDescription;
+
   const fullDescription = `Dieting is not about eating less - It’s about eating right. 
-There is no one-size-fits-all  “perfect diet plan”.  The best diet is the one personalized for you. At Nutriediet, we design customized diet plans through expert in-person or online consultations & nutritional coaching. 
-Wellness in not just about what you eat - it’s also about how do you feel. At Nutriediet, we consider your emotional and mental well-being as part of your health journey, offering mindful counceling to help you find balance inside & out.
-Get comprehensive meal plans & lifestyle guidance for conditions like Obesity, PCOS, Diabetes, Hypertension,Thyroid, Kidney & Liver Disease.
-Begin your Journey to safe, sustainable & complete wellness today.`;
+  There is no one-size-fits-all  “perfect diet plan”.  The best diet is the one personalized for you. At Nutriediet, we design customized diet plans through expert in-person or online consultations & nutritional coaching. 
+  Wellness in not just about what you eat - it’s also about how do you feel. At Nutriediet, we consider your emotional and mental well-being as part of your health journey, offering mindful counceling to help you find balance inside & out.
+  Get comprehensive meal plans & lifestyle guidance for conditions like Obesity, PCOS, Diabetes, Hypertension,Thyroid, Kidney & Liver Disease.
+  Begin your Journey to safe, sustainable & complete wellness today.`;
 
   const needsTruncate = fullDescription.length > TRUNCATE_LENGTH;
   const previewText = needsTruncate ? fullDescription.slice(0, TRUNCATE_LENGTH).trim() + "..." : fullDescription;
@@ -90,23 +106,20 @@ Begin your Journey to safe, sustainable & complete wellness today.`;
 
         <div className="about-text-box">
           <h2 className="about-heading">About Us</h2>
-          <p className="about-text">
-            Welcome to Nutriediet, where nutrition meets care.
+
+          <p
+            className="about-text"
+            style={{ whiteSpace: "pre-wrap" }}
+          >
+            {aboutExpanded ? aboutDescription : aboutPreview}
           </p>
-          <p className="about-text">
-            We are a passionate team of dedicated professionals committed to helping you achieve lasting health through personalized and sustainable dietary solutions.
-          </p>
-          <p className="about-text">
-            Led by an experienced and qualified dietitian with over 20 years of expertise, our clinic specializes in customized nutrition plans tailored to your unique needs, preferences, and health goals.
-          </p>
-          <p className="about-text">
-            At <strong>Nutriediet</strong>, we believe that food is not just fuel—it’s medicine for the body, mind, and soul. Our approach blends scientific evidence with compassionate care, empowering you with the knowledge and guidance to take charge of your well-being.
-            Over the years, we have helped individuals across diverse backgrounds manage weight, diabetes, PCOS, hypertension, and kidney and liver conditions, transforming not just their health but their entire approach to living well.
-            Every plan we create is practical, science-backed, and deeply personalized—because your journey to wellness should be as unique as you are.
-          </p>
-          <p className="about-text">
-            Let’s work together to turn your health goals into lasting achievements.
-          </p>
+
+          <button
+            className="read-more-about"
+            onClick={() => setAboutExpanded(!aboutExpanded)}
+          >
+            {aboutExpanded ? "Read less" : "Read more..."}
+          </button>
         </div>
       </div>
 
