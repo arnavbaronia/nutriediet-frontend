@@ -45,6 +45,19 @@ const HomePage = () => {
 
   const ABOUT_TRUNCATE = 320;
 
+  const aboutNeedsTruncate = aboutDescription.length > ABOUT_TRUNCATE;
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const aboutPreview =
     aboutDescription.length > ABOUT_TRUNCATE
       ? aboutDescription.slice(0, ABOUT_TRUNCATE).trim() + "..."
@@ -111,15 +124,20 @@ const HomePage = () => {
             className="about-text"
             style={{ whiteSpace: "pre-wrap" }}
           >
-            {aboutExpanded ? aboutDescription : aboutPreview}
+            {isMobile
+              ? (aboutExpanded ? aboutDescription : aboutPreview)
+              : aboutDescription}
           </p>
 
-          <button
-            className="read-more-about"
-            onClick={() => setAboutExpanded(!aboutExpanded)}
-          >
-            {aboutExpanded ? "Read less" : "Read more..."}
-          </button>
+          {isMobile && aboutNeedsTruncate && (
+            <button
+              className="read-more-about"
+              onClick={() => setAboutExpanded(prev => !prev)}
+              aria-expanded={aboutExpanded}
+            >
+              {aboutExpanded ? "Read less" : "Read more..."}
+            </button>
+          )}
         </div>
       </div>
 
