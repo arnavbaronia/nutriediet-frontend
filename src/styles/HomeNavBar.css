@@ -37,36 +37,6 @@ body {
   max-height: 100%;
 }
 
-.menu-icon {
-  display: none;
-  cursor: pointer;
-  font-size: 24px;
-}
-
-.nav-buttons {
-  display: flex;
-  align-items: center;
-  transition: max-height 0.3s ease;
-}
-
-.nav-link {
-  display: flex;
-  align-items: center;
-  margin-left: 20px;
-  color: black;
-  text-decoration: none;
-  padding: 10px 15px;
-  border-radius: 20px;
-  transition: background-color 0.3s ease;
-  font-weight: bold;
-  font-size: 20px;
-}
-
-.nav-link:hover,
-.nav-link.active {
-  background-color: #A5D6A7;
-}
-
 .auth-buttons {
   display: flex;
   align-items: center;
@@ -106,48 +76,30 @@ body {
   background-color: #004D40;
 }
 
+
 @media (max-width: 768px) {
-  .menu-icon {
-    display: block;
-  }
-
-  .nav-buttons {
-    flex-direction: column;
-    transform: scaleY(0);
-    transform-origin: top;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    opacity: 0;
-    visibility: hidden;
-    width: 100%;
-    background: white;
-    position: absolute;
-    top: 70px;
-    left: 0;
-    padding: 0;
-    z-index: 999;
-  }  
-
-  .nav-buttons.show-menu {
-    transform: scaleY(1);
-    opacity: 1;
-    visibility: visible;
-    padding: 10px 0;
-    backdrop-filter: blur(10px);
-    min-height: 120px;
-  }  
-
-  .nav-link {
-    margin: 10px 0;
-    font-size: 16px;
+  .navigation-bar {
+    padding: 10px 16px;
+    height: 65px;
   }
 
   .nav-logo {
-    height: 50px;
+    height: 42px;
   }
 
   .auth-buttons {
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;   
+    align-items: center;
+    justify-content: flex-end;
     gap: 10px;
-    margin-left: 0;
+    margin-left: auto;
+  }
+
+  .nav-button {
+    padding: 7px 14px;
+    font-size: 14px;
+    border-radius: 18px;
+    white-space: nowrap;
   }
 }
