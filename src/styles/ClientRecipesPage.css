@@ -31,6 +31,15 @@ body {
   margin-bottom: 20px;
 }
 
+.recipe-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+  margin-top: 20px;
+  padding: 0 1rem;
+}
+
 .recipe-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

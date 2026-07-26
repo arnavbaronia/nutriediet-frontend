@@ -101,7 +101,7 @@ function AppContent() {
               <WeightUpdatePage />
             </ProtectedRoute>
           } />
-          <Route path="/clients/:client_id/recipe" element={
+          <Route path="/clients/:client_id/recipes" element={
             <ProtectedRoute>
               <ClientRecipesPage />
             </ProtectedRoute>

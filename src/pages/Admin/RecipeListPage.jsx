@@ -4,9 +4,10 @@ import api from '../../api/axiosInstance';
 import Select from "react-select";
 import { Button } from "react-bootstrap";
 import { FaPlusCircle } from "react-icons/fa";
+import RecipeCard from '../../components/RecipeCard';
 import '../../styles/AdminRecipeListPage.css';
 import logger from '../../utils/logger';
-import { API_BASE_URL, getFullImageUrl } from '../../utils/constants';
+import { API_ENDPOINTS } from '../../utils/constants';
 
 const AdminRecipeListPage = () => {
   const [recipes, setRecipes] = useState([]);
@@ -19,14 +20,15 @@ const AdminRecipeListPage = () => {
   const [success, setSuccess] = useState('');
 
   const navigate = useNavigate();
+
   const fetchRecipes = async () => {
     setLoading(true);
     try {
-      const response = await api.get('/admin/recipes');
+      const response = await api.get(API_ENDPOINTS.ADMIN_RECIPES);
       if (response.data.success && response.data.list) {
         const formattedRecipes = response.data.list.map((recipe) => ({
-          id: recipe.RecipeID,
-          name: recipe.Name,
+          id: recipe.recipeId,
+          name: recipe.name,
         }));
         setRecipes(formattedRecipes);
         setError('');
@@ -43,13 +45,11 @@ const AdminRecipeListPage = () => {
 
   const fetchRecipeById = async (recipeId) => {
     if (!recipeId) return;
-    
+
     setLoading(true);
     try {
-      const response = await api.get(`/admin/recipes/${recipeId}`);
-      if (response.data.success && response.data.recipe) {
-        setSelectedRecipeDetails(response.data.recipe);
-      } else if (response.data.recipe) {
+      const response = await api.get(API_ENDPOINTS.ADMIN_RECIPE(recipeId));
+      if (response.data.recipe) {
         setSelectedRecipeDetails(response.data.recipe);
       } else {
         throw new Error('Recipe not found');
@@ -89,7 +89,7 @@ const AdminRecipeListPage = () => {
     setDeleting(true);
 
     try {
-      await api.post(`/admin/recipes/${selectedRecipeId}/delete`);
+      await api.post(API_ENDPOINTS.ADMIN_RECIPE_DELETE(selectedRecipeId));
       setSuccess('Recipe deleted successfully!');
       await fetchRecipes();
       setSelectedRecipeDetails(null);
@@ -125,9 +125,9 @@ const AdminRecipeListPage = () => {
               value: recipe.id,
               label: recipe.name,
             }))}
-            value={selectedRecipeId ? { 
-              value: selectedRecipeId, 
-              label: recipes.find(r => r.id === selectedRecipeId)?.name || '' 
+            value={selectedRecipeId ? {
+              value: selectedRecipeId,
+              label: recipes.find((r) => r.id === selectedRecipeId)?.name || '',
             } : null}
             placeholder="Select a Recipe"
             onChange={handleDropdownChange}
@@ -147,41 +147,8 @@ const AdminRecipeListPage = () => {
 
       <div className="recipe-right-section">
         {selectedRecipeDetails ? (
-          <div className="recipe-card">
-            <div className="recipe-image-container">
-              {(() => {
-                const imageUrl = selectedRecipeDetails.ImageURL || selectedRecipeDetails.image_url;
-                const fullUrl = getFullImageUrl(imageUrl);
-                
-                if (!imageUrl) {
-                  return (
-                    <div className="recipe-image-placeholder">
-                      <span>No Image Available</span>
-                    </div>
-                  );
-                }
-
-                // Build full URL with API_BASE_URL if needed
-                
-
-                return (
-                  <img
-                    src={fullUrl}
-                    alt={selectedRecipeDetails.Name || selectedRecipeDetails.name}
-                    className="recipe-image-thumbnail"
-                    onError={(e) => {
-                      e.target.onerror = null; // Critical: prevent infinite loop
-                      e.target.style.display = 'none'; // Hide broken image
-                    }}
-                  />
-                );
-              })()}
-
-              <h3 className="selected-recipe-title">
-                {selectedRecipeDetails.Name || selectedRecipeDetails.name}
-              </h3>
-            </div>
-
+          <div className="recipe-card-wrapper">
+            <RecipeCard recipe={selectedRecipeDetails} />
             <div className="recipe-action-buttons">
               <Button
                 className="recipe-btn-edit"
@@ -205,22 +172,21 @@ const AdminRecipeListPage = () => {
         )}
       </div>
 
-      {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <div className="recipe-modal-overlay">
           <div className="recipe-delete-modal">
             <h3>Confirm Deletion</h3>
             <p>Are you sure you want to delete this recipe?</p>
-            <p>Recipe: {selectedRecipeDetails?.Name || selectedRecipeDetails?.name}</p>
+            <p>Recipe: {selectedRecipeDetails?.title}</p>
             <div className="recipe-modal-buttons">
-              <button 
+              <button
                 className="recipe-modal-button recipe-modal-cancel"
                 onClick={cancelDelete}
                 disabled={deleting}
               >
                 Cancel
               </button>
-              <button 
+              <button
                 className="recipe-modal-button recipe-modal-confirm"
                 onClick={executeDelete}
                 disabled={deleting}

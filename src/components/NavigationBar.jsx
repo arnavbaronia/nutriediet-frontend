@@ -57,8 +57,8 @@ const NavigationBar = () => {
             <span>Diet Plan</span>
           </Link>
           <Link
-            to={`/clients/${client_id}/recipe`}
-            className={`nav-link ${isActive(`/clients/${client_id}/recipe`)}`}
+            to={`/clients/${client_id}/recipes`}
+            className={`nav-link ${isActive(`/clients/${client_id}/recipes`)}`}
             onClick={handleLinkClick}
           >
             <MenuBookIcon className="nav-icon" />

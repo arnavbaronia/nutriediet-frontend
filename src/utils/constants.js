@@ -39,7 +39,7 @@ export const API_ENDPOINTS = {
   CLIENT_PROFILE: (clientId) => `/clients/${clientId}/my_profile`,
   CLIENT_DIET: (clientId) => `/clients/${clientId}/diet`,
   CLIENT_EXERCISE: (clientId) => `/clients/${clientId}/exercise`,
-  CLIENT_RECIPE: (clientId) => `/clients/${clientId}/recipe`,
+  CLIENT_RECIPES: (clientId) => `/clients/${clientId}/recipes`,
   CLIENT_MOTIVATION: (clientId) => `/clients/${clientId}/motivation`,
   CLIENT_WEIGHT: (clientId) => `/clients/${clientId}/weight_update`,
   
@@ -48,6 +48,9 @@ export const API_ENDPOINTS = {
   ADMIN_CLIENT_DETAILS: (clientId) => `/admin/clients/${clientId}`,
   ADMIN_DIET_TEMPLATES: '/admin/diet_templates',
   ADMIN_RECIPES: '/admin/recipes',
+  ADMIN_RECIPE_NEW: '/admin/recipes/new',
+  ADMIN_RECIPE: (recipeId) => `/admin/recipes/${recipeId}`,
+  ADMIN_RECIPE_DELETE: (recipeId) => `/admin/recipes/${recipeId}/delete`,
   ADMIN_EXERCISES: '/admin/exercises',
   ADMIN_MOTIVATIONS: '/admin/motivations',
 };
