@@ -17,6 +17,10 @@ body {
   padding-top: 70px;
 }
 
+.main-content--display {
+  padding-top: 0;
+}
+
 .admin-container6 {
   position: relative;
 }

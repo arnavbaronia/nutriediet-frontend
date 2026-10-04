@@ -10,6 +10,7 @@ import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import BentoIcon from "@mui/icons-material/Bento";
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import TipsAndUpdatesSharpIcon from '@mui/icons-material/TipsAndUpdatesSharp';
+import TvIcon from '@mui/icons-material/Tv';
 import { ROUTES } from '../utils/constants';
 
 const AdminNavBar = () => {
@@ -60,6 +61,10 @@ const AdminNavBar = () => {
           <Link to="/admin/motivations" className={`nav-link ${isActive("/admin/motivations")}`}>
             <TipsAndUpdatesSharpIcon className="nav-icon" />
             <span>Motivation</span>
+          </Link>
+          <Link to={ROUTES.ADMIN_DISPLAY_CONTROL} className={`nav-link ${isActive(ROUTES.ADMIN_DISPLAY_CONTROL)}`}>
+            <TvIcon className="nav-icon" />
+            <span>Waiting Room</span>
           </Link>
           <button className="logout-button nav-link" onClick={() => setShowLogoutModal(true)}>
             <ExitToAppIcon className="nav-icon" />

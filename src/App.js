@@ -28,6 +28,8 @@ import EditExercisePage from './pages/Admin/EditExercisePage';
 import CreateDietPage from './pages/Admin/CreateDietPage';
 import CreateMotivationPage from './pages/Admin/CreateMotivationPage';
 import MotivationManagementPage from "./pages/Admin/MotivationManagementPage";
+import WaitingRoomDisplayPage from './pages/Admin/WaitingRoomDisplayPage';
+import WaitingRoomControlPage from './pages/Admin/WaitingRoomControlPage';
 import NavigationBar from './components/NavigationBar';
 import AdminNavBar from './components/AdminNavBar';
 import HomeNavBar from './components/HomeNavBar';
@@ -44,6 +46,7 @@ function AppContent() {
   const location = useLocation();
   const showFooterPages = ["/", "/about", "/services", "/testimonials", "/login", "/signup", "/admin/login"];
   const showFooter = showFooterPages.includes(location.pathname);
+  const isWaitingRoomDisplay = location.pathname === '/admin/display';
 
   const AdminRouteWrapper = ({ children }) => (
     <BackButton>
@@ -54,15 +57,17 @@ function AppContent() {
   return (
     <div className="App">
       {/* Navigation bars */}
-      <Routes>
-        <Route path="/admin/*" element={<AdminNavBar />} />
-        <Route path="/*" element={<HomeNavBar />} />
-        <Route path="/clients/*" element={<NavigationBar />} />
-        <Route path="/admin/login" element={<HomeNavBar />} />
-        <Route path="/account-activation" element={<NavigationBar />} />
-      </Routes>
+      {!isWaitingRoomDisplay && (
+        <Routes>
+          <Route path="/admin/*" element={<AdminNavBar />} />
+          <Route path="/*" element={<HomeNavBar />} />
+          <Route path="/clients/*" element={<NavigationBar />} />
+          <Route path="/admin/login" element={<HomeNavBar />} />
+          <Route path="/account-activation" element={<NavigationBar />} />
+        </Routes>
+      )}
 
-      <div className="main-content">
+      <div className={`main-content${isWaitingRoomDisplay ? ' main-content--display' : ''}`}>
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<HomePage />} />
@@ -212,6 +217,18 @@ function AppContent() {
             <ProtectedRoute requireduser_type="ADMIN">
               <AdminRouteWrapper>
                 <CreateMotivationPage />
+              </AdminRouteWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/display" element={
+            <ProtectedRoute requireduser_type="ADMIN">
+              <WaitingRoomDisplayPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/display/control" element={
+            <ProtectedRoute requireduser_type="ADMIN">
+              <AdminRouteWrapper>
+                <WaitingRoomControlPage />
               </AdminRouteWrapper>
             </ProtectedRoute>
           } />

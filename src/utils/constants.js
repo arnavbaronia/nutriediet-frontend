@@ -53,6 +53,8 @@ export const API_ENDPOINTS = {
   ADMIN_RECIPE_DELETE: (recipeId) => `/admin/recipes/${recipeId}/delete`,
   ADMIN_EXERCISES: '/admin/exercises',
   ADMIN_MOTIVATIONS: '/admin/motivations',
+  DISPLAY_STATUS: '/display/status',
+  DISPLAY_STREAM: '/display/stream',
 };
 
 // User Types
@@ -90,6 +92,8 @@ export const ROUTES = {
   ADMIN_LOGIN: '/admin/login',
   ADMIN_CLIENTS: '/admin/clients',
   ADMIN_DASHBOARD: '/admin/clients',
+  ADMIN_DISPLAY: '/admin/display',
+  ADMIN_DISPLAY_CONTROL: '/admin/display/control',
   CLIENT_DASHBOARD: (clientId) => `/clients/${clientId}/diet`,
   ACCOUNT_ACTIVATION: '/account-activation',
 };
