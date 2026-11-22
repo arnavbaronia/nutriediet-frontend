@@ -1,0 +1,133 @@
+.waiting-room-display {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.08), transparent 40%),
+    linear-gradient(160deg, #06261f 0%, #004d40 45%, #012820 100%);
+  color: #f7fff8;
+  text-align: center;
+  overflow: hidden;
+}
+
+.waiting-room-display.status-next_patient {
+  background:
+    radial-gradient(circle at top, rgba(255, 236, 179, 0.16), transparent 42%),
+    linear-gradient(160deg, #14350f 0%, #1b5e20 45%, #0d3b12 100%);
+}
+
+.waiting-room-display.status-custom {
+  background:
+    radial-gradient(circle at top, rgba(179, 229, 252, 0.14), transparent 42%),
+    linear-gradient(160deg, #0b2a3a 0%, #01579b 45%, #012a43 100%);
+}
+
+.waiting-room-display__status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-size: clamp(0.85rem, 1.6vw, 1.1rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.waiting-room-display__dot {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: #9e9e9e;
+}
+
+.waiting-room-display__dot--live {
+  background: #69f0ae;
+  box-shadow: 0 0 0 0 rgba(105, 240, 174, 0.7);
+  animation: waiting-room-pulse 2s infinite;
+}
+
+.waiting-room-display__dot--reconnecting,
+.waiting-room-display__dot--connecting {
+  background: #ffd54f;
+}
+
+.waiting-room-display__dot--error {
+  background: #ff8a80;
+}
+
+.waiting-room-display__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 3vw, 2rem);
+  flex: 1;
+  padding: 1rem;
+}
+
+.waiting-room-display__eyebrow {
+  margin: 0;
+  font-size: clamp(1rem, 2.2vw, 1.4rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.waiting-room-display__title {
+  margin: 0;
+  max-width: 16ch;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(3.2rem, 12vw, 8.5rem);
+  line-height: 0.95;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.waiting-room-display__message {
+  margin: 0;
+  max-width: 22ch;
+  font-size: clamp(1.4rem, 4.5vw, 3rem);
+  line-height: 1.25;
+  font-weight: 500;
+  opacity: 0.95;
+}
+
+.waiting-room-display__footer {
+  min-height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.waiting-room-display__enable-speech {
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.9rem 1.4rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.waiting-room-display__speech-note {
+  margin: 0;
+  opacity: 0.7;
+  font-size: 1rem;
+}
+
+@keyframes waiting-room-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(105, 240, 174, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(105, 240, 174, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(105, 240, 174, 0);
+  }
+}

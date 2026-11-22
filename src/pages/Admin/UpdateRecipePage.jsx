@@ -2,43 +2,41 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../api/axiosInstance';
 import { FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
+import RecipeForm from '../../components/RecipeForm';
 import '../../styles/CreateRecipePage.css';
 import logger from '../../utils/logger';
-import { API_BASE_URL, getFullImageUrl } from '../../utils/constants';
+import { API_ENDPOINTS } from '../../utils/constants';
+import {
+  formStateToRecipePayload,
+  recipeToFormState,
+} from '../../utils/recipeHelpers';
 
 const UpdateRecipePage = () => {
   const { recipe_id } = useParams();
-  const [name, setName] = useState("");
-  const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState("");
-  const [currentImageUrl, setCurrentImageUrl] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [form, setForm] = useState(null);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [fetchingRecipe, setFetchingRecipe] = useState(true);
-  
+
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const response = await api.get(`/admin/recipes/${recipe_id}`);
-        const recipeData = response.data.recipe || response.data;
-        
+        const response = await api.get(API_ENDPOINTS.ADMIN_RECIPE(recipe_id));
+        const recipeData = response.data.recipe;
+
         if (recipeData) {
-          setName(recipeData.Name || recipeData.name || "");
-          const imageUrl = recipeData.ImageURL || recipeData.image_url;
-          if (imageUrl) {
-            setCurrentImageUrl(`${imageUrl}`);
-          }
+          setForm(recipeToFormState(recipeData));
         } else {
           throw new Error('Recipe data not found');
         }
       } catch (err) {
         logger.error('Error fetching recipe', err);
         setErrorMessage(
-          err.response?.data?.error || 
-          err.response?.data?.err || 
-          'Failed to fetch recipe details. Please try again.'
+          err.response?.data?.error ||
+            'Failed to fetch recipe details. Please try again.'
         );
       } finally {
         setFetchingRecipe(false);
@@ -48,52 +46,33 @@ const UpdateRecipePage = () => {
     fetchRecipe();
   }, [recipe_id]);
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    if (!selectedFile) return;
-    
-    setFile(selectedFile);
-    
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreview(reader.result);
-    };
-    reader.readAsDataURL(selectedFile);
+  const handleChange = (field, value) => {
+    setForm((current) => ({ ...current, [field]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setErrorMessage("");
+    setErrorMessage('');
 
-    if (!name) {
-      setErrorMessage("Recipe name is required");
+    if (!form?.title?.trim()) {
+      setErrorMessage('Recipe title is required');
       setLoading(false);
       return;
     }
 
     try {
-      const formData = new FormData();
-      formData.append("name", name);
-      
-      if (file) {
-        formData.append("file", file);
-      }
-
-      await api.post(`/admin/recipes/${recipe_id}/update`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-
-      setSuccessMessage("Recipe updated successfully!");
+      const payload = formStateToRecipePayload(form);
+      await api.post(API_ENDPOINTS.ADMIN_RECIPE(recipe_id), payload);
+      setSuccessMessage('Recipe updated successfully!');
       setTimeout(() => {
         navigate('/admin/recipes');
       }, 1500);
     } catch (err) {
       logger.error('Error updating recipe', err);
       setErrorMessage(
-        err.response?.data?.error || 
-        err.response?.data?.err || 
-        "Failed to update recipe. Please try again."
+        err.response?.data?.error ||
+          'Failed to update recipe. Please try again.'
       );
     } finally {
       setLoading(false);
@@ -110,10 +89,18 @@ const UpdateRecipePage = () => {
     );
   }
 
+  if (!form) {
+    return (
+      <div className="admin-create-recipe">
+        <p>{errorMessage || 'Recipe not found.'}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="admin-create-recipe">
       <h1><strong>Update Recipe</strong></h1>
-      
+
       {successMessage && (
         <div className="success-message-container">
           <div className="success-message28">
@@ -122,7 +109,7 @@ const UpdateRecipePage = () => {
           </div>
         </div>
       )}
-      
+
       {errorMessage && (
         <div className="error-message-container11">
           <div className="error-message28">
@@ -131,72 +118,15 @@ const UpdateRecipePage = () => {
           </div>
         </div>
       )}
-      
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="name">Recipe Name</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Enter recipe name"
-            className="small-input"
-            required
-          />
-        </div>
-        
-        <div className="form-group">
-          <label htmlFor="image">Recipe Image</label>
-          {currentImageUrl && !preview && (
-            <div className="image-preview-container">
-              <p>Current Image:</p>
-              <img 
-                src={currentImageUrl.startsWith('http') ? currentImageUrl : `${API_BASE_URL}${currentImageUrl}`}
-                alt={name} 
-                className="image-preview" 
-                onError={(e) => {
-                  e.target.onerror = null; // Critical: prevent infinite loop
-                  e.target.style.display = 'none'; // Hide broken image
-                }}
-              />
-            </div>
-          )}
-          <input
-            type="file"
-            id="image"
-            name="image"
-            onChange={handleFileChange}
-            accept="image/*"
-            className="file-input"
-          />
-          {preview && (
-            <div className="image-preview-container">
-              <p>New Image Preview:</p>
-              <img src={preview} alt="Preview" className="image-preview" />
-            </div>
-          )}
-        </div>
-        
-        <div className="button-group">
-          <button 
-            type="submit" 
-            className="btn-submit"
-            disabled={loading}
-          >
-            {loading ? 'Updating...' : 'Update Recipe'}
-          </button>
-          <button 
-            type="button" 
-            className="cancel-btn9" 
-            onClick={() => navigate('/admin/recipes')}
-            disabled={loading}
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
+
+      <RecipeForm
+        form={form}
+        onChange={handleChange}
+        onSubmit={handleSubmit}
+        submitLabel="Update Recipe"
+        loading={loading}
+        onCancel={() => navigate('/admin/recipes')}
+      />
     </div>
   );
 };

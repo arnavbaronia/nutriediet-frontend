@@ -2,50 +2,14 @@ import React, { useState, useEffect } from "react";
 import "../../styles/ClientRecipesPage.css";
 import logger from "../../utils/logger";
 import NavigationBar from "../../components/NavigationBar";
+import RecipeCard from "../../components/RecipeCard";
 import { FaMortarPestle } from "react-icons/fa";
-import api from '../../api/axiosInstance';
-import { API_BASE_URL, getFullImageUrl } from '../../utils/constants';
-
-// Separate component to prevent re-render loops
-const RecipeImage = React.memo(({ recipe }) => {
-  const [hasError, setHasError] = useState(false);
-
-  const imageUrl = recipe?.imageUrl || recipe?.image_url || recipe?.Image;
-
-  if (!imageUrl || hasError) {
-    return (
-      <div className="recipe-image-container">
-        <div className="recipe-image-placeholder">
-          <FaMortarPestle size={80} />
-          <p>{hasError ? 'Failed to load image' : 'No image available'}</p>
-        </div>
-      </div>
-    );
-  }
-
-  const fullUrl = getFullImageUrl(imageUrl);
-
-  return (
-    <div className="recipe-image-container">
-      <img
-        src={fullUrl}
-        alt={recipe?.name || 'Recipe image'}
-        className="recipe-image"
-        onError={(e) => {
-          e.target.onerror = null; // Critical: prevent loop
-          setHasError(true);
-        }}
-      />
-    </div>
-  );
-});
-
-RecipeImage.displayName = 'RecipeImage';
+import api from "../../api/axiosInstance";
+import { API_ENDPOINTS } from "../../utils/constants";
 
 const ClientRecipeListPage = () => {
   const [recipes, setRecipes] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
-  const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -54,18 +18,15 @@ const ClientRecipeListPage = () => {
     const fetchRecipes = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem("token");
-        const clientEmail = localStorage.getItem("email") || "";
         const clientID = localStorage.getItem("client_id") || "";
 
-        if (!token || !clientID) {
+        if (!clientID) {
           setError("Authentication error. Please log in.");
           setLoading(false);
           return;
         }
 
-        const response = await api.get(`/clients/${clientID}/recipe`
-        );
+        const response = await api.get(API_ENDPOINTS.CLIENT_RECIPES(clientID));
 
         if (!response.data.isActive) {
           setError("Your account is inactive. Please contact support.");
@@ -73,12 +34,14 @@ const ClientRecipeListPage = () => {
           return;
         }
 
-        const recipes = response.data.recipes || [];
-        setRecipes(recipes);
-        setFilteredRecipes(recipes);
+        const recipeList = response.data.recipes || [];
+        setRecipes(recipeList);
+        setFilteredRecipes(recipeList);
       } catch (err) {
         logger.error("Error fetching recipes", err);
-        setError(err.response?.data?.error || "Failed to fetch recipes. Please try again.");
+        setError(
+          err.response?.data?.error || "Failed to fetch recipes. Please try again."
+        );
       } finally {
         setLoading(false);
       }
@@ -93,12 +56,13 @@ const ClientRecipeListPage = () => {
 
     if (!query) {
       setFilteredRecipes(recipes);
-    } else {
-      const filtered = recipes.filter((recipe) =>
-        recipe?.name?.toLowerCase().includes(query)
-      );
-      setFilteredRecipes(filtered);
+      return;
     }
+
+    const filtered = recipes.filter((recipe) =>
+      recipe?.title?.toLowerCase().includes(query)
+    );
+    setFilteredRecipes(filtered);
   };
 
   if (loading) {
@@ -131,16 +95,10 @@ const ClientRecipeListPage = () => {
           onChange={handleSearch}
         />
 
-        <div className="recipe-container">
+        <div className="recipe-card-grid">
           {filteredRecipes.length > 0 ? (
             filteredRecipes.map((recipe) => (
-              <div
-                key={recipe.id}
-                className="recipe-box"
-                onClick={() => setSelectedRecipe(recipe)}
-              >
-                <h3>{recipe?.name || "Unnamed Recipe"}</h3>
-              </div>
+              <RecipeCard key={recipe.id || recipe.slug} recipe={recipe} />
             ))
           ) : (
             <p className="no-recipes">
@@ -148,26 +106,6 @@ const ClientRecipeListPage = () => {
             </p>
           )}
         </div>
-
-        {selectedRecipe && (
-          <div
-            className="recipe-popup-overlay"
-            onClick={() => setSelectedRecipe(null)}
-          >
-            <div className="recipe-popup" onClick={(e) => e.stopPropagation()}>
-              <button
-                className="close-btn"
-                onClick={() => setSelectedRecipe(null)}
-              >
-                ✖
-              </button>
-              <h2>{selectedRecipe?.name || "Unnamed Recipe"}</h2>
-              
-              {/* Recipe image */}
-              <RecipeImage recipe={selectedRecipe} />
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
