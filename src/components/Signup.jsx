@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/Signup.css";
-import { API_BASE_URL, API_ENDPOINTS, STORAGE_KEYS, USER_TYPES } from "../utils/constants";
+import {
+  API_BASE_URL,
+  API_ENDPOINTS,
+  STORAGE_KEYS,
+  USER_TYPES,
+} from "../utils/constants";
 import { validateEmail } from "../utils/passwordValidator";
 
 const Signup = () => {
@@ -14,7 +19,11 @@ const Signup = () => {
     user_type: USER_TYPES.CLIENT,
   });
 
+  const [verifyPassword, setVerifyPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showVerifyPassword, setShowVerifyPassword] = useState(false);
   const [error, setError] = useState(null);
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -26,9 +35,13 @@ const Signup = () => {
     e.preventDefault();
     setError(null);
 
-    // Validate email
     if (!validateEmail(formData.email)) {
       setError("Please enter a valid email address");
+      return;
+    }
+
+    if (formData.password !== verifyPassword) {
+      setError("Passwords do not match. Please verify your password.");
       return;
     }
 
@@ -38,17 +51,24 @@ const Signup = () => {
     };
 
     try {
-      const response = await axios.post(`${API_BASE_URL}${API_ENDPOINTS.SIGNUP}`, payload);
+      const response = await axios.post(
+        `${API_BASE_URL}${API_ENDPOINTS.SIGNUP}`,
+        payload
+      );
 
       const { token } = response.data?.created || response.data || {};
 
       localStorage.setItem(STORAGE_KEYS.FIRST_NAME, formData.first_name);
       localStorage.setItem(STORAGE_KEYS.LAST_NAME, formData.last_name);
 
-      navigate(`/create_profile/${formData.email}`, { state: { token } });
+      navigate(`/create_profile/${formData.email}`, {
+        state: { token },
+      });
     } catch (err) {
       const data = err.response?.data || {};
-      setError(data.err || data.error || "Signup failed. Please try again.");
+      setError(
+        data.err || data.error || "Signup failed. Please try again."
+      );
     }
   };
 
@@ -56,6 +76,7 @@ const Signup = () => {
     <div className="signup-wrapper">
       <form onSubmit={handleSignup} className="signup-form">
         <h1>Sign-Up</h1>
+
         {error && <p className="error-message">{error}</p>}
 
         <input
@@ -67,6 +88,7 @@ const Signup = () => {
           className="input-field"
           required
         />
+
         <input
           type="text"
           name="last_name"
@@ -76,6 +98,7 @@ const Signup = () => {
           className="input-field"
           required
         />
+
         <input
           type="email"
           name="email"
@@ -85,18 +108,63 @@ const Signup = () => {
           className="input-field"
           required
         />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          className="input-field"
-          required
-        />
-        <div className="login-redirect">
-          Already have an account? <span onClick={() => navigate('/login')}>Log in</span>
+
+        {/* Password */}
+        <div className="password-input-wrapper">
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            className="input-field"
+            required
+          />
+
+          <button
+            type="button"
+            className="password-toggle"
+            onClick={() => setShowPassword(!showPassword)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            <i className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`} />
+          </button>
         </div>
+
+        {/* Verify Password */}
+        <div className="password-input-wrapper">
+          <input
+            type={showVerifyPassword ? "text" : "password"}
+            placeholder="Verify Password"
+            value={verifyPassword}
+            onChange={(e) => setVerifyPassword(e.target.value)}
+            className="input-field"
+            required
+          />
+
+          <button
+            type="button"
+            className="password-toggle"
+            onClick={() => setShowVerifyPassword(!showVerifyPassword)}
+            aria-label={
+              showVerifyPassword
+                ? "Hide verification password"
+                : "Show verification password"
+            }
+          >
+            <i
+              className={`fa ${
+                showVerifyPassword ? "fa-eye-slash" : "fa-eye"
+              }`}
+            />
+          </button>
+        </div>
+
+        <div className="login-redirect">
+          Already have an account?{" "}
+          <span onClick={() => navigate("/login")}>Log in</span>
+        </div>
+
         <button type="submit" className="submit-buttonk">
           Sign Up
         </button>

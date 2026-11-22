@@ -172,3 +172,42 @@ select.input-field {
 .login-redirect span:hover {
   color: #357ab8;
 }
+
+.password-input-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper .input-field {
+  padding-right: 45px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #004d40;
+  cursor: pointer;
+  font-size: 17px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-toggle:hover {
+  color: #357ab8;
+}
+
+.password-toggle:focus {
+  outline: none;
+}
+
+.password-toggle:active {
+  transform: translateY(-50%);
+}
