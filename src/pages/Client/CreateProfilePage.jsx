@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-import axios from "axios";
-import api from '../../api/axiosInstance';
+import api from "../../api/axiosInstance";
 import "../../styles/ProfilePage.css";
 import logger from "../../utils/logger";
 
@@ -51,22 +50,53 @@ const CreateProfilePage = () => {
     }
   }, []);
 
+  const requiredFields = [
+    "age",
+    "city",
+    "phone_number",
+    "height",
+    "starting_weight",
+    "dietary_preference",
+    "medical_history",
+    "allergies",
+    "stay",
+    "exercise",
+    "locality",
+  ];
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name } = e.target;
+    let value = e.target.value;
+
+    if (name === "phone_number") {
+      value = value.replace(/\D/g, "");
+    }
 
     setFormData((prev) => {
-      const updatedFormData = { ...prev, [name]: value };
+      const updatedFormData = {
+        ...prev,
+        [name]: value,
+      };
 
       if (name === "first_name" || name === "last_name") {
-        updatedFormData.name = `${updatedFormData.first_name} ${updatedFormData.last_name}`.trim();
+        updatedFormData.name =
+          `${updatedFormData.first_name} ${updatedFormData.last_name}`.trim();
       }
 
       return updatedFormData;
     });
 
     if (fieldErrors[name]) {
-      setFieldErrors(prev => ({ ...prev, [name]: '' }));
+      setFieldErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
     }
+
+    if (error) {
+      setError(null);
+    }
+
     if (backendError) {
       setBackendError(null);
     }
@@ -74,31 +104,51 @@ const CreateProfilePage = () => {
 
   const validateForm = () => {
     const errors = {};
-    const requiredFields = [
-      'age', 'city', 'phone_number', 'height', 'starting_weight', 
-      'dietary_preference', 'medical_history', 'allergies', 
-      'stay', 'exercise', 'locality'
-    ];
 
-    requiredFields.forEach(field => {
-      if (!formData[field]) {
-        errors[field] = 'This field is required';
+    requiredFields.forEach((field) => {
+      if (!String(formData[field] ?? "").trim()) {
+        errors[field] = "This field is required";
       }
     });
 
+    if (
+      formData.phone_number &&
+      !/^\d+$/.test(formData.phone_number)
+    ) {
+      errors.phone_number = "Please enter numbers only";
+    }
+
     setFieldErrors(errors);
+
     return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
-      setError("Please fill in all required fields");
+      setError("Please fill in all required fields.");
+
+      setTimeout(() => {
+        const firstError = document.querySelector(
+          ".client-input.input-error, .client-textarea.input-error"
+        );
+
+        firstError?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+
+        firstError?.focus();
+      }, 100);
+
       return;
     }
 
     try {
+      setError(null);
+      setBackendError(null);
+
       const url = `/create_profile/${email}`;
 
       const processedFormData = {
@@ -118,46 +168,83 @@ const CreateProfilePage = () => {
       setError(null);
       setBackendError(null);
 
-      navigate("/account-activation", { state: { token } });
+      navigate("/account-activation", {
+        state: { token },
+      });
     } catch (err) {
       setSuccess(false);
-      
+
       if (err.response) {
         const { data, status } = err.response;
-        
+
         if (status === 400) {
           if (data.error === "email does not match") {
-            setBackendError("Email in the form doesn't match the registered email");
+            setBackendError(
+              "Email in the form doesn't match the registered email"
+            );
           } else {
-            setBackendError("Invalid form data. Please check your inputs.");
+            setBackendError(
+              "Invalid form data. Please check your inputs."
+            );
           }
         } else if (status === 403) {
-          setBackendError("User needs to sign up before creating a profile");
+          setBackendError(
+            "User needs to sign up before creating a profile"
+          );
         } else if (status === 404) {
           setBackendError("User record not found");
         } else if (status === 500) {
           setBackendError("Server error. Please try again later.");
         } else {
-          setBackendError(data.error || "An unexpected error occurred");
+          setBackendError(
+            data.error || "An unexpected error occurred"
+          );
         }
       } else {
-        setBackendError("Network error. Please check your connection.");
+        setBackendError(
+          "Network error. Please check your connection."
+        );
       }
-      
+
       logger.error("Error creating profile", err);
     }
   };
 
-  const RequiredStar = () => <span className="required-star">*</span>;
+  const RequiredStar = () => (
+    <span className="required-star">*</span>
+  );
+
+  const getFieldClass = (field, baseClass = "client-input") =>
+    `${baseClass} ${fieldErrors[field] ? "input-error" : ""}`;
 
   return (
     <div className="profile-container">
       <div className="form-container">
-        <h2 className="client-heading">Create New Client Profile</h2>
-        {success && <p className="success-message">Client created successfully!</p>}
-        {error && <p className="error-message4">{error}</p>}
+        <h2 className="client-heading">
+          Create New Client Profile
+        </h2>
 
-        <form onSubmit={handleSubmit} className="client-form">
+        {success && (
+          <p className="success-message">
+            Client created successfully!
+          </p>
+        )}
+
+        {error && (
+          <p className="error-message4">{error}</p>
+        )}
+
+        {backendError && (
+          <div className="backend-error-message">
+            <p>{backendError}</p>
+          </div>
+        )}
+
+        <form
+          onSubmit={handleSubmit}
+          className="client-form"
+          noValidate
+        >
           <div className="form-row">
             <div className="form-group">
               <label>Name</label>
@@ -168,27 +255,46 @@ const CreateProfilePage = () => {
                 className="client-input"
               />
             </div>
+
             <div className="form-group">
-              <label>Age <RequiredStar /></label>
+              <label>
+                Age <RequiredStar />
+              </label>
               <input
                 type="number"
                 name="age"
                 value={formData.age}
                 onChange={handleChange}
-                className="client-input"
+                className={getFieldClass("age")}
+                aria-invalid={!!fieldErrors.age}
               />
-              {fieldErrors.age && <span className="field-error">{fieldErrors.age}</span>}
+              {fieldErrors.age && (
+                <span className="field-error">
+                  {fieldErrors.age}
+                </span>
+              )}
             </div>
+
             <div className="form-group">
-              <label>Phone Number <RequiredStar /></label>
+              <label>
+                Phone Number <RequiredStar />
+              </label>
               <input
-                type="text"
+                type="tel"
                 name="phone_number"
                 value={formData.phone_number}
                 onChange={handleChange}
-                className="client-input"
+                className={getFieldClass("phone_number")}
+                inputMode="numeric"
+                pattern="[0-9]*"
+                aria-invalid={!!fieldErrors.phone_number}
+                placeholder="Enter phone number"
               />
-              {fieldErrors.phone_number && <span className="field-error">{fieldErrors.phone_number}</span>}
+              {fieldErrors.phone_number && (
+                <span className="field-error">
+                  {fieldErrors.phone_number}
+                </span>
+              )}
             </div>
           </div>
 
@@ -202,113 +308,193 @@ const CreateProfilePage = () => {
                 className="client-input"
               />
             </div>
+
             <div className="form-group">
-              <label>City <RequiredStar /></label>
+              <label>
+                City <RequiredStar />
+              </label>
               <input
                 type="text"
                 name="city"
                 value={formData.city}
                 onChange={handleChange}
-                className="client-input"
+                className={getFieldClass("city")}
+                aria-invalid={!!fieldErrors.city}
               />
-              {fieldErrors.city && <span className="field-error">{fieldErrors.city}</span>}
+              {fieldErrors.city && (
+                <span className="field-error">
+                  {fieldErrors.city}
+                </span>
+              )}
             </div>
+
             <div className="form-group">
-              <label>Locality <RequiredStar /></label>
+              <label>
+                Locality <RequiredStar />
+              </label>
               <input
                 type="text"
                 name="locality"
                 value={formData.locality}
                 onChange={handleChange}
-                className="client-input"
+                className={getFieldClass("locality")}
+                aria-invalid={!!fieldErrors.locality}
               />
-              {fieldErrors.locality && <span className="field-error">{fieldErrors.locality}</span>}
+              {fieldErrors.locality && (
+                <span className="field-error">
+                  {fieldErrors.locality}
+                </span>
+              )}
             </div>
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label>Height (cm) <RequiredStar /></label>
+              <label>
+                Height (cm) <RequiredStar />
+              </label>
               <input
                 type="number"
                 name="height"
                 value={formData.height}
                 onChange={handleChange}
-                className="client-input"
+                className={getFieldClass("height")}
+                aria-invalid={!!fieldErrors.height}
               />
-              {fieldErrors.height && <span className="field-error">{fieldErrors.height}</span>}
+              {fieldErrors.height && (
+                <span className="field-error">
+                  {fieldErrors.height}
+                </span>
+              )}
             </div>
+
             <div className="form-group">
-              <label>Starting Weight <RequiredStar /></label>
+              <label>
+                Starting Weight <RequiredStar />
+              </label>
               <input
                 type="number"
                 name="starting_weight"
                 value={formData.starting_weight}
                 onChange={handleChange}
-                className="client-input"
+                className={getFieldClass("starting_weight")}
+                aria-invalid={!!fieldErrors.starting_weight}
               />
-              {fieldErrors.starting_weight && <span className="field-error">{fieldErrors.starting_weight}</span>}
+              {fieldErrors.starting_weight && (
+                <span className="field-error">
+                  {fieldErrors.starting_weight}
+                </span>
+              )}
             </div>
+
             <div className="form-group">
-              <label>Dietary Preference <RequiredStar /></label>
+              <label>
+                Dietary Preference <RequiredStar />
+              </label>
               <select
                 name="dietary_preference"
                 value={formData.dietary_preference}
                 onChange={handleChange}
-                className="client-input"
+                className={getFieldClass("dietary_preference")}
                 style={{ width: "100%" }}
+                aria-invalid={!!fieldErrors.dietary_preference}
               >
                 <option value="">Select</option>
                 <option value="Veg">Veg</option>
                 <option value="Non-Veg">Non-Veg</option>
                 <option value="Eggetarian">Eggetarian</option>
               </select>
-              {fieldErrors.dietary_preference && <span className="field-error">{fieldErrors.dietary_preference}</span>}
+
+              {fieldErrors.dietary_preference && (
+                <span className="field-error">
+                  {fieldErrors.dietary_preference}
+                </span>
+              )}
             </div>
           </div>
 
           <div className="form-group">
-            <label>Medical History <RequiredStar /></label>
+            <label>
+              Medical History <RequiredStar />
+            </label>
             <textarea
               name="medical_history"
               value={formData.medical_history}
               onChange={handleChange}
-              className="client-textarea"
-            ></textarea>
-            {fieldErrors.medical_history && <span className="field-error">{fieldErrors.medical_history}</span>}
+              className={getFieldClass(
+                "medical_history",
+                "client-textarea"
+              )}
+              aria-invalid={!!fieldErrors.medical_history}
+            />
+            {fieldErrors.medical_history && (
+              <span className="field-error">
+                {fieldErrors.medical_history}
+              </span>
+            )}
           </div>
 
           <div className="form-group">
-            <label>Allergies <RequiredStar /></label>
+            <label>
+              Allergies <RequiredStar />
+            </label>
             <textarea
               name="allergies"
               value={formData.allergies}
               onChange={handleChange}
-              className="client-textarea"
-            ></textarea>
-            {fieldErrors.allergies && <span className="field-error">{fieldErrors.allergies}</span>}
+              className={getFieldClass(
+                "allergies",
+                "client-textarea"
+              )}
+              aria-invalid={!!fieldErrors.allergies}
+            />
+            {fieldErrors.allergies && (
+              <span className="field-error">
+                {fieldErrors.allergies}
+              </span>
+            )}
           </div>
 
           <div className="form-group">
-            <label>Stay <RequiredStar /></label>
+            <label>
+              Stay <RequiredStar />
+            </label>
             <textarea
               name="stay"
               value={formData.stay}
               onChange={handleChange}
-              className="client-textarea"
-            ></textarea>
-            {fieldErrors.stay && <span className="field-error">{fieldErrors.stay}</span>}
+              className={getFieldClass(
+                "stay",
+                "client-textarea"
+              )}
+              aria-invalid={!!fieldErrors.stay}
+            />
+            {fieldErrors.stay && (
+              <span className="field-error">
+                {fieldErrors.stay}
+              </span>
+            )}
           </div>
 
           <div className="form-group">
-            <label>Exercise <RequiredStar /></label>
+            <label>
+              Exercise <RequiredStar />
+            </label>
             <textarea
               name="exercise"
               value={formData.exercise}
               onChange={handleChange}
-              className="client-textarea"
-            ></textarea>
-            {fieldErrors.exercise && <span className="field-error">{fieldErrors.exercise}</span>}
+              className={getFieldClass(
+                "exercise",
+                "client-textarea"
+              )}
+              aria-invalid={!!fieldErrors.exercise}
+            />
+            {fieldErrors.exercise && (
+              <span className="field-error">
+                {fieldErrors.exercise}
+              </span>
+            )}
           </div>
 
           <div className="form-group">
@@ -318,7 +504,7 @@ const CreateProfilePage = () => {
               value={formData.comments}
               onChange={handleChange}
               className="client-textarea"
-            ></textarea>
+            />
           </div>
 
           <div className="form-group">
@@ -328,10 +514,15 @@ const CreateProfilePage = () => {
               value={formData.diet_recall}
               onChange={handleChange}
               className="client-textarea"
-            ></textarea>
+            />
           </div>
 
-          <button type="submit" className="update-button">Create Profile</button>
+          <button
+            type="submit"
+            className="update-button"
+          >
+            Create Profile
+          </button>
         </form>
       </div>
     </div>
